@@ -1,0 +1,33 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>2D Graph test</title>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.flot.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#placeholder').css({width:window.innerWidth*0.4,height:window.innerHeight*0.4});
+                $.ajax({
+                    url: "2dgraph.php",
+                    dataType: "json",
+                    success:function(data){
+                        //console.log(data);
+                        
+                        $.plot($('#placeholder'),data);
+                    },
+                    error:function(){
+                        alert('error');
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="placeholder"></div>
+    </body>
+</html>

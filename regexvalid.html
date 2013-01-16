@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Insert title here</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 13px;
+            }
+
+            input {
+                width: 220px;
+                height: 25px;
+                font-size: 13px;
+                margin-bottom: 10px;
+                border: solid 1px #333333;
+            }
+
+            label.error {
+                font-size: 11px;
+                background-color: #cc0000;
+                color: #FFFFFF;
+                padding: 3px;
+                margin-left: 5px;
+                -moz-border-radius: 4px;
+                -webkit-border-radius: 4px;
+            }
+        </style>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script>
+            $(document)
+            .ready(
+            function() {
+                //dodanie metody walidacyjnej
+                $.validator.addMethod("regex", function(value, element) {
+                    return this.optional(element) || /(([0-9]*x[0-9]*[+]?)+|([0-9]\/[1-9][0-9]*x[0-9]*)[+]?)(<=|>=|=)[0-9]+/g.test(value); 
+                }, "Tre\u015bć jest nieprawidłowa");
+                //walidacja formularza - pole textarea musi być wypełnione i musi mieć naszą zasadę regex napisaną powyżej
+                $('form[name=form]').validate({
+                    rules : {
+                        textarea : {
+                            required : true,
+                            regex: true
+                        }
+                    }
+                });				
+                //przycisk do przywracania wartości w textarea
+                $('#returb').click(function() {
+                    $('#textarea')
+                    .val(
+                    $('#textarea').prop(
+                    'defaultValue'));
+                });
+                //przycisk do wysyłania forma
+                $('#submit').click(function() {
+                    if ($('form[name=form]').valid()) {
+                        alert('wyslano');
+                    } else {
+                        alert('nie wyslano');
+                    }
+                    return false;
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form name="form" method="POST">
+            <textarea name="textarea" id="textarea"
+                      style="width: 500px; height: 200px;">2x1+5x2<=30
+                2x1+3x2<=26
+                0x1+3x2<=15</textarea>
+            <input id="submit" type="submit" />
+        </form>
+        <button id="returb">Przywróć wartość</button>
+    </body>
+</html>
