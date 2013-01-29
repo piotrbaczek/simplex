@@ -26,7 +26,6 @@ class Processer extends Csv_Reader {
 		$this->tabela = parent::get();
 		if ($this->tabela['0']['0'] != "max" && $this->tabela['0']['0'] != "min") {
 			$this->errormessage('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.');
-			break;
 		} else {
 			$this->funkcja = $this->tabela['0']['0'];
 		}
