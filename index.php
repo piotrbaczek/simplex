@@ -42,7 +42,6 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
                         <li><a href="#tabs-1">Rozwiąż!</a></li>
                         <li><a href="#tabs-2">Załaduj dane</a></li>
                         <li><a href="sources/whatitcando.html">Co to jest Simpleks?</a></li>
-                        <li><a href="sources/feedback.php">Feedback</a></li>
                     </ul>
                     <div id="tabs-1">
                         <div id="defaultdiv" style="width: 100%; height: 500px;">
