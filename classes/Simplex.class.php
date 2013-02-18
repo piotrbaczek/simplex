@@ -1,6 +1,7 @@
 <?php
 
 class Simplex {
+
     private $index = 0;
     private $matrixes;
     private $basecol;
@@ -13,9 +14,8 @@ class Simplex {
     private $O;
     private $wrongsigns;
     private $d;
-    private $c;
+    public $c;
     private $gomorry;
-    public static $starttime;
     private $temp;
 
     public function __construct() {
@@ -174,6 +174,7 @@ class Simplex {
         }
         $this->basecol[$this->index] = -1;
         $this->baserow[$this->index] = -1;
+
         if ($gomorry && $this->index != 0) {
             while (true) {
                 $this->index++;
@@ -187,11 +188,12 @@ class Simplex {
 
                 $this->zmiennebazowe[$this->index] = $this->zmiennebazowe[$this->index - 1];
                 $this->zmienneniebazowe[$this->index] = $this->zmienneniebazowe[$this->index - 1];
+                $this->c[$this->index] = $this->c[$this->index - 1];
                 $p = $this->gomorryAddRow($k);
-
+                $this->c[$this->index][2 + count($this->c[$this->index][0])] = new Fraction2(0);
                 $this->zmiennebazowe[$this->index][count($this->matrixes[0])] = 'Z<sub>1</sub>';
                 $q = count($this->matrixes[$this->index]) - 2;
-                //echo 'Przekształcenie po elemencie ['.$q.','.$p.']='.$this->matrixes[$this->index][$q][$p];
+                //echo 'Przekształcenie po elemencie ['.$q.','.$p.']='.$this->matrixes[$this->index][$q][$p]->toString();
                 $this->basecol[$this->index] = $p;
                 $this->baserow[$this->index] = $q;
                 //----------------------------------------------------------------
@@ -201,6 +203,7 @@ class Simplex {
                 $this->matrixes[$this->index] = $this->matrixes[$this->index - 1];
                 $this->basecol[$this->index] = -1;
                 $this->baserow[$this->index] = -1;
+                $this->c[$this->index] = $this->c[$this->index - 1];
                 $this->gaussjordan();
                 if (!$this->gomorrycheck()) {
                     break;
@@ -214,7 +217,7 @@ class Simplex {
         for ($i = 0; $i < $this->index + 1; $i++) {
             $a = count($this->matrixes[$i]);
             $b = count($this->matrixes[$i][0]);
-            echo '<table class="result"><tbody>';
+            echo '<table class="result" border="1"><tbody>';
             for ($j = 0; $j < $a; $j++) {
                 echo '<tr>';
                 for ($k = 0; $k < $b; $k++) {
@@ -362,6 +365,7 @@ class Simplex {
                 }
                 echo '<th class="ui-state-default" rowspan="2">Warto&#347;&#263;</th></tr>';
                 echo '<tr><th class="ui-state-default">Baza</th>';
+                echo '<th class="ui-state-default">c</th>';
                 for ($j = 0; $j < $this->N + $this->wrongsigns + $this->M - 2; $j++) {
                     if (isset($this->zmienneniebazowe[$i][$j + 1])) {
                         echo '<th class="ui-state-default">' . $this->zmienneniebazowe[$i][$j + 1] . '</th>';
@@ -374,9 +378,10 @@ class Simplex {
                 echo '</tr>';
                 for ($j = 0; $j < $a; $j++) {
                     if (isset($this->zmiennebazowe[$i][1 + $j])) {
-                        echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][1 + $j] . '</th>';
+                        echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][1 + $j] . '</th><td class="center">' . $this->c[$this->index][$j]->toString() . '</td>';
                     } else {
                         echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
+                        echo '<td></td>';
                     }
 
 
@@ -697,28 +702,14 @@ class Simplex {
         }
     }
 
-    public static function startExecution() {
-        $mtime = microtime();
-        $mtime = explode(" ", $mtime);
-        $mtime = $mtime[1] + $mtime[0];
-        $this->starttime = $mtime;
-    }
-
-    public static function stopExecution() {
-        $mtime = microtime();
-        $mtime = explode(" ", $mtime);
-        $mtime = $mtime[1] + $mtime[0];
-        echo round($mtime - $this->starttime, 3) . 's';
-    }
-
 }
 
 //------------
-/* include 'Ulamek.class.php';
-  $a = Array(Array(new Fraction2(2), new Fraction2(5)), Array(new Fraction2(2), new Fraction2(3)), Array(new Fraction2(0), new Fraction2(3)));
-  $b = Array(new Fraction2(30), new Fraction2(26), new Fraction2(15));
-  $c = Array("<=", "<=", "<=");
-  $d = Array(new Fraction2(2), new Fraction2(0)); */
+include 'Ulamek.class.php';
+$a = Array(Array(new Fraction2(2), new Fraction2(5)), Array(new Fraction2(2), new Fraction2(3)), Array(new Fraction2(0), new Fraction2(3)));
+$b = Array(new Fraction2(30), new Fraction2(26), new Fraction2(15));
+$c = Array("<=", "<=", "<=");
+$d = Array(new Fraction2(2), new Fraction2(6));
 //2x1+3x2>=12
 //2x1+1x2>=4
 //0x1+7x2>=3
@@ -732,20 +723,21 @@ class Simplex {
   //$b=Array(1,2,2);
   //$c=Array(2,1);
  */
-/* try{
-  $s=new Simplex();
-  $s->startExecution();
-  $s->Solve($a,$b,$c,$d,true,false);
-  //$s->printAllMatrix();
-  $s->testprint();
-  $s->printCol();
-  $s->printRow();
-  $s->printValuePair();
-  $s->printResult();
-  //$s->getjsonData($a, $b, $d);
-  echo '<br/>';
-  $s->stopExecution();
-  }catch(Exception $e){
-
-  } */
+try {
+    $s = new Simplex();
+    $s->Solve($a, $b, $c, $d, true, true);
+//    echo '<pre>';
+//    var_dump($s->c);
+//    echo '</pre>';
+    //$s->printAllMatrix();
+    $s->testprint();
+    $s->printCol();
+    $s->printRow();
+    $s->printValuePair();
+    $s->printResult();
+    //$s->getjsonData($a, $b, $d);
+    echo '<br/>';
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
 ?>
