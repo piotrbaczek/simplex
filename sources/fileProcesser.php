@@ -1,13 +1,13 @@
 <?php
 
 include '../classes/CSVReader.class.php';
-include '../classes/Simplex2.class.php';
+include '../classes/Simplex.class.php';
 include '../classes/Ulamek.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';
 $sa=activity::isactivated2('../activity/active.xml')=='true' ? true : false;
 
-$adres = '../upload/' . $_POST['filename'] . '.csv';
+$adres = '../download/' . $_POST['filename'] . '.csv';
 //$adres = '../upload/Book1.csv';
 if (file_exists($adres)) {
 	$plik = new Processer($adres);

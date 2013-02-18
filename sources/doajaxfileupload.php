@@ -36,7 +36,7 @@ if (!empty($_FILES[$fileElementName]['error'])) {
     $filename=md5($_FILES['fileToUpload']['name']);
     $msg .= $filename;
     try {
-        copy($_FILES['fileToUpload']['tmp_name'], "../upload/" . $filename.'.csv');
+        copy($_FILES['fileToUpload']['tmp_name'], "../download/" . $filename.'.csv');
     } catch (Exception $e) {
         $error.=$e;
     }
