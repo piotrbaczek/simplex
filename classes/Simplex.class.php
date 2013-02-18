@@ -356,6 +356,7 @@ class Simplex {
                     echo '<table class="result"><tbody>';
                 }
                 echo '<tr><th style="width:30px;text-align:center;" class="ui-state-default">(' . $i . ')</th>';
+                echo '<th style="width:30px;text-align:center;" class="ui-state-default"></th>';
                 for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
                     if (isset($this->targetfunction[$j])) {
                         echo '<th class="ui-state-default">' . $this->targetfunction[$j]->toString() . '</th>';
