@@ -46,10 +46,10 @@ class Simplex {
         for ($i = 1; $i < $this->N; $i++) {
             $this->zmiennebazowe[$this->index][$i] = 'S<sub>' . $i . '</sub>';
         }
-        for ($i = 1; $i < 1 + $this->O; $i++) {
+        for ($i = 1; $i < 2 + $this->O; $i++) {
             $this->zmienneniebazowe[$this->index][$i] = 'x<sub>' . $i . '</sub>';
         }
-        for ($i = 1 + $this->O; $i < $this->O + $this->N; $i++) {
+        for ($i = 2 + $this->O; $i < $this->O + $this->N; $i++) {
             $this->zmienneniebazowe[$this->index][$i] = 'a<sub>' . ($i - $this->N + 1) . '</sub>';
         }
         //zamiana problemu minimalizacyjnego na maksymalizacyjny

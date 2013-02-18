@@ -60,8 +60,7 @@ $(document).ajaxStart(function(){
                                 'background-color':'transparent',
                                 'text-align':'center'
                             });
-                        }
-    					
+                        }		
                     });
                     $('#resultdiv3').slideDown('slow');
                 }
@@ -138,7 +137,7 @@ $(document).ajaxStart(function(){
                                     }
                 					
                                 });
-                            });  
+                            });
                         }
                     }
 
@@ -157,7 +156,8 @@ $(document).ajaxStart(function(){
     }).click(function(){
         $('#result').slideUp('fast');
         $('#fileloader').slideDown('slow');
-        $('input.fake').empty();
+        $('input.fake').val("");
+        $("#fileToUpload").val("");
     });
     $('input.fake').click(function(){
         $('input[name=fileToUpload]').click();
