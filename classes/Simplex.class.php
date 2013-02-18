@@ -1,7 +1,6 @@
 <?php
 
 class Simplex {
-
     private $index = 0;
     private $matrixes;
     private $basecol;
