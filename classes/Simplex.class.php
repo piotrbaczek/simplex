@@ -705,39 +705,39 @@ class Simplex {
 }
 
 //------------
-include 'Ulamek.class.php';
-$a = Array(Array(new Fraction2(2), new Fraction2(5)), Array(new Fraction2(2), new Fraction2(3)), Array(new Fraction2(0), new Fraction2(3)));
-$b = Array(new Fraction2(30), new Fraction2(26), new Fraction2(15));
-$c = Array("<=", "<=", "<=");
-$d = Array(new Fraction2(2), new Fraction2(6));
-//2x1+3x2>=12
-//2x1+1x2>=4
-//0x1+7x2>=3
-//---------------------------------------
-/* $a = Array(Array(1, 0, 0), Array(0, 1, 0), Array(0, 0, 1), Array(3, 6, 2));
-  $b = Array(1000, 500, 1500, 6750);
-  $c = Array("<=", "<=", "<=","<=");
-  $d = Array(4, 12, 3);
-  //----------------------------------------
-  //$a=Array(Array(1,0),Array(0,1),Array(1,1));
-  //$b=Array(1,2,2);
-  //$c=Array(2,1);
- */
-try {
-    $s = new Simplex();
-    $s->Solve($a, $b, $c, $d, true, true);
-//    echo '<pre>';
-//    var_dump($s->c);
-//    echo '</pre>';
-    //$s->printAllMatrix();
-    $s->testprint();
-    $s->printCol();
-    $s->printRow();
-    $s->printValuePair();
-    $s->printResult();
-    //$s->getjsonData($a, $b, $d);
-    echo '<br/>';
-} catch (Exception $e) {
-    echo $e->getMessage();
-}
+//include 'Ulamek.class.php';
+//$a = Array(Array(new Fraction2(2), new Fraction2(5)), Array(new Fraction2(2), new Fraction2(3)), Array(new Fraction2(0), new Fraction2(3)));
+//$b = Array(new Fraction2(30), new Fraction2(26), new Fraction2(15));
+//$c = Array("<=", "<=", "<=");
+//$d = Array(new Fraction2(2), new Fraction2(6));
+////2x1+3x2>=12
+////2x1+1x2>=4
+////0x1+7x2>=3
+////---------------------------------------
+///* $a = Array(Array(1, 0, 0), Array(0, 1, 0), Array(0, 0, 1), Array(3, 6, 2));
+//  $b = Array(1000, 500, 1500, 6750);
+//  $c = Array("<=", "<=", "<=","<=");
+//  $d = Array(4, 12, 3);
+//  //----------------------------------------
+//  //$a=Array(Array(1,0),Array(0,1),Array(1,1));
+//  //$b=Array(1,2,2);
+//  //$c=Array(2,1);
+// */
+//try {
+//    $s = new Simplex();
+//    $s->Solve($a, $b, $c, $d, true, true);
+////    echo '<pre>';
+////    var_dump($s->c);
+////    echo '</pre>';
+//    //$s->printAllMatrix();
+//    $s->testprint();
+//    $s->printCol();
+//    $s->printRow();
+//    $s->printValuePair();
+//    $s->printResult();
+//    //$s->getjsonData($a, $b, $d);
+//    echo '<br/>';
+//} catch (Exception $e) {
+//    echo $e->getMessage();
+//}
 ?>
