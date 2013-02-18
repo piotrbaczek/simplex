@@ -3,21 +3,21 @@
 class Simplex {
 
     private $index = 0;
-    public $matrixes;
-    public $basecol;
-    public $baserow;
-    public $basis;
-    public $zmiennebazowe;
-    public $zmienneniebazowe;
-    public $M;
-    public $N;
-    public $O;
-    public $wrongsigns;
-    public $d;
-    public $c;
-    public $gomorry = false;
-    private $starttime;
-    public $temp;
+    private $matrixes;
+    private $basecol;
+    private $baserow;
+    private $basis;
+    private $zmiennebazowe;
+    private $zmienneniebazowe;
+    private $M;
+    private $N;
+    private $O;
+    private $wrongsigns;
+    private $d;
+    private $c;
+    private $gomorry;
+    public static $starttime;
+    private $temp;
 
     public function __construct() {
         $this->matrixes = Array();
@@ -26,7 +26,7 @@ class Simplex {
         $this->zmiennebazowe = Array();
         $this->zmienneniebazowe = Array();
         $this->c = Array();
-        $temp = new Fraction2();
+        $this->temp = new Fraction2();
     }
 
     public function Solve(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomorry = false) {
@@ -268,7 +268,7 @@ class Simplex {
         echo '</tr>';
         for ($j = 0; $j < $a; $j++) {
             if (isset($this->zmiennebazowe[0][$j + 1])) {
-                echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[0][$j + 1] . '</th><th>' . $this->c[$this->index][$j]->toString() . '</th>';
+                echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[0][$j + 1] . '</th><td class="center">' . $this->c[$this->index][$j]->toString() . '</td>';
             } else {
                 echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th><th></th>';
             }
@@ -309,7 +309,7 @@ class Simplex {
                 echo '</tr>';
                 for ($j = 0; $j < $a; $j++) {
                     if (isset($this->zmiennebazowe[$i][($j + 1)])) {
-                        echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][($j + 1)] . '</th><th>' . $this->c[$this->index][$j]->toString() . '</th>';
+                        echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][($j + 1)] . '</th><td class="center">' . $this->c[$this->index][$j]->toString() . '</td>';
                     } else {
                         echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th><th></th>';
                     }
@@ -382,7 +382,7 @@ class Simplex {
 
 
                     if ($this->baserow[$i] == -1 && $this->basecol[$i] == -1) {
-                        //brak wierszy g��wnych
+                        //brak wierszy głównych
                         for ($k = 0; $k < $b; $k++) {
                             if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
                                 echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
@@ -395,7 +395,7 @@ class Simplex {
                             }
                         }
                     } elseif ($this->baserow[$i - 1] == -1 && $this->basecol[$i - 1] == -1) {
-                        //wiersze g��wne
+                        //wiersze główne
                         for ($k = 0; $k < $b; $k++) {
                             if ($k == $this->basecol[$i] && $j == $this->baserow[$i]) {
                                 echo '<td style="color:white;background-color:red;text-align:center;width:45px;">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
@@ -489,43 +489,39 @@ class Simplex {
             for ($j = 0; $j < $b; $j++) {
                 if ($i == $this->baserow[$this->index - 1] && $j == $this->basecol[$this->index - 1]) {
                     //element główny
-                    //$s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
-                    //$s->reverse();
-                    //$this->matrixes[$this->index][$i][$j] = $s;
-                    $this->temp = clone $this->matrixes[$this->index][$i][$j];
-                    $this->temp->reverse();
-                    $this->matrixes[$this->index][$i][$j] = clone $this->temp;
+//                    $s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
+//                    $s->reverse();
+//                    $this->matrixes[$this->index][$i][$j] = $s;
+                    $this->matrixes[$this->index][$i][$j] = new Fraction2(1);
                 } elseif ($i == $this->baserow[$this->index - 1]) {
                     //wiersz główny
+                    $s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
+                    $n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
+                    $s->divide($n);
+                    //echo $s->toString();
+                    $this->matrixes[$this->index][$i][$j] = new Fraction2($s->getNumerator(), $s->getDenominator());
+                } elseif ($j == $this->basecol[$this->index - 1]) {
+                    //kolumna główna
 //                    $s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
 //                    $n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
 //                    $s->divide($n);
-//                    //echo $s->toString();
-//                    $this->matrixes[$this->index][$i][$j] = new Fraction2($s->getNumerator(), $s->getDenominator());
-                    $this->temp = clone $this->matrixes[$this->index][$i][$j];
-                    $n = clone $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]];
-                    $this->temp->divide($n);
-                    $this->matrixes[$this->index][$i][$j] = clone $this->temp;
-                } elseif ($j == $this->basecol[$this->index - 1]) {
-                    //kolumna główna
-                    $this->temp = clone $this->matrixes[$this->index][$i][$j];
-                    $n = clone $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]];
-                    $this->temp->divide($n);
-                    $this->temp->multiply(-1);
-                    $this->matrixes[$this->index][$i][$j] = clone $this->temp;
+//                    $s->multiply(-1);
+//                    $this->matrixes[$this->index][$i][$j] = $s;
+                    $this->matrixes[$this->index][$i][$j] = new Fraction2(0);
+                    //$this->matrixes[$this->index][$i][$j] = -round($this->matrixes[$this->index][$i][$j] / $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]], 2);
                 } else {
                     //normalny element
-                    $this->temp = clone $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j];
-                    $m = clone $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]];
-                    $n = clone $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]];
-                    $l = clone $this->matrixes[$this->index][$i][$j];
+                    $s = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getDenominator());
+                    $m = new Fraction2($this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getDenominator());
+                    $n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
+                    $l = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
                     //echo $l->toString().'='.$l->toString().'-('.$s->toString().'*'.$m->toString().')/'.$n->toString().'<br/>';
-                    $this->temp->multiply($m);
-                    $this->temp->divide($n);
+                    $s->multiply($m);
+                    $s->divide($n);
                     //echo '('.$s->toString().'*'.$m->toString().')/'.$n->toString();
-                    $l->substract($this->temp);
+                    $l->substract($s);
                     //echo '='.$l->toString().'<br/>';
-                    $this->matrixes[$this->index][$i][$j] = clone $l;
+                    $this->matrixes[$this->index][$i][$j] = $l;
                     //$this->matrixes[$this->index][$i][$j] = round((($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j] * $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]) / $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]), 2);
                 }
             }
@@ -702,14 +698,14 @@ class Simplex {
         }
     }
 
-    public function startExecution() {
+    public static function startExecution() {
         $mtime = microtime();
         $mtime = explode(" ", $mtime);
         $mtime = $mtime[1] + $mtime[0];
         $this->starttime = $mtime;
     }
 
-    public function stopExecution() {
+    public static function stopExecution() {
         $mtime = microtime();
         $mtime = explode(" ", $mtime);
         $mtime = $mtime[1] + $mtime[0];

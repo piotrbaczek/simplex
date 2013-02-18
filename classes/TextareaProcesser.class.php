@@ -8,7 +8,7 @@ class TextareaProcesser{
 	private $gomorry=false;
 	public function __construct($param='',$param2='', $param3=true, $param4=false){
 		if(!isset($param) or !isset($param2)){
-			$this->errormessage('B��d przetwarzania - nie przekazano �adnego parametru');
+			$this->errormessage('Błąd przetwarzania - nie przekazano żadnego parametru');
 			return 0;
 		}else{
 			//przetwarzanie textarea
@@ -18,7 +18,7 @@ class TextareaProcesser{
 			preg_match_all('([+|-]?[0-9]*\/[1-9]{1,}[0-9]*[a-z]|[+|-]?[0-9]*[a-z])', $param,$b);
 			preg_match_all('(=[+|-]?[0-9]*\/[1-9]{1,}[0-9]*|=[+|-]?[0-9]*)', $param, $c);
 			if(count($a[0])!=count($c[0]) or (count($b[0])%count($c[0])!=0)){
-				$this->errormessage('B��d przetwarzania - Kom�rki macierzy s� nier�wne. Sprawd� poprawno�� danych!');
+				$this->errormessage('Błąd przetwarzania - Wymiary macierzy są nierówne. Sprawdź poprawność danych!');
 			}else{
 				foreach ($a[0] as $key => $value) {
 					$this->a[]=$value;

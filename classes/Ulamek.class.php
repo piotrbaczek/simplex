@@ -17,18 +17,6 @@ class Fraction2 {
         }
     }
 
-    public function set($numerator = 1, $denominator = 1) {
-        if (is_numeric(trim($numerator)) && is_numeric(trim($denominator))) {
-            if ($denominator == 0) {
-                throw new Exception('Denominator can\'t be 0!');
-            } else {
-                $this->numerator = trim($numerator);
-                $this->denominator = trim($denominator);
-                $this->reduction();
-            }
-        }
-    }
-
     public function getNumerator() {
         return $this->numerator;
     }

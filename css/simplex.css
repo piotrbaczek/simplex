@@ -40,7 +40,9 @@ body {
 .right {
 	float: right;
 }
-
+.center{
+    text-align: center;
+}
 div.mid {
 	position: relative;
 	margin-left: auto;
