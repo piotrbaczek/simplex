@@ -4,14 +4,18 @@ class Fraction2 {
 
     private $numerator;
     private $denominator;
+    private $mnumerator;
+    private $mdenominator;
 
-    public function __construct($numerator = 1, $denominator = 1) {
-        if (is_numeric(trim($numerator)) && is_numeric(trim($denominator))) {
-            if ($denominator == 0) {
-                throw new Exception('Denominator can\'t be 0!');
+    public function __construct($numerator = 1, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
+        if (is_numeric(trim($numerator)) && is_numeric(trim($denominator)) && is_numeric(trim($mnumerator)) && is_numeric(trim($mdenominator))) {
+            if ($denominator == 0 || $mdenominator == 0) {
+                throw new Exception('Denominator can\'t be a 0!');
             } else {
                 $this->numerator = trim($numerator);
                 $this->denominator = trim($denominator);
+                $this->mnumerator = trim($mnumerator);
+                $this->mdenominator = trim($mdenominator);
                 $this->reduction();
             }
         }
@@ -23,6 +27,14 @@ class Fraction2 {
 
     public function getDenominator() {
         return $this->denominator;
+    }
+
+    public function getMNumerator() {
+        return $this->mnumerator;
+    }
+
+    public function getMDenominator() {
+        return $this->mdenominator;
     }
 
     private function reduction() {
@@ -38,11 +50,29 @@ class Fraction2 {
             $this->numerator /= $hcd;
             $this->denominator /= $hcd;
         }
+
+        if ($this->mnumerator == 0) {
+            $this->mdenominator = 1;
+        } elseif (( $this->mnumerator < 0 && $this->mdenominator < 0 ) || ( $this->mdenominator < 0 )) {
+            $this->mexpansion(-1);
+            $hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
+            $this->mnumerator /= $hcd;
+            $this->mdenominator /= $hcd;
+        } else {
+            $hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
+            $this->mnumerator /= $hcd;
+            $this->mdenominator /= $hcd;
+        }
     }
 
     public function expansion($num) {
         $this->numerator *= $num;
         $this->denominator *= $num;
+    }
+
+    public function mexpansion($num) {
+        $this->mnumerator *= $num;
+        $this->mdenominator *= $num;
     }
 
     public function contraction($num) {
@@ -116,7 +146,19 @@ class Fraction2 {
     }
 
     public function toString() {
-        return $this->denominator == 1 ? $this->numerator : $this->numerator . '/' . $this->denominator;
+        $string = '';
+        if ($this->denominator == 1) {
+            $string.=$this->numerator;
+        } else {
+            $string.=$this->numerator . '/' . $this->denominator;
+        }
+        if ($this->mnumerator == 0 && $this->mdenominator == 1) {
+            
+        } else {
+            $string.=($this->mnumerator >= 0 ? '+' : '-');
+            $string.=($this->mdenominator == 1 ? $this->mnumerator . 'M' : $this->mnumerator . '/' . $this->mdenominator . 'M');
+        }
+        return $string;
     }
 
     public static function highestCommonDivisor($a, $b) {
@@ -187,6 +229,7 @@ class Fraction2 {
 
     public function minusFraction() {
         $this->numerator = -$this->numerator;
+        $this->mnumerator = -$this->mnumerator;
     }
 
     public function add($param) {
@@ -198,6 +241,10 @@ class Fraction2 {
             $numerator = $this->numerator * $param->denominator + $this->denominator * $param->numerator;
             $this->numerator = $numerator;
             $this->denominator = $denominator;
+            $mdenominator = $this->mdenominator * $param->mdenominator;
+            $mnumerator = $this->mnumerator * $param->mdenominator + $this->mdenominator * $mparam->numerator;
+            $this->mnumerator = $mnumerator;
+            $this->mdenominator = $mdenominator;
             $this->reduction();
         }
     }
@@ -211,6 +258,10 @@ class Fraction2 {
             $numerator = $this->numerator * $param->denominator - $this->denominator * $param->numerator;
             $this->numerator = $numerator;
             $this->denominator = $denominator;
+            $mdenominator = $this->mdenominator * $param->mdenominator;
+            $mnumerator = $this->mnumerator * $param->mdenominator - $this->mdenominator * $mparam->numerator;
+            $this->mnumerator = $mnumerator;
+            $this->mdenominator = $mdenominator;
             $this->reduction();
         }
     }
@@ -241,6 +292,12 @@ class Fraction2 {
 
 }
 
-//$s1=new Fraction2(+0);
-//echo $s1->toString();
+//$s1 = new Fraction2(0, 1);
+//echo $s1->toString().'<br/>';
+//$s2 = new Fraction2(0, 1, 1, 1);
+//echo $s2->toString().'<br/>';
+//$s3 = new Fraction2(2, 1, 1, 1);
+//echo $s3->toString().'<br/>';
+$s4 = new Fraction2(12, 3, 24, 3);
+echo $s4->toString() . '<br/>';
 ?>
