@@ -24,9 +24,12 @@
                     <div style="width:219px;margin:0px auto;">
                         <a href="../index.php"><img alt="simplexlogo" src="../images/logo_header_min.png"></a>
                     </div>
-                    <br /> <label for="login">Login:</label> <input type="text"
-                                                                    name="login" /><br /> <label for="password">Hasło:</label> <input
-                                                                    type="password" name="password" /><br />
+                    <br/>
+                    <label for="login">Login:</label>
+                    <input type="text" name="login" />
+                    <br />
+                    <label for="password">Hasło:</label>
+                    <input type="password" name="password" /><br />
                     <button>OK</button>
                 </form>
                 <div><?php echo (isset($_GET['error']) && $_GET['error'] == 1) ? '<span style=\'color:red;background-color:white;\'>Zły login i/lub hasło. Spróbuj ponownie.</span>' : ''; ?></div>

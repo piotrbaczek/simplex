@@ -2,7 +2,7 @@
 
 include '../classes/CSVReader.class.php';
 include '../classes/Simplex.class.php';
-include '../classes/Ulamek.class.php';
+include '../classes/Fraction.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';
 $sa=activity::isactivated2('../activity/active.xml')=='true' ? true : false;
