@@ -1,19 +1,26 @@
 <?php
+
 class login {
-    private $password='e00fa221684bc62f8de844a062a70a29f13d0e95b6098c26';
-    private $login='admin';
-    public function logIn($login='',$password=''){
-        if(($this->login==$login) && ($this->password==$this->encrypt($password))){
+
+    private $password = 'e00fa221684bc62f8de844a062a70a29f13d0e95b6098c26';
+    private $login = 'admin';
+
+    public function __construct($login = '', $password = '') {
+        if (($this->login == $login) && ($this->password == $this->encrypt($password))) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    private function encrypt($pass){
-        return hash('tiger192,4',$pass.'thisisthesalt');
+
+    private function encrypt($password) {
+        return hash('tiger192,4', $password . 'thisisthesalt');
     }
-    public static function getSalt($salt){
-        return login::encrypt($salt);
+
+    public static function getHash($password) {
+        return login::encrypt($password);
     }
+
 }
+
 ?>
