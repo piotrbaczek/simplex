@@ -8,16 +8,18 @@ class Fraction2 {
     private $mdenominator;
 
     public function __construct($numerator = 1, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
-        if (is_numeric(trim($numerator)) && is_numeric(trim($denominator)) && is_numeric(trim($mnumerator)) && is_numeric(trim($mdenominator))) {
+        if (is_numeric($numerator) && is_numeric($denominator) && is_numeric($mnumerator) && is_numeric($mdenominator)) {
             if ($denominator == 0 || $mdenominator == 0) {
                 throw new Exception('Denominator can\'t be a 0!');
             } else {
-                $this->numerator = trim($numerator);
-                $this->denominator = trim($denominator);
-                $this->mnumerator = trim($mnumerator);
-                $this->mdenominator = trim($mdenominator);
+                $this->numerator = (int)$numerator;
+                $this->denominator = (int)$denominator;
+                $this->mnumerator = (int)$mnumerator;
+                $this->mdenominator = (int)$mdenominator;
                 $this->reduction();
             }
+        }else{
+            $this->errormessage('Fractions must contain numbers!');
         }
     }
 
@@ -181,7 +183,7 @@ class Fraction2 {
                 return false;
             }
         } elseif (is_numeric($param)) {
-            if ($this->numerator > $param) {
+            if ($this->getRealValue() == $param) {
                 return true;
             } else {
                 return false;
@@ -195,14 +197,10 @@ class Fraction2 {
                 $this->numerator-=$this->denominator;
             }
             $this->minusFraction();
-            //echo 'dodatnie';
         } elseif (Fraction2::isNegative(new Fraction2($this->getNumerator(), $this->getDenominator()))) {
-            //echo 'ujemne, bo '.$this->numerator.'/'.$this->denominator.'<br/>';
             while ($this->numerator < -$this->denominator) {
                 $this->numerator+=$this->denominator;
-                //echo 'ujemne, bo '.$this->numerator.'/'.$this->denominator.'<br/>';
             }
-            //echo 'ujemne, bo '.$this->numerator.'/'.$this->denominator.'<br/>';
             $this->add(1);
             $this->minusFraction();
         }
@@ -220,7 +218,7 @@ class Fraction2 {
     }
 
     public function getRealValue() {
-        return $this->numerator / $this->denominator;
+        return ($this->mnumerator!=0 ? ($this->mnumerator>0 ? PHP_INT_MAX:~PHP_INT_MAX):$this->numerator/$this->denominator);
     }
 
     public static function errormessage($message) {
@@ -273,6 +271,8 @@ class Fraction2 {
         } elseif ($param instanceof Fraction2) {
             $this->numerator*=$param->numerator;
             $this->denominator*=$param->denominator;
+            $this->mnumerator*=$param->mnumerator;
+            $this->mdenominator*=$param->mdenominator;
             $this->reduction();
         }
     }
@@ -284,6 +284,8 @@ class Fraction2 {
         } elseif ($param instanceof Fraction2) {
             $this->numerator*=$param->denominator;
             $this->denominator*=$param->numerator;
+            $this->mnumerator*=$param->mdenominator;
+            $this->mdenominator*=$param->mnumerator;
             $this->reduction();
         } else {
             $this->errormessage('Must be a fraction or number!');
@@ -298,6 +300,6 @@ class Fraction2 {
 //echo $s2->toString().'<br/>';
 //$s3 = new Fraction2(2, 1, 1, 1);
 //echo $s3->toString().'<br/>';
-$s4 = new Fraction2(12, 3, 24, 3);
-echo $s4->toString() . '<br/>';
+$s4 = new Fraction2(2,'3a');
+echo $s4->getRealValue() . '<br/>';
 ?>
