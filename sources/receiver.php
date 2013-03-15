@@ -1,6 +1,6 @@
 <?php
 include '../classes/TextareaProcesser.class.php';
-include '../classes/Ulamek.class.php';
+include '../classes/Fraction.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/activity.class.php';
 $ss=activity::isactivated2('../activity/active.xml')=='true' ? true : false;

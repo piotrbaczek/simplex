@@ -10,10 +10,10 @@ class Picture {
     }
 
     private function countsize($a, $b, $c, $d, $e) {
-        $this->wymiar[] = $b;
-        $this->wymiar[] = $c;
-        $this->wymiar[] = $d;
-        $this->wymiar[] = $e;
+        $this->wymiar[] = (int)$b;
+        $this->wymiar[] = (int)$c;
+        $this->wymiar[] = (int)$d;
+        $this->wymiar[] = (int)$e;
         foreach ($this->wymiar as $key => $value) {
             if (strpos($value, '/')) {
                 $temp = explode('/', $value);
