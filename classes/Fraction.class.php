@@ -240,7 +240,7 @@ class Fraction2 {
             $this->numerator = $numerator;
             $this->denominator = $denominator;
             $mdenominator = $this->mdenominator * $param->mdenominator;
-            $mnumerator = $this->mnumerator * $param->mdenominator + $this->mdenominator * $mparam->numerator;
+            $mnumerator = $this->mnumerator * $param->mdenominator + $this->mdenominator * $param->mnumerator;
             $this->mnumerator = $mnumerator;
             $this->mdenominator = $mdenominator;
             $this->reduction();
@@ -257,7 +257,7 @@ class Fraction2 {
             $this->numerator = $numerator;
             $this->denominator = $denominator;
             $mdenominator = $this->mdenominator * $param->mdenominator;
-            $mnumerator = $this->mnumerator * $param->mdenominator - $this->mdenominator * $mparam->numerator;
+            $mnumerator = $this->mnumerator * $param->mdenominator - $this->mdenominator * $param->mnumerator;
             $this->mnumerator = $mnumerator;
             $this->mdenominator = $mdenominator;
             $this->reduction();

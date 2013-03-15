@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8"/>
         <title>Simplex 2012&copy; Logowanie do panelu Administratora</title>
         <link rel="icon" type="image/x-icon" href="../images/icon32.png" />
         <link rel="stylesheet" href="../css/simplex.css" />
