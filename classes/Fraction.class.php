@@ -8,18 +8,18 @@ class Fraction2 {
     private $mdenominator;
 
     public function __construct($numerator = 1, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
-        if (is_numeric($numerator) && is_numeric($denominator) && is_numeric($mnumerator) && is_numeric($mdenominator)) {
-            if ($denominator == 0 || $mdenominator == 0) {
-                throw new Exception('Denominator can\'t be a 0!');
-            } else {
-                $this->numerator = (int)$numerator;
-                $this->denominator = (int)$denominator;
-                $this->mnumerator = (int)$mnumerator;
-                $this->mdenominator = (int)$mdenominator;
-                $this->reduction();
-            }
-        }else{
-            $this->errormessage('Fractions must contain numbers!');
+        settype($numerator, 'integer');
+        settype($denominator, 'integer');
+        settype($mnumerator, 'integer');
+        settype($mdenominator, 'integer');
+        if ($denominator == 0 || $mdenominator == 0) {
+            throw new Exception('Denominator can\'t be a 0!');
+        } else {
+            $this->numerator = (int) $numerator;
+            $this->denominator = (int) $denominator;
+            $this->mnumerator = (int) $mnumerator;
+            $this->mdenominator = (int) $mdenominator;
+            $this->reduction();
         }
     }
 
@@ -218,7 +218,7 @@ class Fraction2 {
     }
 
     public function getRealValue() {
-        return ($this->mnumerator!=0 ? ($this->mnumerator>0 ? PHP_INT_MAX:~PHP_INT_MAX):$this->numerator/$this->denominator);
+        return ($this->mnumerator != 0 ? ($this->mnumerator > 0 ? PHP_INT_MAX : ~PHP_INT_MAX) : $this->numerator / $this->denominator);
     }
 
     public static function errormessage($message) {
@@ -290,6 +290,10 @@ class Fraction2 {
         } else {
             $this->errormessage('Must be a fraction or number!');
         }
+    }
+
+    public function __clone() {
+        return new Fraction2($this->numerator, $this->denominator, $this->mnumerator, $this->mdenominator);
     }
 
 }
