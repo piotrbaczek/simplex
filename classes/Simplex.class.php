@@ -641,9 +641,9 @@ class Simplex {
     public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction, $number) {
         $a = count($variables[0]);
         $b = count($variables);
+        $json = Array();
         switch ($a) {
             case 2:
-                $json = Array();
                 $maxx = new Fraction2(0);
                 $maxy = new Fraction2(0);
                 for ($i = 0; $i < $b; $i++) {
@@ -699,6 +699,9 @@ class Simplex {
                 echo '<div style="width:480px;float:right;">';
                 echo '<div id="placeholder' . $number . '" style="width: 480px; height: 360px;"></div>';
                 echo '</div>';
+                break;
+            case 3:
+                
                 break;
         }
     }
