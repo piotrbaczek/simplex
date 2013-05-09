@@ -17,6 +17,7 @@ class Simplex {
     public $c;
     private $gomorry;
     private $temp;
+    private $signs = Array();
 
     public function __construct() {
         $this->matrixes = Array();
@@ -39,6 +40,7 @@ class Simplex {
         $this->d = $max;
         $this->gomorry = $gomorry;
         $this->targetfunction = $targetfunction;
+        $this->signs = $signs;
         $this->c[$this->index] = Array();
         for ($i = 0; $i < $this->O + 1; $i++) {
             $this->c[$this->index][$i] = new Fraction2(0);
@@ -60,13 +62,13 @@ class Simplex {
             $this->d = true;
         }
         if ($this->d) {
-            foreach ($signs as $key => $value) {
+            foreach ($this->signs as $key => $value) {
                 if ($value != "<=") {
                     $this->wrongsigns++;
                 }
             }
         } else {
-            foreach ($signs as $key => $value) {
+            foreach ($this->signs as $key => $value) {
                 if ($value != ">=") {
                     $this->wrongsigns++;
                 }
@@ -96,7 +98,7 @@ class Simplex {
 
         $ax = 0;
         if ($this->d) {
-            foreach ($signs as $key => $value) {
+            foreach ($this->signs as $key => $value) {
                 switch ($value) {
                     case ">=":
                         $this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction2(-1);
@@ -116,7 +118,7 @@ class Simplex {
                 }
             }
         } else {
-            foreach ($signs as $key => $value) {
+            foreach ($this->signs as $key => $value) {
                 switch ($value) {
                     case "<=":
                         $this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction2(-1);
@@ -701,12 +703,63 @@ class Simplex {
                 echo '</div>';
                 break;
             case 3:
-                $maxx=new Fraction2(0);
-                $maxy=new Fraction2(0);
-                $maxz=new Fraction2(0);
-                $json = Array('y'=>Array('vars'=>'1'));
-                echo json_encode($json);
+                $maxx = new Fraction2(0);
+                $maxy = new Fraction2(0);
+                $maxz = new Fraction2(0);
+                for ($i = 0; $i < $b; $i++) {
+                    if ($variables[$i][1]->getNumerator() == 0) {
+                        continue;
+                    }
+                    $s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+                    $s->divide($variables[$i][1]);
+                    if ($s->compare($maxy)) {
+                        $maxy = $s;
+                    }
+
+                    if ($variables[$i][0]->getNumerator() == 0) {
+                        continue;
+                    }
+                    $s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+                    $s->divide($variables[$i][0]);
+                    if ($s->compare($maxx)) {
+                        $maxx = $s;
+                    }
+                    if ($variables[$i][2]->getNumerator() == 0) {
+                        continue;
+                    }
+
+                    $s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+                    $s->divide($variables[$i][2]);
+                    if ($s->compare($maxz)) {
+                        $maxz = $s;
+                    }
+                }
+                //echo $maxx->getRealValue();
+                for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 10)) {
+                    for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 10)) {
+                        for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 10)) {
+                            //$json[] = Array($i, $j, $k);
+                            for ($it = 0; $it < $b; $it++) {
+                                if ($i * $variables[$it][0]->getRealValue() + $j * $variables[$it][1]->getRealValue() + $k * $variables[$it][2]->getRealValue()) {
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                echo $maxx->toString() . ' ' . $maxy->toString() . ' ' . $maxz->toString() . '<br/>';
+                echo '<pre>';
+                print_r($json);
+                echo '</pre>';
+                //echo json_encode($json);
                 break;
+        }
+    }
+
+    private function isValidPoint($x, $y, $z, $variables, $boundaries) {
+        $b = count($variables);
+        for ($i = 0; $i < b; $i++) {
+            //eval(>=)
         }
     }
 
