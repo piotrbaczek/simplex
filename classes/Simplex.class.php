@@ -640,7 +640,7 @@ class Simplex {
         echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
     }
 
-    public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction, $number) {
+    public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction, $number, $signs) {
         $a = count($variables[0]);
         $b = count($variables);
         $json = Array();
@@ -735,32 +735,35 @@ class Simplex {
                     }
                 }
                 //echo $maxx->getRealValue();
-                for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 10)) {
-                    for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 10)) {
-                        for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 10)) {
+                for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 30)) {
+                    for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 30)) {
+                        for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 30)) {
                             //$json[] = Array($i, $j, $k);
-                            for ($it = 0; $it < $b; $it++) {
-                                if ($i * $variables[$it][0]->getRealValue() + $j * $variables[$it][1]->getRealValue() + $k * $variables[$it][2]->getRealValue()) {
-                                    
-                                }
+                            if (Simplex::isValidPoint($i, $j, $k, $variables, $boundaries, $signs)) {
+                                $json[] = Array($i, $j, $k);
                             }
                         }
                     }
                 }
-                echo $maxx->toString() . ' ' . $maxy->toString() . ' ' . $maxz->toString() . '<br/>';
-                echo '<pre>';
-                print_r($json);
-                echo '</pre>';
-                //echo json_encode($json);
+//                echo $maxx->toString() . ' ' . $maxy->toString() . ' ' . $maxz->toString() . '<br/>';
+//                echo '<pre>';
+//                print_r($json);
+//                echo '</pre>';
+                echo json_encode($json);
                 break;
         }
     }
 
-    private function isValidPoint($x, $y, $z, $variables, $boundaries) {
-        $b = count($variables);
-        for ($i = 0; $i < b; $i++) {
-            //eval(>=)
+    public static function isValidPoint($x, $y, $z, $variables, $boundaries, $signs) {
+        $b = count($boundaries);
+        $str = false;
+        for ($i = 0; $i < $b; $i++) {
+            eval("\$str = ((\$variables[$i][0]->getRealValue()*$x+\$variables[$i][1]->getRealValue()*$y+\$variables[$i][2]->getRealValue()*$z)$signs[$i](\$boundaries[$i]->getRealValue())) ? true : false;");
+            if (!$str) {
+                return false;
+            }
         }
+        return true;
     }
 
 }

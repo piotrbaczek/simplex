@@ -12,7 +12,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 //----------------------------------------------------------------------------
 $_POST['textarea']='1x1+0x2+0x3<=1000
 0x1+1x2+0x3<=500
-0x1+1x2+0x3<=1500
+0x1+0x2+1x3<=1500
 3x+6x2+2x3<=6750';
 $_POST['targetfunction']='4x1+12x2+3x3';
 $_POST['funct']='true';
@@ -29,6 +29,6 @@ $tp = new TextareaProcesser($_POST['textarea'], $_POST['targetfunction'], $_POST
 if ($ss) {
     $simplex = new Simplex();
     $simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-    $simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), 1);
+    $simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), 1, $tp->getSigns());
 }
 ?>
