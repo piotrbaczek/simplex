@@ -631,9 +631,7 @@ class Simplex {
     }
 
     public function printResult() {
-        $a = count($this->matrixes[$this->index]);
-        $b = count($this->matrixes[$this->index][0]);
-        echo 'W=' . $this->matrixes[$this->index][$a - 1][$b - 1]->toString();
+        echo 'W=' . $this->getResult()->toString();
     }
 
     public static function errormessage($message) {
@@ -745,10 +743,6 @@ class Simplex {
                         }
                     }
                 }
-//                echo $maxx->toString() . ' ' . $maxy->toString() . ' ' . $maxz->toString() . '<br/>';
-//                echo '<pre>';
-//                print_r($json);
-//                echo '</pre>';
                 echo json_encode($json);
                 break;
         }
