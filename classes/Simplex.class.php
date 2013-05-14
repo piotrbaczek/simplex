@@ -270,7 +270,7 @@ class Simplex {
 		echo '</tr>';
 		for ($j = 0; $j < $a; $j++) {
 			if (isset($this->zmiennebazowe[0][$j + 1])) {
-				echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[0][$j + 1] . '</th><td class="center">' . $this->c[$this->index][$j]->toString() . '</td>';
+				echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[0][$j + 1] . '</th><td class="center">' . $this->c[0][$j]->toString() . '</td>';
 			} else {
 				echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th><th></th>';
 			}
@@ -311,7 +311,7 @@ class Simplex {
 				echo '</tr>';
 				for ($j = 0; $j < $a; $j++) {
 					if (isset($this->zmiennebazowe[$i][($j + 1)])) {
-						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][($j + 1)] . '</th><td class="center">' . $this->c[$this->index][$j]->toString() . '</td>';
+						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][($j + 1)] . '</th><td class="center">' . $this->c[$i][$j]->toString() . '</td>';
 					} else {
 						echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th><th></th>';
 					}
