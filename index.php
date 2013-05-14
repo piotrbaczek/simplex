@@ -25,6 +25,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
         <script src="js/jquery.blockui.js" type="text/javascript"></script>
         <script src="js/ajaxfileupload.js" type="text/javascript"></script>
         <script src="js/simplex.js" type="text/javascript"></script>
+        <script src="js/CanvasXpress.min.js"></script>
     </head>
     <body>
         <img id="bg" alt="Background image" src="images/back.jpg" />
