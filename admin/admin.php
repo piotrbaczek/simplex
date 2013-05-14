@@ -1,6 +1,4 @@
 <?php
-ini_set('use_only_cookies', 'On');
-ini_set('session.use_trans_sid', 'Off');
 session_start();
 if ($_SESSION['admin'] != 'true') {
     header('Location:index.php?error=1');
