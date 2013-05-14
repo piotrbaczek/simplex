@@ -54,7 +54,7 @@ class Simplex {
         for ($i = 2 + $this->O; $i < $this->O + $this->N; $i++) {
             $this->zmienneniebazowe[$this->index][$i] = 'a<sub>' . ($i - $this->N + 1) . '</sub>';
         }
-//zamiana problemu minimalizacyjnego na maksymalizacyjny
+        //zamiana problemu minimalizacyjnego na maksymalizacyjny
         if (!$this->d) {
             foreach ($targetfunction as $value) {
                 $value->minusFraction();
@@ -143,7 +143,6 @@ class Simplex {
             $this->matrixes[$this->index][$this->N - 1][$i] = $targetfunction[$i];
         }
 
-//koniec inicjalizacji
         while (!$this->check()) {
             $this->index++;
             $this->matrixes[$this->index] = $this->matrixes[$this->index - 1];
@@ -151,7 +150,6 @@ class Simplex {
             $this->zmienneniebazowe[$this->index] = $this->zmienneniebazowe[$this->index - 1];
             $this->c[$this->index] = $this->c[$this->index - 1];
             $p = $this->findBasecol();
-//echo 'p='.$p;
             if ($p == -1) {
                 break;
             } else {
@@ -166,7 +164,7 @@ class Simplex {
             } else {
                 $this->baserow[$this->index] = $q;
             }
-
+            $this->c[$this->index][$q] = $this->matrixes[0][$this->M][$p];
             $this->swapBase();
             $this->gaussjordan();
             if (!isset($this->basis[$q])) {
