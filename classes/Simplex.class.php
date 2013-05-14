@@ -700,7 +700,7 @@ class Simplex {
                 echo '<div id="placeholder' . $number . '" style="width: 480px; height: 360px;"></div>';
                 echo '</div>';
                 break;
-            case 3:
+            default:
                 $maxx = new Fraction2(0);
                 $maxy = new Fraction2(0);
                 $maxz = new Fraction2(0);
@@ -732,23 +732,20 @@ class Simplex {
                         $maxz = $s;
                     }
                 }
-//echo $maxx->getRealValue();
                 for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 25)) {
-                    for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 20)) {
-                        for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 20)) {
-//$json[] = Array($i, $j, $k);
+                    for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 25)) {
+                        for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 25)) {
                             if (Simplex::isValidPoint($i, $j, $k, $variables, $boundaries, $signs)) {
                                 $json[] = Array($i, $j, $k);
                             }
                         }
                     }
                 }
-//echo json_encode($json);
                 echo '<canvas id="canvas1" width="613" height="500"></canvas>';
                 echo '<script>';
                 echo '$(document).ready(function() {';
                 echo 'var vars = [];';
-                echo 'a =' . json_encode($json).';';
+                echo 'a =' . json_encode($json) . ';';
                 echo 'for (var i = 0; i < a.length; i++) {';
                 echo 'vars.push("Punkt" + (i + 1));';
                 echo '}';

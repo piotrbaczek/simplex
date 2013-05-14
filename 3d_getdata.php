@@ -1,9 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 include 'classes/TextareaProcesser.class.php';
 include 'classes/Fraction.class.php';
 include 'classes/Simplex.class.php';
