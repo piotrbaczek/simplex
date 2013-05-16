@@ -157,7 +157,7 @@ class Fraction2 {
         if ($this->mnumerator == 0 && $this->mdenominator == 1) {
             
         } else {
-            $string.=($this->mnumerator >= 0 ? '+' : '-');
+            $string.=($this->mnumerator >= 0 ? '+' : '');
             $string.=($this->mdenominator == 1 ? $this->mnumerator . 'M' : $this->mnumerator . '/' . $this->mdenominator . 'M');
         }
         return $string;
