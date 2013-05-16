@@ -6,7 +6,7 @@ class Simplex {
 	private $matrixes;
 	private $basecol;
 	private $baserow;
-	private $basis;
+	public $basis;
 	private $zmiennebazowe;
 	private $zmienneniebazowe;
 	private $M;
@@ -27,6 +27,7 @@ class Simplex {
 		$this->zmienneniebazowe = Array();
 		$this->c = Array();
 		$this->temp = new Fraction2();
+		$this->basis = Array();
 	}
 
 	public function Solve(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomorry = false) {
@@ -164,11 +165,15 @@ class Simplex {
 			} else {
 				$this->baserow[$this->index] = $q;
 			}
-			$this->c[$this->index][$q] = $this->matrixes[0][$this->M][$p];
+			$this->c[$this->index][$q] = clone $this->matrixes[0][$this->M][$p];
+			$this->c[$this->index][$q]->minusFraction();
 			$this->swapBase();
 			$this->gaussjordan();
+
 			if (!isset($this->basis[$q])) {
 				$this->basis[$p] = $q;
+			} else {
+				unset($this->basis[$q]);
 			}
 //break;
 		}
@@ -558,15 +563,19 @@ class Simplex {
 
 	public function printValuePair() {
 		$a = count($this->matrixes[$this->index][0]);
-		$x = $this->returnValuePair();
-		if ($x[0] != 'NaN') {
-			foreach ($x as $key => $value) {
-				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value->toString() . '<br/>';
+		$x = $this->getValuePair();
+		foreach ($x as $key => $value) {
+			if ($key == 0 && $value != 'NaN') {
+				echo 'x<sub>1</sub>=' . $value->toString() . '<br/>';
+				continue;
+			}
+			if ($value != 'NaN') {
+				echo 'x<sub>' . ($key) . '</sub>=' . $value->toString() . '<br/>';
 			}
 		}
 	}
 
-	public function returnValuePair() {
+	public function getValuePair() {
 		if ($this->index == 0) {
 			return Array('NaN');
 		} else {
@@ -574,14 +583,14 @@ class Simplex {
 			$a = count($this->matrixes[$this->index][0]);
 			sort($this->basis);
 			foreach ($this->basis as $key => $value) {
-				$x[] = $this->matrixes[$this->index][$value][$a - 1];
+				$x[$value] = $this->matrixes[$this->index][$value][$a - 1];
 			}
 			return $x;
 		}
 	}
 
 	private function gomorrycheck() {
-		$x = $this->returnValuePair();
+		$x = $this->getValuePair();
 		foreach ($x as $key => $value) {
 			if (!is_integer($value)) {
 				return false;
@@ -793,4 +802,5 @@ class Simplex {
 	}
 
 }
+
 ?>
