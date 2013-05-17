@@ -43,9 +43,25 @@ class Simplex {
 		$this->targetfunction = $targetfunction;
 		$this->signs = $signs;
 		$this->c[$this->index] = Array();
-		for ($i = 0; $i < $this->O + 1; $i++) {
-			$this->c[$this->index][$i] = new Fraction2(0);
+
+		if ($this->d) {
+			foreach ($this->signs as $key => $value) {
+				if ($value == "<=") {
+					$this->c[$this->index][$key] = new Fraction2(0);
+				}else{
+					$this->wrongsigns++;
+				}
+			}
+		} else {
+			foreach ($this->signs as $key => $value) {
+				if ($value == ">=") {
+					$this->c[$this->index][$key] = new Fraction2(0, 1, -1, 1);
+				}else{
+					$this->wrongsigns++;
+				}
+			}
 		}
+		
 		for ($i = 1; $i < $this->N; $i++) {
 			$this->zmiennebazowe[$this->index][$i] = 'S<sub>' . $i . '</sub>';
 		}
@@ -55,26 +71,7 @@ class Simplex {
 		for ($i = 2 + $this->O; $i < $this->O + $this->N; $i++) {
 			$this->zmienneniebazowe[$this->index][$i] = 'a<sub>' . ($i - $this->N + 1) . '</sub>';
 		}
-		//zamiana problemu minimalizacyjnego na maksymalizacyjny
-		if (!$this->d) {
-			foreach ($targetfunction as $value) {
-				$value->minusFraction();
-			}
-			$this->d = true;
-		}
-		if ($this->d) {
-			foreach ($this->signs as $key => $value) {
-				if ($value != "<=") {
-					$this->wrongsigns++;
-				}
-			}
-		} else {
-			foreach ($this->signs as $key => $value) {
-				if ($value != ">=") {
-					$this->wrongsigns++;
-				}
-			}
-		}
+
 
 		if ($this->wrongsigns != 0) {
 			for ($i = 2 * ($this->N - 1); $i < 2 * ($this->N - 1) + $this->wrongsigns; $i++) {
@@ -106,7 +103,6 @@ class Simplex {
 						$this->matrixes[$this->index][$key][$this->M - 1 + $this->N - 1 + $ax] = new Fraction2(1);
 						$ax++;
 						break;
-
 					default:
 						for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
 							if (($j - ($this->M - 1)) == $key) {

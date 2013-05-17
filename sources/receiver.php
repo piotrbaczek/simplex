@@ -6,9 +6,9 @@ include '../classes/Simplex.class.php';
 include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 //----------------------------------------------------------------------------
-$_POST['textarea']='2x1+5x2<=30						2x1+3x2<=26						0x1+3x2<=15';
+$_POST['textarea']='2x1+5x2>=30						2x1+3x2>=26						0x1+3x2>=15';
 $_POST['targetfunction']='2x1+6x2';
-$_POST['funct']='true';
+$_POST['funct']='false';
 $_POST['gomorryf']='false';
 $tp = new TextareaProcesser($_POST['textarea'], $_POST['targetfunction'], $_POST['funct'], $_POST['gomorryf']);
 //echo '<pre>';
