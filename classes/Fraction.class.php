@@ -7,7 +7,7 @@ class Fraction2 {
 	private $mnumerator;
 	private $mdenominator;
 
-	public function __construct($numerator = 1, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
+	public function __construct($numerator = 0, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
 		settype($numerator, 'integer');
 		settype($denominator, 'integer');
 		settype($mnumerator, 'integer');
