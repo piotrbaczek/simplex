@@ -84,12 +84,12 @@ class Simplex {
 
 		for ($i = 0; $i < $this->N - 1; $i++) {
 			for ($j = 0; $j < $this->M - 1; $j++) {
-				$this->matrixes[$this->index][$i][$j] = $variables[$i][$j];
+				$this->matrixes[$this->index][$i][$j] = clone $variables[$i][$j];
 			}
 		}
 
 		for ($i = 0; $i < $this->N - 1; $i++) {
-			$this->matrixes[$this->index][$i][$this->N + $this->wrongsigns + $this->M - 2] = $boundaries[$i];
+			$this->matrixes[$this->index][$i][$this->N + $this->wrongsigns + $this->M - 2] = clone $boundaries[$i];
 		}
 
 		$ax = 0;
@@ -112,7 +112,7 @@ class Simplex {
 
 		for ($i = 0; $i < $this->O; $i++) {
 			$targetfunction[$i]->minusFraction();
-			$this->matrixes[$this->index][$this->N - 1][$i] = $targetfunction[$i];
+			$this->matrixes[$this->index][$this->N - 1][$i] = clone $targetfunction[$i];
 		}
 
 		if ($this->d) {
