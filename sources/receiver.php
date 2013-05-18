@@ -26,12 +26,6 @@ if ($ss) {
     $simplex->testprint();
     $simplex->printValuePair();
     $simplex->printResult();
-	//---------------------------------
-	echo '<br/>';
-	$simplex->printCol();
-	$simplex->printRow();
-	print_r($simplex->basis);
-	//--------------------------------
     echo '</div><div style="width:60%;float:right">';
     $simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), 1, $tp->getSigns());
     echo '</div><div style="width:1000px;clear:both;"></div>';
