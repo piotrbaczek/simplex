@@ -14,7 +14,7 @@ class Simplex {
 	private $O;
 	private $wrongsigns;
 	private $d;
-	public $c;
+	private $c;
 	private $gomorry;
 	private $temp;
 	private $signs = Array();
@@ -28,6 +28,7 @@ class Simplex {
 		$this->c = Array();
 		$this->temp = new Fraction2();
 		$this->basis = Array();
+		$this->wrongsigns = 0;
 	}
 
 	public function Solve(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomorry = false) {
@@ -46,32 +47,28 @@ class Simplex {
 
 		if ($this->d) {
 			foreach ($this->signs as $key => $value) {
-				if ($value == "<=") {
-					$this->c[$this->index][$key] = new Fraction2(0);
-				}else{
+				$this->c[$this->index][$key] = new Fraction2(0);
+				if ($value != "<=") {
 					$this->wrongsigns++;
 				}
 			}
 		} else {
 			foreach ($this->signs as $key => $value) {
-				if ($value == ">=") {
-					$this->c[$this->index][$key] = new Fraction2(0, 1, -1, 1);
-				}else{
+				$this->c[$this->index][$key] = new Fraction2(0, 1, 1, 1);
+				if ($value != "<=") {
 					$this->wrongsigns++;
 				}
 			}
 		}
-		
 		for ($i = 1; $i < $this->N; $i++) {
 			$this->zmiennebazowe[$this->index][$i] = 'S<sub>' . $i . '</sub>';
 		}
-		for ($i = 1; $i < 2 + $this->O; $i++) {
+		for ($i = 1; $i < $this->M; $i++) {
 			$this->zmienneniebazowe[$this->index][$i] = 'x<sub>' . $i . '</sub>';
 		}
-		for ($i = 2 + $this->O; $i < $this->O + $this->N; $i++) {
-			$this->zmienneniebazowe[$this->index][$i] = 'a<sub>' . ($i - $this->N + 1) . '</sub>';
+		for ($i = $this->M; $i < $this->O + $this->N; $i++) {
+			$this->zmienneniebazowe[$this->index][$i] = 'a<sub>' . ($i - $this->N + 2) . '</sub>';
 		}
-
 
 		if ($this->wrongsigns != 0) {
 			for ($i = 2 * ($this->N - 1); $i < 2 * ($this->N - 1) + $this->wrongsigns; $i++) {
@@ -84,6 +81,7 @@ class Simplex {
 				$this->matrixes[$this->index][$i][$j] = new Fraction2(0);
 			}
 		}
+
 		for ($i = 0; $i < $this->N - 1; $i++) {
 			for ($j = 0; $j < $this->M - 1; $j++) {
 				$this->matrixes[$this->index][$i][$j] = $variables[$i][$j];
@@ -95,49 +93,47 @@ class Simplex {
 		}
 
 		$ax = 0;
-		if ($this->d) {
-			foreach ($this->signs as $key => $value) {
-				switch ($value) {
-					case ">=":
-						$this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction2(-1);
-						$this->matrixes[$this->index][$key][$this->M - 1 + $this->N - 1 + $ax] = new Fraction2(1);
-						$ax++;
-						break;
-					default:
-						for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
-							if (($j - ($this->M - 1)) == $key) {
-								$this->matrixes[$this->index][$key][$j] = new Fraction2(1);
-							} else {
-								$this->matrixes[$this->index][$key][$j] = new Fraction2(0);
-							}
+		foreach ($this->signs as $key => $value) {
+			switch ($value) {
+				case ">=":
+					$this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction2(-1);
+					$this->matrixes[$this->index][$key][$this->M - 1 + $this->N - 1 + $ax] = new Fraction2(1);
+					$ax++;
+					break;
+				default:
+					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
+						if (($j - ($this->M - 1)) == $key) {
+							$this->matrixes[$this->index][$key][$j] = new Fraction2(1);
 						}
-						break;
-				}
-			}
-		} else {
-			foreach ($this->signs as $key => $value) {
-				switch ($value) {
-					case "<=":
-						$this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction2(-1);
-						$this->matrixes[$this->index][$key][$this->M - 1 + $this->N - 1 + $ax] = new Fraction2(1);
-						$ax++;
-						break;
-
-					default:
-						for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
-							if (($j - ($this->M - 1)) == $key) {
-								$this->matrixes[$this->index][$key][$j] = new Fraction2(1);
-							} else {
-								$this->matrixes[$this->index][$key][$j] = new Fraction2(0);
-							}
-						}
-						break;
-				}
+					}
+					break;
 			}
 		}
+
 		for ($i = 0; $i < $this->O; $i++) {
 			$targetfunction[$i]->minusFraction();
 			$this->matrixes[$this->index][$this->N - 1][$i] = $targetfunction[$i];
+		}
+
+		if ($this->d) {
+			
+		} else {
+
+			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
+				$this->temp = new Fraction2();
+				for ($j = 0; $j < $this->N - 1; $j++) {
+					if ($this->signs[$j] == ">=") {
+						$this->temp->add($this->matrixes[$this->index][$j][$i]);
+					}
+				}
+				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+			}
+			//for boundaries
+			$this->temp = new Fraction2();
+			for ($j = 0; $j < $this->N - 1; $j++) {
+				$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns]);
+			}
+			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 		}
 
 		while (!$this->check()) {
@@ -163,6 +159,7 @@ class Simplex {
 			}
 			$this->c[$this->index][$q] = clone $this->matrixes[0][$this->M][$p];
 			$this->c[$this->index][$q]->minusFraction();
+			$this->c[$this->index][$q] = new Fraction2($this->c[$this->index][$q]->getNumerator(), $this->c[$this->index][$q]->getDenominator());
 			$this->swapBase();
 			$this->gaussjordan();
 
@@ -171,7 +168,11 @@ class Simplex {
 			} else {
 				unset($this->basis[$q]);
 			}
-//break;
+			//---------------------------
+			if ($this->index >= 1) {
+				break;
+			}
+			//--------------------------
 		}
 		$this->basecol[$this->index] = -1;
 		$this->baserow[$this->index] = -1;
