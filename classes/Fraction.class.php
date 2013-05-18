@@ -107,7 +107,15 @@ class Fraction2 {
 
 	public static function isPositive($param) {
 		if ($param instanceof Fraction2) {
-			return $param->numerator > 0 ? true : false;
+			if($param->numerator>0){
+				if($param->mnumerator>=0){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
 		} elseif (is_numeric($param)) {
 			return $param > 0 ? true : false;
 		}
@@ -115,9 +123,17 @@ class Fraction2 {
 
 	public static function isNegative($param) {
 		if ($param instanceof Fraction2) {
-			return $param->numerator < 0 ? true : false;
+			if($param->numerator<0){
+				if($param->mnumerator<=0){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
 		} elseif (is_numeric($param)) {
-			return $param < 0 ? true : false;
+			return $param > 0 ? true : false;
 		}
 	}
 
