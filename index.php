@@ -13,18 +13,17 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
         <link rel="stylesheet"
               href="js/development-bundle/themes/smoothness/jquery-ui-1.8.16.custom.css" />
         <link rel="stylesheet" href="css/simplex.css" />
-        <script src="js/excanvas.js" type="text/javascript"></script>
-        <script src="js/js/jquery-1.6.2.min.js" type="text/javascript"></script>
-        <script src="js/js/jquery-ui-1.8.16.custom.min.js"
-        type="text/javascript"></script>
-        <script src="js/jquery.bgiframe.js" type="text/javscript"></script>
-        <script src="js/jquery.dimensions.js" type="text/javascript"></script>
-        <script src="js/jquery.tooltip.js" type="text/javascript"></script>
-        <script src="js/jquery.flot.js" type="text/javascript"></script>
-        <script src="js/jquery.validate.js" type="text/javascript"></script>
-        <script src="js/jquery.blockui.js" type="text/javascript"></script>
-        <script src="js/ajaxfileupload.js" type="text/javascript"></script>
-        <script src="js/simplex.js" type="text/javascript"></script>
+        <script src="js/excanvas.js"></script>
+        <script src="js/js/jquery-1.6.2.min.js"></script>
+        <script src="js/js/jquery-ui-1.8.16.custom.min.js"></script>
+        <script src="js/jquery.bgiframe.js"></script>
+        <script src="js/jquery.dimensions.js"></script>
+        <script src="js/jquery.tooltip.js"></script>
+        <script src="js/jquery.flot.js"></script>
+        <script src="js/jquery.validate.js"></script>
+        <script src="js/jquery.blockui.js"></script>
+        <script src="js/ajaxfileupload.js"></script>
+        <script src="js/simplex.js"></script>
         <script src="js/CanvasXpress.min.js"></script>
     </head>
     <body>

@@ -6,7 +6,7 @@ class Simplex {
 	private $matrixes;
 	private $basecol;
 	private $baserow;
-	public $basis;
+	private $basis;
 	private $zmiennebazowe;
 	private $zmienneniebazowe;
 	private $M;
@@ -27,7 +27,7 @@ class Simplex {
 		$this->zmienneniebazowe = Array();
 		$this->c = Array();
 		$this->temp = new Fraction2();
-		$this->basis = Array();
+		$this->basis;
 		$this->wrongsigns = 0;
 	}
 
@@ -44,6 +44,7 @@ class Simplex {
 		$this->targetfunction = $targetfunction;
 		$this->signs = $signs;
 		$this->c[$this->index] = Array();
+		$this->basis = new SplFixedArray($this->O);
 
 		if ($this->d) {
 			foreach ($this->signs as $key => $value) {
@@ -165,10 +166,8 @@ class Simplex {
 
 			if (!isset($this->basis[$q])) {
 				$this->basis[$p] = $q;
-			} else {
-				unset($this->basis[$q]);
 			}
-
+			
 			if ($this->wrongsigns != 0) {
 				for ($i = 0; $i < ($this->M - 1) + 2 * $this->wrongsigns; $i++) {
 					if (!in_array($i, $this->basecol)) {
@@ -181,6 +180,14 @@ class Simplex {
 						$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 					}
 				}
+// for last column
+				$this->temp = new Fraction2();
+				for ($j = 0; $j < $this->N - 1; $j++) {
+					if (!in_array($j, $this->baserow)) {
+						$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns]);
+					}
+				}
+				$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
 			//---------------------------
 //			if ($this->index >= 1) {
@@ -588,11 +595,10 @@ class Simplex {
 
 	public function getValuePair() {
 		if ($this->index == 0) {
-			return Array('NaN');
+			return Array("NaN");
 		} else {
 			$x = Array();
 			$a = count($this->matrixes[$this->index][0]);
-			sort($this->basis);
 			foreach ($this->basis as $key => $value) {
 				$x[$value] = $this->matrixes[$this->index][$value][$a - 1];
 			}
