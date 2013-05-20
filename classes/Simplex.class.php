@@ -168,10 +168,24 @@ class Simplex {
 			} else {
 				unset($this->basis[$q]);
 			}
-			//---------------------------
-			if ($this->index >= 1) {
-				break;
+
+			if ($this->wrongsigns != 0) {
+				for ($i = 0; $i < ($this->M - 1) + 2 * $this->wrongsigns; $i++) {
+					if (!in_array($i, $this->basecol)) {
+						$this->temp = new Fraction2();
+						for ($j = 0; $j < $this->N - 1; $j++) {
+							if ($this->signs[$j] == ">=") {
+								$this->temp->add($this->matrixes[$this->index][$j][$i]);
+							}
+						}
+						$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+					}
+				}
 			}
+			//---------------------------
+//			if ($this->index >= 1) {
+//				break;
+//			}
 			//--------------------------
 		}
 		$this->basecol[$this->index] = -1;
