@@ -7,11 +7,13 @@ include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------
-$_POST['textarea']='x1+0x2+0x3<=1000						0x1+1x2+0x3<=500						0x1+0x2+1x3<=1500 						3x1+6x2+2x3<=6750';
-$_POST['targetfunction']='4x1+12x2+3x3';
-$_POST['funct']='true';
-$_POST['gomorryf']='false';
-	$tp = new TextareaProcesser($_POST['textarea'], $_POST['targetfunction'], $_POST['funct'], $_POST['gomorryf']);
+//$_POST['textarea']='x1+0x2+0x3<=1000						0x1+1x2+0x3<=500						0x1+0x2+1x3<=1500 						3x1+6x2+2x3<=6750';
+//$_POST['targetfunction']='4x1+12x2+3x3';
+//$_POST['funct']='true';
+//$_POST['gomorryf']='false';
+	$tp = new TextareaProcesser(
+			!isset($_POST['textarea']) ? null : $_POST['textarea'], !isset($_POST['targetfunction']) ? null : $_POST['targetfunction'], !isset($_POST['funct']) ? null : $_POST['funct'], !isset($_POST['gomorryf']) ? null : $_POST['gomorryf']
+	);
 //echo '<pre>';
 //print_r($_POST);
 //print_r($tp->getBoundaries());
@@ -20,15 +22,19 @@ $_POST['gomorryf']='false';
 //print_r($tp->getGomorry());
 //print_r($tp->getMaxMin());
 //echo '</pre>';
-	$simplex = new Simplex();
-	$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-	echo '<div style="width:60%;height:100%;float:left;">';
-	$simplex->printSolution();
-	$simplex->printValuePair();
-	$simplex->printResult();
-	echo '</div><div style="width:40%;float:left">';
-	$simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), $tp->getSigns());
-	echo '</div><div style="width:1000px;clear:both;"></div>';
+	if ($tp->isCorrect()) {
+		$simplex = new Simplex();
+		$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
+		echo '<div style="width:60%;height:100%;float:left;">';
+		$simplex->printSolution();
+		$simplex->printValuePair();
+		$simplex->printResult();
+		echo '</div><div style="width:40%;float:left">';
+		$simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), $tp->getSigns());
+		echo '</div><div style="width:1000px;clear:both;"></div>';
+	} else {
+		TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
+	}
 } else {
 	echo '<script>';
 	echo '$(document).ready(function(){';
