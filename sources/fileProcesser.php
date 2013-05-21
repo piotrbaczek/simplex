@@ -5,23 +5,23 @@ include '../classes/Simplex.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';
-$sa=activity::isactivated2('../activity/active.xml')=='true' ? true : false;
+$ss=activity::isactivated2('../activity/active.xml')=='true' ? true : false;
 
 $adres = '../download/' . $_POST['filename'] . '.csv';
 //$adres = '../upload/Book1.csv';
 if (file_exists($adres)) {
 	$plik = new Processer($adres);
 	unlink($adres);
-	if($sa){
+	if($ss){
 		$ss = new Simplex();
 		$ss->Solve($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetFunction(), $plik->getMinMax(), $plik->getGomorry());
 		echo '<div style="width:40%;float:left;">';
-		$ss->testprint();
+		$ss->printSolution();
 		$ss->printValuePair();
 		$ss->printResult();
 		echo '</div><div style="width:60%;float:right">';
 		echo '<div style="margin:0px auto;">';
-		$ss->getjsonData($plik->getVariables(), $plik->getBoundaries(),$plik->getTargetfunction(),2);
+		$ss->getjsonData($plik->getVariables(), $plik->getBoundaries(),$plik->getTargetfunction(),$plik->getSigns());
 		echo '</div></div><div style="width:1000px;clear:both;"></div>';
 	}else{
 		echo '<script>';

@@ -7,10 +7,10 @@ include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------
-//$_POST['textarea']='2x1+5x2<=30						2x1+3x2<=26						0x1+3x2<=15';
-//$_POST['targetfunction']='2x1+6x2';
-//$_POST['funct']='true';
-//$_POST['gomorryf']='false';
+$_POST['textarea']='x1+0x2+0x3<=1000						0x1+1x2+0x3<=500						0x1+0x2+1x3<=1500 						3x1+6x2+2x3<=6750';
+$_POST['targetfunction']='4x1+12x2+3x3';
+$_POST['funct']='true';
+$_POST['gomorryf']='false';
 	$tp = new TextareaProcesser($_POST['textarea'], $_POST['targetfunction'], $_POST['funct'], $_POST['gomorryf']);
 //echo '<pre>';
 //print_r($_POST);
@@ -22,11 +22,11 @@ if ($ss) {
 //echo '</pre>';
 	$simplex = new Simplex();
 	$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-	echo '<div style="width:40%;float:left;">';
+	echo '<div style="width:60%;height:100%;float:left;">';
 	$simplex->printSolution();
 	$simplex->printValuePair();
 	$simplex->printResult();
-	echo '</div><div style="width:60%;float:right">';
+	echo '</div><div style="width:40%;float:left">';
 	$simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), $tp->getSigns());
 	echo '</div><div style="width:1000px;clear:both;"></div>';
 } else {

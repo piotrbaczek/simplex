@@ -252,7 +252,7 @@ class Simplex {
 		}
 	}
 
-	public function printAllMatrix() {
+	public function printRawMatrix() {
 		for ($i = 0; $i < $this->index + 1; $i++) {
 			$a = count($this->matrixes[$i]);
 			$b = count($this->matrixes[$i][0]);
@@ -284,8 +284,8 @@ class Simplex {
 	}
 
 	public function printSolution() {
-//PRINT FOR REGULAR MATRIX
-//echo of the first matrix
+		//PRINT FOR REGULAR MATRIX
+		//echo of the first matrix
 		$a = count($this->matrixes[0]);
 		$b = count($this->matrixes[0][0]);
 		echo '<table class="result"><tbody>';
@@ -599,12 +599,9 @@ class Simplex {
 		$a = count($this->matrixes[$this->index][0]);
 		$x = $this->getValuePair();
 		foreach ($x as $key => $value) {
-			if ($key == 0 && $value != 'NaN') {
-				echo 'x<sub>1</sub>=' . $value->toString() . '<br/>';
-				continue;
-			}
 			if ($value != 'NaN') {
-				echo 'x<sub>' . ($key) . '</sub>=' . $value->toString() . '<br/>';
+				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value->toString() . '<br/>';
+				continue;
 			}
 		}
 	}
@@ -616,7 +613,7 @@ class Simplex {
 			$x = Array();
 			$a = count($this->matrixes[$this->index][0]);
 			foreach ($this->basis as $key => $value) {
-				$x[$value] = $this->matrixes[$this->index][$value][$a - 1];
+				$x[$key] = $this->matrixes[$this->index][$value][$a - 1];
 			}
 			return $x;
 		}
@@ -675,7 +672,7 @@ class Simplex {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
-	public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction,$signs) {
+	public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction, $signs) {
 		$a = count($variables[0]);
 		$b = count($variables);
 		$json = Array();
