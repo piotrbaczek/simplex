@@ -107,16 +107,16 @@ class Fraction2 {
 
 	public static function isPositive($param) {
 		if ($param instanceof Fraction2) {
-			if($param->numerator>0){
-				if($param->mnumerator>=0){
+			if ($param->numerator > 0) {
+				if ($param->mnumerator >= 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
-			}else{
-				if($param->mnumerator>0){
+			} else {
+				if ($param->mnumerator > 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
@@ -127,16 +127,16 @@ class Fraction2 {
 
 	public static function isNegative($param) {
 		if ($param instanceof Fraction2) {
-			if($param->numerator<0){
-				if($param->mnumerator<=0){
+			if ($param->numerator < 0) {
+				if ($param->mnumerator <= 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
-			}else{
-				if($param->mnumerator<0){
+			} else {
+				if ($param->mnumerator < 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
@@ -313,6 +313,18 @@ class Fraction2 {
 			$this->reduction();
 		} else {
 			$this->errormessage('Must be a fraction or number!');
+		}
+	}
+
+	public function _increment() {
+		$this->add(new Fraction2(1));
+	}
+
+	public function hasM() {
+		if ($this->mnumerator == 0) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
