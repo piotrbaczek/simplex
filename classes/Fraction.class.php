@@ -114,7 +114,11 @@ class Fraction2 {
 					return false;
 				}
 			}else{
-				return false;
+				if($param->mnumerator>0){
+					return true;
+				}else{
+					return false;
+				}
 			}
 		} elseif (is_numeric($param)) {
 			return $param > 0 ? true : false;
@@ -130,10 +134,14 @@ class Fraction2 {
 					return false;
 				}
 			}else{
-				return false;
+				if($param->mnumerator<0){
+					return true;
+				}else{
+					return false;
+				}
 			}
 		} elseif (is_numeric($param)) {
-			return $param > 0 ? true : false;
+			return $param < 0 ? true : false;
 		}
 	}
 
