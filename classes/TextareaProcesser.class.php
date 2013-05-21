@@ -1,100 +1,109 @@
 <?php
-class TextareaProcesser{
-	private $a=Array();
-	private $b=Array();
-	private $c=Array();
-	private $d=Array();
-	private $max=true;
-	private $gomorry=false;
-	public function __construct($param='',$param2='', $param3=true, $param4=false){
-		if(!isset($param) or !isset($param2)){
+
+class TextareaProcesser {
+
+	private $a = Array();
+	private $b = Array();
+	private $c = Array();
+	private $d = Array();
+	private $max = true;
+	private $gomorry = false;
+	private $isCorrect = false;
+
+	public function __construct($param = '', $param2 = '', $param3 = true, $param4 = false) {
+		if (is_null($param) or is_null($param2) or is_null($param3) or is_null($param4)) {
 			$this->errormessage('Błąd przetwarzania - nie przekazano żadnego parametru');
 			return 0;
-		}else{
+		} else {
 			//przetwarzanie textarea
-			$param=str_replace(' ', '', $param);
-			$param=trim($param);
-			preg_match_all('/(<=|>=|=)/', $param,$a);
-			preg_match_all('([+|-]?[0-9]*\/[1-9]{1,}[0-9]*[a-z]|[+|-]?[0-9]*[a-z])', $param,$b);
+			$param = str_replace(' ', '', $param);
+			$param = trim($param);
+			preg_match_all('/(<=|>=|=)/', $param, $a);
+			preg_match_all('([+|-]?[0-9]*\/[1-9]{1,}[0-9]*[a-z]|[+|-]?[0-9]*[a-z])', $param, $b);
 			preg_match_all('(=[+|-]?[0-9]*\/[1-9]{1,}[0-9]*|=[+|-]?[0-9]*)', $param, $c);
-			if(count($a[0])!=count($c[0]) or (count($b[0])%count($c[0])!=0)){
+			if (count($a[0]) != count($c[0]) or (count($b[0]) % count($c[0]) != 0)) {
 				$this->errormessage('Błąd przetwarzania - Wymiary macierzy są nierówne. Sprawdź poprawność danych!');
-			}else{
+			} else {
 				foreach ($a[0] as $key => $value) {
-					$this->a[]=$value;
+					$this->a[] = $value;
 				}
-				
+
 
 				foreach ($c[0] as $key => $value) {
-					if(strpos(substr($value, 1), '/')){
-						$temp=explode('/', substr($value, 1));
-						$this->c[]=new Fraction2($temp[0],$temp[1]);
-					}else{
-						$this->c[]=new Fraction2(substr($value, 1));
+					if (strpos(substr($value, 1), '/')) {
+						$temp = explode('/', substr($value, 1));
+						$this->c[] = new Fraction2($temp[0], $temp[1]);
+					} else {
+						$this->c[] = new Fraction2(substr($value, 1));
 					}
 				}
 				//przetwarzanie funkcji celu
 				preg_match_all('([+|-]?[0-9]*\/[1-9]{1,}[0-9]*[a-z]|[+|-]?[0-9]*[a-z])', $param2, $d);
 				foreach ($d[0] as $key => $value) {
-					$value=substr($value, 0,-1);
-					if(strpos($value, '/')){
-						$temp=explode('/', $value);
-						$this->d[]=new Fraction2($temp[0],$temp[1]);
-					}else{
-						$this->d[]=new Fraction2($value);
+					$value = substr($value, 0, -1);
+					if (strpos($value, '/')) {
+						$temp = explode('/', $value);
+						$this->d[] = new Fraction2($temp[0], $temp[1]);
+					} else {
+						$this->d[] = new Fraction2($value);
 					}
 				}
-				
-				$index=0;
-				foreach ($b[0] as $key=>$value){
-					if($key!=0 && $key%count($d[0])==0){
+
+				$index = 0;
+				foreach ($b[0] as $key => $value) {
+					if ($key != 0 && $key % count($d[0]) == 0) {
 						$index++;
 					}
-					if(strpos(substr($value,0,-1), '/')){
-						$temp=explode('/', substr($value,0,-1));
-						$this->b[$index][$key%count($d[0])]=new Fraction2($temp[0],$temp[1]);
-					}else{
-						$this->b[$index][$key%count($d[0])]=new Fraction2(substr($value,0,-1));
+					if (strpos(substr($value, 0, -1), '/')) {
+						$temp = explode('/', substr($value, 0, -1));
+						$this->b[$index][$key % count($d[0])] = new Fraction2($temp[0], $temp[1]);
+					} else {
+						$this->b[$index][$key % count($d[0])] = new Fraction2(substr($value, 0, -1));
 					}
-				
 				}
 
 				//przetwarzanie f. gomorry'ego
-				$this->gomorry=($param4=='true' ? true : false);
+				$this->gomorry = ($param4 == 'true' ? true : false);
 
 				//przetworzenie max/min
-				$this->max=($param3=='true' ? true : false);
+				$this->max = ($param3 == 'true' ? true : false);
 			}
-				
 		}
+		$this->isCorrect = true;
 	}
-	public function getVariables(){
+
+	public function getVariables() {
 		return $this->b;
 	}
 
-	public function getSigns(){
+	public function getSigns() {
 		return $this->a;
 	}
 
-	public function getBoundaries(){
+	public function getBoundaries() {
 		return $this->c;
 	}
 
-	public function getMaxMin(){
+	public function getMaxMin() {
 		return $this->max;
 	}
 
-	public function getGomorry(){
+	public function getGomorry() {
 		return $this->gomorry;
 	}
 
-	public function getTargetfunction(){
+	public function getTargetfunction() {
 		return $this->d;
 	}
 
-	public static function errormessage($message){
-		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>'.$message.'</p></div>';
+	public function isCorrect() {
+		return $this->isCorrect ? true : false;
 	}
+
+	public static function errormessage($message) {
+		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
+	}
+
 }
 
 ?>
