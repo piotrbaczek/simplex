@@ -32,9 +32,11 @@ class Simplex {
 	}
 
 	public function Solve(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomorry = false) {
-		if (count($signs) != count($boundaries)) {
-			$this->errormessage('Nie zgadza się liczba znaków równania i liczba zmiennych ograniczających');
-			return 0;
+		if (!isset($variables) && !isset($boundaries) && !isset($signs) && !isset($targetfunction)) {
+			if (count($signs) != count($variables)) {
+				$this->errormessage('Nie zgadza się liczba znaków równania i liczba zmiennych ograniczających. Złe dane wejściowe.');
+				return 0;
+			}
 		}
 		$this->M = count($variables[0]) + 1; //3
 		$this->N = count($boundaries) + 1; //4
@@ -232,7 +234,6 @@ class Simplex {
 				$this->c[$this->index][2 + count($this->c[$this->index][0])] = new Fraction2(0);
 				$this->zmiennebazowe[$this->index][count($this->matrixes[0])] = 'Z<sub>1</sub>';
 				$q = count($this->matrixes[$this->index]) - 2;
-//echo 'Przekształcenie po elemencie ['.$q.','.$p.']='.$this->matrixes[$this->index][$q][$p]->toString();
 				$this->basecol[$this->index] = $p;
 				$this->baserow[$this->index] = $q;
 //----------------------------------------------------------------
@@ -247,7 +248,6 @@ class Simplex {
 				if (!$this->gomorrycheck()) {
 					break;
 				}
-//break;
 			}
 		}
 	}
@@ -325,7 +325,7 @@ class Simplex {
 		}
 		echo '</tbody></table>';
 		echo '<br/><br/>';
-//rest of matrixes
+		//rest of matrixes
 		if (!$this->gomorry) {
 			for ($i = 1; $i < $this->index + 1; $i++) {
 				$a = count($this->matrixes[$i]);
@@ -383,12 +383,11 @@ class Simplex {
 				echo '<br/><br/>';
 			}
 		} else {
-// GOMORRY PRINT
-//-------------------------------------------------
+			// GOMORRY PRINT
+			//-------------------------------------------------
 			for ($i = 1; $i < $this->index + 1; $i++) {
 				$a = count($this->matrixes[$i]);
 				$b = count($this->matrixes[$i][0]);
-//echo 'macierz['.$i.']='.$a.'x'.$b;
 				if ($this->basecol[$i - 1] == -1 && $this->baserow[$i - 1] == -1) {
 					echo '<table class="result2"><tbody>';
 				} else {
@@ -426,7 +425,7 @@ class Simplex {
 
 
 					if ($this->baserow[$i] == -1 && $this->basecol[$i] == -1) {
-//brak wierszy głównych
+						//brak wierszy głównych
 						for ($k = 0; $k < $b; $k++) {
 							if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
 								echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
@@ -439,7 +438,7 @@ class Simplex {
 							}
 						}
 					} elseif ($this->baserow[$i - 1] == -1 && $this->basecol[$i - 1] == -1) {
-//wiersze główne
+						//wiersze główne
 						for ($k = 0; $k < $b; $k++) {
 							if ($k == $this->basecol[$i] && $j == $this->baserow[$i]) {
 								echo '<td style="color:white;background-color:red;text-align:center;width:45px;">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
@@ -489,14 +488,11 @@ class Simplex {
 			if ($this->matrixes[$this->index][$a - 1][$i]->getNumerator() == 0) {
 				continue;
 			} elseif ($startv->compare($this->matrixes[$this->index][$a - 1][$i]) && Fraction2::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
-				//echo 'this=' . $startv->toString() . ' candidate=' . $this->matrixes[$this->index][$a - 1][$i]->toString() . '<br/>';
 				$starti = $i;
 				$startv = $this->matrixes[$this->index][$a - 1][$i];
 			}
-//echo $this->matrixes[$this->index][$a-1][$i]->toString();
 		}
 		$this->basecol[$this->index - 1] = $starti;
-		//echo 's='.$startv->toString() . ' ' . $starti.'<br/>';
 		return $starti;
 	}
 
@@ -506,22 +502,18 @@ class Simplex {
 		$startv = new Fraction2(100000);
 		$starti = -1;
 		for ($i = 0; $i < $a - 1; $i++) {
-//echo $this->matrixes[$this->index][$i][$b-1]->toString();
 			$s = new Fraction2($this->matrixes[$this->index][$i][$b - 1]->getNumerator(), $this->matrixes[$this->index][$i][$b - 1]->getDenominator());
 			$n = new Fraction2($this->matrixes[$this->index][$i][$p]->getNumerator(), $this->matrixes[$this->index][$i][$p]->getDenominator());
 			if ($n->getNumerator() == 0) {
 				continue;
 			} else {
-//echo $s->toString().'/'.$n->toString().'<br/>';
 				$s->divide($n);
-//echo $s->toString().'<br/>';
 				if (!$s->compare($startv) && Fraction2::isPositive($s)) {
 					$starti = $i;
 					$startv = $s;
 				}
 			}
 		}
-//echo $startv->toString().' '.$starti.'<br/>';
 		$this->baserow[$this->index - 1] = $starti;
 		return $starti;
 	}
@@ -532,41 +524,27 @@ class Simplex {
 		for ($i = 0; $i < $a; $i++) {
 			for ($j = 0; $j < $b; $j++) {
 				if ($i == $this->baserow[$this->index - 1] && $j == $this->basecol[$this->index - 1]) {
-//element główny
-//                    $s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
-//                    $s->reverse();
-//                    $this->matrixes[$this->index][$i][$j] = $s;
+					//element główny
 					$this->matrixes[$this->index][$i][$j] = new Fraction2(1);
 				} elseif ($i == $this->baserow[$this->index - 1]) {
-//wiersz główny
+					//wiersz główny
 					$s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
 					$n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
 					$s->divide($n);
-//echo $s->toString();
 					$this->matrixes[$this->index][$i][$j] = new Fraction2($s->getNumerator(), $s->getDenominator());
 				} elseif ($j == $this->basecol[$this->index - 1]) {
-//kolumna główna
-//                    $s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
-//                    $n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
-//                    $s->divide($n);
-//                    $s->multiply(-1);
-//                    $this->matrixes[$this->index][$i][$j] = $s;
+					//kolumna główna
 					$this->matrixes[$this->index][$i][$j] = new Fraction2(0);
-//$this->matrixes[$this->index][$i][$j] = -round($this->matrixes[$this->index][$i][$j] / $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]], 2);
 				} else {
-//normalny element
+					//normalny element
 					$s = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getDenominator());
 					$m = new Fraction2($this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getDenominator());
 					$n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
 					$l = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
-//echo $l->toString().'='.$l->toString().'-('.$s->toString().'*'.$m->toString().')/'.$n->toString().'<br/>';
 					$s->multiply($m);
 					$s->divide($n);
-//echo '('.$s->toString().'*'.$m->toString().')/'.$n->toString();
 					$l->substract($s);
-//echo '='.$l->toString().'<br/>';
 					$this->matrixes[$this->index][$i][$j] = $l;
-//$this->matrixes[$this->index][$i][$j] = round((($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j] * $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]) / $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]), 2);
 				}
 			}
 		}
@@ -588,7 +566,6 @@ class Simplex {
 	}
 
 	private function swapBase() {
-//echo 'zmieniam '.$this->zmiennebazowe[$this->index][($this->baserow[$this->index-1]+1)].' na'.$this->zmienneniebazowe[$this->index][($this->basecol[$this->index-1]+1)].'<br/>';
 		$buffer = $this->zmiennebazowe[$this->index][($this->baserow[$this->index - 1] + 1)];
 		$this->zmiennebazowe[$this->index][($this->baserow[$this->index - 1] + 1)] = $this->zmienneniebazowe[$this->index][($this->basecol[$this->index - 1] + 1)];
 		$this->zmienneniebazowe[$this->index][($this->basecol[$this->index - 1] + 1)] = $buffer;
@@ -647,14 +624,12 @@ class Simplex {
 			$this->matrixes[$this->index][$b][$i] = $this->matrixes[$this->index][$b - 1][$i];
 			$s = new Fraction2($this->matrixes[$this->index][$q][$i]->getNumerator(), $this->matrixes[$this->index][$q][$i]->getDenominator());
 			$s->getImproperPart();
-//echo $s->toString();
 			$this->matrixes[$this->index][$b - 1][$i] = $s;
 			if (!$this->matrixes[$this->index][$q][$i]->compare($startv)) {
 				$startv = $this->matrixes[$this->index][$q][$i];
 				$starti = $i;
 			}
 		}
-//echo $starti;
 		return $starti;
 	}
 
