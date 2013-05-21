@@ -141,18 +141,21 @@ table.result th,table.result2 th {
 	text-align:center;
 }
 
-table.result td, table.result2 td {
+table.result td{
 	border-width: 1px;
 	padding: 1px;
 	border-style: inset;
 	border-color: gray;
 	background-color: white;
-	-moz-border-radius: 3px;
 	text-align: center;
+	width:45px;
 }
 
-td.mainelement {
-	color: red;
+table.result td.mainelement {
+	color:white;
+	background-color:red;
+	text-align:center;
+	width:45px;
 }
 
 #loadbackdiv,#loadbackbutton3 {

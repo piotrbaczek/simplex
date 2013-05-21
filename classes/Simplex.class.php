@@ -50,6 +50,7 @@ class Simplex {
 			foreach ($this->signs as $key => $value) {
 				$this->c[$this->index][$key] = new Fraction2(0);
 				if ($value != "<=") {
+					$this->c[$this->index][$key] = new Fraction2(0, 1, 1, 1);
 					$this->wrongsigns++;
 				}
 			}
@@ -117,9 +118,24 @@ class Simplex {
 		}
 
 		if ($this->d) {
-			
+			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
+				$this->temp = new Fraction2();
+				for ($j = 0; $j < $this->N - 1; $j++) {
+					if ($this->signs[$j] == ">=") {
+						$this->temp->add($this->matrixes[$this->index][$j][$i]);
+					}
+				}
+				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+			}
+			//for boundaries
+			$this->temp = new Fraction2();
+			for ($j = 0; $j < $this->N - 1; $j++) {
+				if ($this->signs[$j] != "<=") {
+					$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]);
+				}
+			}
+			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 		} else {
-
 			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
 				$this->temp = new Fraction2();
 				for ($j = 0; $j < $this->N - 1; $j++) {
@@ -167,9 +183,9 @@ class Simplex {
 			if (!isset($this->basis[$q])) {
 				$this->basis[$p] = $q;
 			}
-			
+
 			if ($this->wrongsigns != 0) {
-				for ($i = 0; $i < ($this->M - 1) + 2 * $this->wrongsigns; $i++) {
+				for ($i = 0; $i < ($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns); $i++) {
 					if (!in_array($i, $this->basecol)) {
 						$this->temp = new Fraction2();
 						for ($j = 0; $j < $this->N - 1; $j++) {
@@ -180,20 +196,20 @@ class Simplex {
 						$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 					}
 				}
-// for last column
+				//for last column
 				$this->temp = new Fraction2();
 				for ($j = 0; $j < $this->N - 1; $j++) {
-					if (!in_array($j, $this->baserow)) {
-						$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns]);
+					if (!in_array($j, $this->baserow) && $this->signs[$j] != "<=") {
+						$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]);
 					}
 				}
 				$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
-			//---------------------------
-//			if ($this->index >= 1) {
+			//------------------------
+//			if($this->index>0){
 //				break;
 //			}
-			//--------------------------
+			//------------------------
 		}
 		$this->basecol[$this->index] = -1;
 		$this->baserow[$this->index] = -1;
@@ -267,7 +283,7 @@ class Simplex {
 		echo '<br/>';
 	}
 
-	public function testprint() {
+	public function printSolution() {
 //PRINT FOR REGULAR MATRIX
 //echo of the first matrix
 		$a = count($this->matrixes[0]);
@@ -469,18 +485,18 @@ class Simplex {
 		$b = count($this->matrixes[$this->index][0]);
 		$startv = new Fraction2(100000);
 		$starti = -1;
-		for ($i = 0; $i < $b - 1; $i++) {
+		for ($i = 0; $i < $this->M + $this->N - 2; $i++) {
 			if ($this->matrixes[$this->index][$a - 1][$i]->getNumerator() == 0) {
 				continue;
 			} elseif ($startv->compare($this->matrixes[$this->index][$a - 1][$i]) && Fraction2::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
-//echo 'this='.$startv->toString().' candidate='.$this->matrixes[$this->index][$a-1][$i]->toString().'<br/>';
+				//echo 'this=' . $startv->toString() . ' candidate=' . $this->matrixes[$this->index][$a - 1][$i]->toString() . '<br/>';
 				$starti = $i;
 				$startv = $this->matrixes[$this->index][$a - 1][$i];
 			}
 //echo $this->matrixes[$this->index][$a-1][$i]->toString();
 		}
 		$this->basecol[$this->index - 1] = $starti;
-//echo $startv.' '.$starti;
+		//echo 's='.$startv->toString() . ' ' . $starti.'<br/>';
 		return $starti;
 	}
 
@@ -563,7 +579,7 @@ class Simplex {
 	private function checktargetfunction() {
 		$a = count($this->matrixes[$this->index]);
 		$b = count($this->matrixes[$this->index][0]);
-		for ($i = 0; $i < $b; $i++) {
+		for ($i = 0; $i < $this->M + $this->N - 2; $i++) {
 			if (Fraction2::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
 				return false;
 			}
@@ -659,7 +675,7 @@ class Simplex {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
-	public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction, $number, $signs) {
+	public static function getjsonData(Array $variables, Array $boundaries, Array $targetfunction,$signs) {
 		$a = count($variables[0]);
 		$b = count($variables);
 		$json = Array();
@@ -714,11 +730,11 @@ class Simplex {
 				}
 				echo '<script>';
 				echo '$(document).ready(function(){';
-				echo '$.plot($("#placeholder' . $number . '"),' . json_encode($json) . ');';
+				echo '$.plot($("#placeholder1"),' . json_encode($json) . ');';
 				echo '});';
 				echo '</script>';
 				echo '<div style="width:480px;float:right;">';
-				echo '<div id="placeholder' . $number . '" style="width: 480px; height: 360px;"></div>';
+				echo '<div id="placeholder1" style="width: 480px; height: 360px;"></div>';
 				echo '</div>';
 				break;
 			default:
@@ -819,5 +835,4 @@ class Simplex {
 	}
 
 }
-
 ?>

@@ -45,6 +45,7 @@ $(document).ajaxStart(function(){
                 type: "POST",
                 url: "sources/receiver.php",
                 data: s,
+				dataType: "html",
                 success: function(data){
                     $('#defaultdiv').slideUp('fast');
                     $('#resultdiv2').empty().append(data);
