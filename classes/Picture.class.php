@@ -17,9 +17,9 @@ class Picture {
         foreach ($this->wymiar as $key => $value) {
             if (strpos($value, '/')) {
                 $temp = explode('/', $value);
-                $this->wymiar[$key] = new Fraction2($temp[0], $temp[1]);
+                $this->wymiar[$key] = new Fraction($temp[0], $temp[1]);
             } else {
-                $this->wymiar[$key] = new Fraction2($value);
+                $this->wymiar[$key] = new Fraction($value);
             }
         }
         if ($a == 'm') {
@@ -32,7 +32,7 @@ class Picture {
             $handle = ImageCreate(460, 50) or die("Cannot Create image");
             $bg_color = ImageColorAllocate($handle, 255, 255, 255);
             $txt_color = ImageColorAllocate($handle, 0, 0, 0);
-            $c = new Fraction2($this->wymiar[0]->getNumerator(), $this->wymiar[0]->getDenominator());
+            $c = new Fraction($this->wymiar[0]->getNumerator(), $this->wymiar[0]->getDenominator());
             $c->divide($this->wymiar[1]);
             $text = '(' . $this->wymiar[0]->toString() . ') / (' . $this->wymiar[1]->toString() . ') = ' . $c->toString();
             imagettftext($handle, 18, 0, 0, 35, $txt_color, '../css/Roboto.ttf', $text);
@@ -46,7 +46,7 @@ class Picture {
             $handle = ImageCreate(490, 50) or die("Cannot Create image");
             $bg_color = ImageColorAllocate($handle, 255, 255, 255);
             $txt_color = ImageColorAllocate($handle, 0, 0, 0);
-            $s = new Fraction2($this->wymiar[1]->getNumerator(), $this->wymiar[1]->getDenominator());
+            $s = new Fraction($this->wymiar[1]->getNumerator(), $this->wymiar[1]->getDenominator());
             $s->multiply($this->wymiar[2]);
             $s->divide($this->wymiar[3]);
             $text = $this->wymiar[0]->toString() . ' - (' . $this->wymiar[1]->toString() . ' * ' . $this->wymiar[2]->toString() . ') / (' . $this->wymiar[3]->toString() . ') = ';

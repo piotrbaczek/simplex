@@ -151,6 +151,10 @@ table.result td{
 	width:45px;
 }
 
+table.result td:hover{
+	cursor: default;
+}
+
 table.result td.mainelement {
 	color:white;
 	background-color:red;

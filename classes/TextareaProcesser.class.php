@@ -32,9 +32,9 @@ class TextareaProcesser {
 				foreach ($c[0] as $key => $value) {
 					if (strpos(substr($value, 1), '/')) {
 						$temp = explode('/', substr($value, 1));
-						$this->c[] = new Fraction2($temp[0], $temp[1]);
+						$this->c[] = new Fraction($temp[0], $temp[1]);
 					} else {
-						$this->c[] = new Fraction2(substr($value, 1));
+						$this->c[] = new Fraction(substr($value, 1));
 					}
 				}
 				//przetwarzanie funkcji celu
@@ -43,9 +43,9 @@ class TextareaProcesser {
 					$value = substr($value, 0, -1);
 					if (strpos($value, '/')) {
 						$temp = explode('/', $value);
-						$this->d[] = new Fraction2($temp[0], $temp[1]);
+						$this->d[] = new Fraction($temp[0], $temp[1]);
 					} else {
-						$this->d[] = new Fraction2($value);
+						$this->d[] = new Fraction($value);
 					}
 				}
 
@@ -56,9 +56,9 @@ class TextareaProcesser {
 					}
 					if (strpos(substr($value, 0, -1), '/')) {
 						$temp = explode('/', substr($value, 0, -1));
-						$this->b[$index][$key % count($d[0])] = new Fraction2($temp[0], $temp[1]);
+						$this->b[$index][$key % count($d[0])] = new Fraction($temp[0], $temp[1]);
 					} else {
-						$this->b[$index][$key % count($d[0])] = new Fraction2(substr($value, 0, -1));
+						$this->b[$index][$key % count($d[0])] = new Fraction(substr($value, 0, -1));
 					}
 				}
 

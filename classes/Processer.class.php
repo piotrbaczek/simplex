@@ -45,9 +45,9 @@ class Processer extends Csv_Reader {
 			if(is_numeric(trim($value))){
 				if(strpos($value, '/')){
 					$temp=explode('/', value);
-					$this->a[]=new Fraction2($temp[0],$temp[1]);
+					$this->a[]=new Fraction($temp[0],$temp[1]);
 				}else{
-					$this->a[]=new Fraction2(trim($value));
+					$this->a[]=new Fraction(trim($value));
 				}
 			}
 		}
@@ -61,17 +61,17 @@ class Processer extends Csv_Reader {
 					$a=trim($this->tabela[$i][++$j]);
 					if(strpos($a, '/')){
 						$temp=explode('/', $a);
-						$this->d[]=new Fraction2($temp[0],$temp[1]);
+						$this->d[]=new Fraction($temp[0],$temp[1]);
 					}else{
-						$this->d[]=new Fraction2($a);
+						$this->d[]=new Fraction($a);
 					}
 				} else {
 					$value=trim($this->tabela[$i][$j]);
 					if(strpos($value, '/')){
 						$temp=explode('/', $value);
-						$this->b[$k][$j]=new Fraction2($temp[0],$temp[1]);
+						$this->b[$k][$j]=new Fraction($temp[0],$temp[1]);
 					}else{
-						$this->b[$k][$j]=new Fraction2($value);
+						$this->b[$k][$j]=new Fraction($value);
 					}
 				}
 			}

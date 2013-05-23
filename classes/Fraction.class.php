@@ -1,6 +1,6 @@
 <?php
 
-class Fraction2 {
+class Fraction {
 
 	private $numerator;
 	private $denominator;
@@ -83,7 +83,7 @@ class Fraction2 {
 	}
 
 	public function compare($param) {
-		if ($param instanceof Fraction2) {
+		if ($param instanceof Fraction) {
 			$a = $this->numerator * $param->getDenominator();
 			$b = $this->denominator * $param->getNumerator();
 			if ($a > $b) {
@@ -106,7 +106,7 @@ class Fraction2 {
 	}
 
 	public static function isPositive($param) {
-		if ($param instanceof Fraction2) {
+		if ($param instanceof Fraction) {
 			if ($param->numerator > 0) {
 				if ($param->mnumerator >= 0) {
 					return true;
@@ -126,7 +126,7 @@ class Fraction2 {
 	}
 
 	public static function isNegative($param) {
-		if ($param instanceof Fraction2) {
+		if ($param instanceof Fraction) {
 			if ($param->numerator < 0) {
 				if ($param->mnumerator <= 0) {
 					return true;
@@ -200,7 +200,7 @@ class Fraction2 {
 	}
 
 	public function isEqual($param) {
-		if ($param instanceof Fraction2) {
+		if ($param instanceof Fraction) {
 			if ($param->getNumerator() == $this->numerator && $param->getDenominator() == $this->denominator) {
 				return true;
 			} else {
@@ -216,12 +216,12 @@ class Fraction2 {
 	}
 
 	public function getImproperPart() {
-		if (Fraction2::isPositive(new Fraction2($this->getNumerator(), $this->getDenominator()))) {
+		if (Fraction::isPositive(new Fraction($this->getNumerator(), $this->getDenominator()))) {
 			while ($this->numerator >= $this->denominator) {
 				$this->numerator-=$this->denominator;
 			}
 			$this->minusFraction();
-		} elseif (Fraction2::isNegative(new Fraction2($this->getNumerator(), $this->getDenominator()))) {
+		} elseif (Fraction::isNegative(new Fraction($this->getNumerator(), $this->getDenominator()))) {
 			while ($this->numerator < -$this->denominator) {
 				$this->numerator+=$this->denominator;
 			}
@@ -256,9 +256,9 @@ class Fraction2 {
 
 	public function add($param) {
 		if (is_numeric($param)) {
-			$s = new Fraction2($param);
+			$s = new Fraction($param);
 			$this->add($s);
-		} elseif ($param instanceof Fraction2) {
+		} elseif ($param instanceof Fraction) {
 			$denominator = $this->denominator * $param->denominator;
 			$numerator = $this->numerator * $param->denominator + $this->denominator * $param->numerator;
 			$this->numerator = $numerator;
@@ -273,9 +273,9 @@ class Fraction2 {
 
 	public function substract($param) {
 		if (is_numeric($param)) {
-			$s = new Fraction2($param);
+			$s = new Fraction($param);
 			$this->substract($s);
-		} elseif ($param instanceof Fraction2) {
+		} elseif ($param instanceof Fraction) {
 			$denominator = $this->denominator * $param->denominator;
 			$numerator = $this->numerator * $param->denominator - $this->denominator * $param->numerator;
 			$this->numerator = $numerator;
@@ -290,9 +290,9 @@ class Fraction2 {
 
 	public function multiply($param) {
 		if (is_numeric($param)) {
-			$s = new Fraction2($param);
+			$s = new Fraction($param);
 			$this->multiply($s);
-		} elseif ($param instanceof Fraction2) {
+		} elseif ($param instanceof Fraction) {
 			$this->numerator*=$param->numerator;
 			$this->denominator*=$param->denominator;
 			$this->mnumerator*=$param->mnumerator;
@@ -303,9 +303,9 @@ class Fraction2 {
 
 	public function divide($param) {
 		if (is_numeric($param)) {
-			$s = new Fraction2($param);
+			$s = new Fraction($param);
 			$this->divide($s);
-		} elseif ($param instanceof Fraction2) {
+		} elseif ($param instanceof Fraction) {
 			$this->numerator*=$param->denominator;
 			$this->denominator*=$param->numerator;
 			$this->mnumerator*=$param->mdenominator;
@@ -317,7 +317,7 @@ class Fraction2 {
 	}
 
 	public function _increment() {
-		$this->add(new Fraction2(1));
+		$this->add(new Fraction(1));
 	}
 
 	public function hasM() {

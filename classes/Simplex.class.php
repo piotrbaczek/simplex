@@ -26,7 +26,7 @@ class Simplex {
 		$this->zmiennebazowe = Array();
 		$this->zmienneniebazowe = Array();
 		$this->c = Array();
-		$this->temp = new Fraction2();
+		$this->temp = new Fraction();
 		$this->basis;
 		$this->wrongsigns = 0;
 	}
@@ -50,15 +50,15 @@ class Simplex {
 
 		if ($this->d) {
 			foreach ($this->signs as $key => $value) {
-				$this->c[$this->index][$key] = new Fraction2(0);
+				$this->c[$this->index][$key] = new Fraction(0);
 				if ($value != "<=") {
-					$this->c[$this->index][$key] = new Fraction2(0, 1, 1, 1);
+					$this->c[$this->index][$key] = new Fraction(0, 1, 1, 1);
 					$this->wrongsigns++;
 				}
 			}
 		} else {
 			foreach ($this->signs as $key => $value) {
-				$this->c[$this->index][$key] = new Fraction2(0, 1, 1, 1);
+				$this->c[$this->index][$key] = new Fraction(0, 1, 1, 1);
 				if ($value != "<=") {
 					$this->wrongsigns++;
 				}
@@ -82,7 +82,7 @@ class Simplex {
 
 		for ($i = 0; $i < $this->N; $i++) {
 			for ($j = 0; $j < $this->N + $this->M - 1 + $this->wrongsigns; $j++) {
-				$this->matrixes[$this->index][$i][$j] = new Fraction2(0);
+				$this->matrixes[$this->index][$i][$j] = new Fraction(0);
 			}
 		}
 
@@ -100,14 +100,14 @@ class Simplex {
 		foreach ($this->signs as $key => $value) {
 			switch ($value) {
 				case ">=":
-					$this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction2(-1);
-					$this->matrixes[$this->index][$key][$this->M - 1 + $this->N - 1 + $ax] = new Fraction2(1);
+					$this->matrixes[$this->index][$key][$this->M - 1 + $key] = new Fraction(-1);
+					$this->matrixes[$this->index][$key][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(1);
 					$ax++;
 					break;
 				default:
 					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
 						if (($j - ($this->M - 1)) == $key) {
-							$this->matrixes[$this->index][$key][$j] = new Fraction2(1);
+							$this->matrixes[$this->index][$key][$j] = new Fraction(1);
 						}
 					}
 					break;
@@ -121,38 +121,38 @@ class Simplex {
 
 		if ($this->d) {
 			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
-				$this->temp = new Fraction2();
+				$this->temp = new Fraction();
 				for ($j = 0; $j < $this->N - 1; $j++) {
 					if ($this->signs[$j] == ">=") {
 						$this->temp->add($this->matrixes[$this->index][$j][$i]);
 					}
 				}
-				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
 			//for boundaries
-			$this->temp = new Fraction2();
+			$this->temp = new Fraction();
 			for ($j = 0; $j < $this->N - 1; $j++) {
 				if ($this->signs[$j] != "<=") {
 					$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]);
 				}
 			}
-			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 		} else {
 			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
-				$this->temp = new Fraction2();
+				$this->temp = new Fraction();
 				for ($j = 0; $j < $this->N - 1; $j++) {
 					if ($this->signs[$j] == ">=") {
 						$this->temp->add($this->matrixes[$this->index][$j][$i]);
 					}
 				}
-				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
 			//for boundaries
-			$this->temp = new Fraction2();
+			$this->temp = new Fraction();
 			for ($j = 0; $j < $this->N - 1; $j++) {
 				$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns]);
 			}
-			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 		}
 
 		while (!$this->check()) {
@@ -178,7 +178,7 @@ class Simplex {
 			}
 			$this->c[$this->index][$q] = clone $this->matrixes[0][$this->M][$p];
 			$this->c[$this->index][$q]->minusFraction();
-			$this->c[$this->index][$q] = new Fraction2($this->c[$this->index][$q]->getNumerator(), $this->c[$this->index][$q]->getDenominator());
+			$this->c[$this->index][$q] = new Fraction($this->c[$this->index][$q]->getNumerator(), $this->c[$this->index][$q]->getDenominator());
 			$this->swapBase();
 			$this->gaussjordan();
 
@@ -189,23 +189,23 @@ class Simplex {
 			if ($this->wrongsigns != 0) {
 				for ($i = 0; $i < ($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns); $i++) {
 					if (!in_array($i, $this->basecol)) {
-						$this->temp = new Fraction2();
+						$this->temp = new Fraction();
 						for ($j = 0; $j < $this->N - 1; $j++) {
 							if ($this->signs[$j] == ">=") {
 								$this->temp->add($this->matrixes[$this->index][$j][$i]);
 							}
 						}
-						$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+						$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 					}
 				}
 				//for last column
-				$this->temp = new Fraction2();
+				$this->temp = new Fraction();
 				for ($j = 0; $j < $this->N - 1; $j++) {
 					if (!in_array($j, $this->baserow) && $this->signs[$j] != "<=") {
 						$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]);
 					}
 				}
-				$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction2(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+				$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
 			//------------------------
 //			if($this->index>0){
@@ -231,7 +231,7 @@ class Simplex {
 				$this->zmienneniebazowe[$this->index] = $this->zmienneniebazowe[$this->index - 1];
 				$this->c[$this->index] = $this->c[$this->index - 1];
 				$p = $this->gomorryAddRow($k);
-				$this->c[$this->index][2 + count($this->c[$this->index][0])] = new Fraction2(0);
+				$this->c[$this->index][2 + count($this->c[$this->index][0])] = new Fraction(0);
 				$this->zmiennebazowe[$this->index][count($this->matrixes[0])] = 'Z<sub>1</sub>';
 				$q = count($this->matrixes[$this->index]) - 2;
 				$this->basecol[$this->index] = $p;
@@ -482,12 +482,12 @@ class Simplex {
 	private function findBaseCol() {
 		$a = count($this->matrixes[$this->index]);
 		$b = count($this->matrixes[$this->index][0]);
-		$startv = new Fraction2(100000);
+		$startv = new Fraction(100000);
 		$starti = -1;
 		for ($i = 0; $i < $this->M + $this->N - 2; $i++) {
 			if ($this->matrixes[$this->index][$a - 1][$i]->getNumerator() == 0) {
 				continue;
-			} elseif ($startv->compare($this->matrixes[$this->index][$a - 1][$i]) && Fraction2::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
+			} elseif ($startv->compare($this->matrixes[$this->index][$a - 1][$i]) && Fraction::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
 				$starti = $i;
 				$startv = $this->matrixes[$this->index][$a - 1][$i];
 			}
@@ -499,16 +499,16 @@ class Simplex {
 	private function findBaseRow($p) {
 		$a = count($this->matrixes[$this->index]);
 		$b = count($this->matrixes[$this->index][0]);
-		$startv = new Fraction2(100000);
+		$startv = new Fraction(100000);
 		$starti = -1;
 		for ($i = 0; $i < $a - 1; $i++) {
-			$s = new Fraction2($this->matrixes[$this->index][$i][$b - 1]->getNumerator(), $this->matrixes[$this->index][$i][$b - 1]->getDenominator());
-			$n = new Fraction2($this->matrixes[$this->index][$i][$p]->getNumerator(), $this->matrixes[$this->index][$i][$p]->getDenominator());
+			$s = new Fraction($this->matrixes[$this->index][$i][$b - 1]->getNumerator(), $this->matrixes[$this->index][$i][$b - 1]->getDenominator());
+			$n = new Fraction($this->matrixes[$this->index][$i][$p]->getNumerator(), $this->matrixes[$this->index][$i][$p]->getDenominator());
 			if ($n->getNumerator() == 0) {
 				continue;
 			} else {
 				$s->divide($n);
-				if (!$s->compare($startv) && Fraction2::isPositive($s)) {
+				if (!$s->compare($startv) && Fraction::isPositive($s)) {
 					$starti = $i;
 					$startv = $s;
 				}
@@ -525,22 +525,22 @@ class Simplex {
 			for ($j = 0; $j < $b; $j++) {
 				if ($i == $this->baserow[$this->index - 1] && $j == $this->basecol[$this->index - 1]) {
 					//element główny
-					$this->matrixes[$this->index][$i][$j] = new Fraction2(1);
+					$this->matrixes[$this->index][$i][$j] = new Fraction(1);
 				} elseif ($i == $this->baserow[$this->index - 1]) {
 					//wiersz główny
-					$s = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
-					$n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
+					$s = new Fraction($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
+					$n = new Fraction($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
 					$s->divide($n);
-					$this->matrixes[$this->index][$i][$j] = new Fraction2($s->getNumerator(), $s->getDenominator());
+					$this->matrixes[$this->index][$i][$j] = new Fraction($s->getNumerator(), $s->getDenominator());
 				} elseif ($j == $this->basecol[$this->index - 1]) {
 					//kolumna główna
-					$this->matrixes[$this->index][$i][$j] = new Fraction2(0);
+					$this->matrixes[$this->index][$i][$j] = new Fraction(0);
 				} else {
 					//normalny element
-					$s = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getDenominator());
-					$m = new Fraction2($this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getDenominator());
-					$n = new Fraction2($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
-					$l = new Fraction2($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
+					$s = new Fraction($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getDenominator());
+					$m = new Fraction($this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getDenominator());
+					$n = new Fraction($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
+					$l = new Fraction($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
 					$s->multiply($m);
 					$s->divide($n);
 					$l->substract($s);
@@ -558,7 +558,7 @@ class Simplex {
 		$a = count($this->matrixes[$this->index]);
 		$b = count($this->matrixes[$this->index][0]);
 		for ($i = 0; $i < $this->M + $this->N - 2; $i++) {
-			if (Fraction2::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
+			if (Fraction::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
 				return false;
 			}
 		}
@@ -618,11 +618,11 @@ class Simplex {
 	private function gomorryAddRow($q) {
 		$a = count($this->matrixes[$this->index][0]);
 		$b = count($this->matrixes[$this->index]);
-		$startv = new Fraction2(1);
+		$startv = new Fraction(1);
 		$starti = -1;
 		for ($i = 0; $i < $a; $i++) {
 			$this->matrixes[$this->index][$b][$i] = $this->matrixes[$this->index][$b - 1][$i];
-			$s = new Fraction2($this->matrixes[$this->index][$q][$i]->getNumerator(), $this->matrixes[$this->index][$q][$i]->getDenominator());
+			$s = new Fraction($this->matrixes[$this->index][$q][$i]->getNumerator(), $this->matrixes[$this->index][$q][$i]->getDenominator());
 			$s->getImproperPart();
 			$this->matrixes[$this->index][$b - 1][$i] = $s;
 			if (!$this->matrixes[$this->index][$q][$i]->compare($startv)) {
@@ -653,13 +653,13 @@ class Simplex {
 		$json = Array();
 		switch ($a) {
 			case 2:
-				$maxx = new Fraction2(0);
-				$maxy = new Fraction2(0);
+				$maxx = new Fraction(0);
+				$maxy = new Fraction(0);
 				for ($i = 0; $i < $b; $i++) {
 					if ($variables[$i][1]->getNumerator() == 0) {
 						continue;
 					}
-					$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+					$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 					$s->divide($variables[$i][1]);
 					if ($s->compare($maxy)) {
 						$maxy = $s;
@@ -667,7 +667,7 @@ class Simplex {
 					if ($variables[$i][0]->getNumerator() == 0) {
 						continue;
 					}
-					$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+					$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 					$s->divide($variables[$i][0]);
 					if ($s->compare($maxx)) {
 						$maxx = $s;
@@ -676,26 +676,26 @@ class Simplex {
 				for ($i = 0; $i < $b; $i++) {
 					$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
 					if ($variables[$i][1]->getNumerator() == 0) {
-						$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+						$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 						$s->divide($variables[$i][0]);
 						$json[$i]['data'][] = Array($s->getRealValue(), $maxy->getRealValue());
 					} else {
-						$j = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+						$j = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 						$j->divide($variables[$i][1]);
 						$json[$i]['data'][] = Array(0, $j->getRealValue());
 					}
 					if ($variables[$i][0]->getNumerator() == 0) {
-						$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+						$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 						$s->divide($variables[$i][1]);
 						$json[$i]['data'][] = Array($maxx->getRealValue(), $s->getRealValue());
 					} else {
-						$j = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+						$j = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 						$j->divide($variables[$i][0]);
 						$json[$i]['data'][] = Array($j->getRealValue(), 0);
 					}
 				}
 				if ($targetfunction[0]->getNumerator() != 0 && $targetfunction[1]->getNumerator() != 0) {
-					$t = new Fraction2($targetfunction[0]->getNumerator(), $targetfunction[0]->getDenominator());
+					$t = new Fraction($targetfunction[0]->getNumerator(), $targetfunction[0]->getDenominator());
 					$t->multiply($maxx);
 					$t->divide($targetfunction[1]);
 					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getRealValue(), $t->getRealValue())));
@@ -710,14 +710,14 @@ class Simplex {
 				echo '</div>';
 				break;
 			default:
-				$maxx = new Fraction2(0);
-				$maxy = new Fraction2(0);
-				$maxz = new Fraction2(0);
+				$maxx = new Fraction(0);
+				$maxy = new Fraction(0);
+				$maxz = new Fraction(0);
 				for ($i = 0; $i < $b; $i++) {
 					if ($variables[$i][1]->getNumerator() == 0) {
 						continue;
 					}
-					$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+					$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 					$s->divide($variables[$i][1]);
 					if ($s->compare($maxy)) {
 						$maxy = $s;
@@ -726,7 +726,7 @@ class Simplex {
 					if ($variables[$i][0]->getNumerator() == 0) {
 						continue;
 					}
-					$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+					$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 					$s->divide($variables[$i][0]);
 					if ($s->compare($maxx)) {
 						$maxx = $s;
@@ -735,7 +735,7 @@ class Simplex {
 						continue;
 					}
 
-					$s = new Fraction2($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
+					$s = new Fraction($boundaries[$i]->getNumerator(), $boundaries[$i]->getDenominator());
 					$s->divide($variables[$i][2]);
 					if ($s->compare($maxz)) {
 						$maxz = $s;
