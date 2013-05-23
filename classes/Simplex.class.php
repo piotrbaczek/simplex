@@ -50,10 +50,11 @@ class Simplex {
 
 		if ($this->d) {
 			foreach ($this->signs as $key => $value) {
-				$this->c[$this->index][$key] = new Fraction(0);
 				if ($value != "<=") {
 					$this->c[$this->index][$key] = new Fraction(0, 1, 1, 1);
 					$this->wrongsigns++;
+				}else{
+					$this->c[$this->index][$key] = new Fraction(0);
 				}
 			}
 		} else {
