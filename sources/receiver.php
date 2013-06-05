@@ -7,10 +7,12 @@ include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------
-//$_POST['textarea']='x1+0x2+0x3<=1000						0x1+1x2+0x3<=500						0x1+0x2+1x3<=1500 						3x1+6x2+2x3<=6750';
-//$_POST['targetfunction']='4x1+12x2+3x3';
-//$_POST['funct']='true';
-//$_POST['gomorryf']='false';
+//	$_POST['textarea'] = '5x1+1x2+9x3+12x4<=1500
+//2x1+3x2+4x3+5x4<=1000
+//3x1+2x2+5x3+8x4<=1200';
+//	$_POST['targetfunction'] = '12x1+5x2+10x3+10x4';
+//	$_POST['funct'] = 'true';
+//	$_POST['gomorryf'] = 'true';
 	$tp = new TextareaProcesser(
 			!isset($_POST['textarea']) ? null : $_POST['textarea'], !isset($_POST['targetfunction']) ? null : $_POST['targetfunction'], !isset($_POST['funct']) ? null : $_POST['funct'], !isset($_POST['gomorryf']) ? null : $_POST['gomorryf']
 	);

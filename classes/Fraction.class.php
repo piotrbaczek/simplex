@@ -40,30 +40,23 @@ class Fraction {
 	}
 
 	private function reduction() {
-		if ($this->numerator == 0) {
-			$this->denominator = 1;
-		} elseif (( $this->numerator < 0 && $this->denominator < 0 ) || ( $this->denominator < 0 )) {
+		if ($this->denominator < 0) {
 			$this->expansion(-1);
+			$this->reduction();
+		} elseif ($this->numerator == 0) {
+			$this->denominator = 1;
+		} elseif (abs($this->numerator) == 1 || abs($this->denominator) == 1) {
+			//do nothing - cannot reduce fraction with 1
+		} elseif ($this->numerator < 0) {
+			$this->numerator = abs($this->numerator);
 			$hcd = $this->highestCommonDivisor($this->numerator, $this->denominator);
 			$this->numerator /= $hcd;
 			$this->denominator /= $hcd;
+			$this->numerator*=-1;
 		} else {
 			$hcd = $this->highestCommonDivisor($this->numerator, $this->denominator);
 			$this->numerator /= $hcd;
 			$this->denominator /= $hcd;
-		}
-
-		if ($this->mnumerator == 0) {
-			$this->mdenominator = 1;
-		} elseif (( $this->mnumerator < 0 && $this->mdenominator < 0 ) || ( $this->mdenominator < 0 )) {
-			$this->mexpansion(-1);
-			$hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
-			$this->mnumerator /= $hcd;
-			$this->mdenominator /= $hcd;
-		} else {
-			$hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
-			$this->mnumerator /= $hcd;
-			$this->mdenominator /= $hcd;
 		}
 	}
 
@@ -188,6 +181,7 @@ class Fraction {
 	}
 
 	public static function highestCommonDivisor($a, $b) {
+		//echo 'hcd('.$a.','.$b.')';
 		$a = abs($a);
 		while ($a != $b) {
 			if ($a > $b) {

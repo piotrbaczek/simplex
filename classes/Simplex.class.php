@@ -53,7 +53,7 @@ class Simplex {
 				if ($value != "<=") {
 					$this->c[$this->index][$key] = new Fraction(0, 1, 1, 1);
 					$this->wrongsigns++;
-				}else{
+				} else {
 					$this->c[$this->index][$key] = new Fraction(0);
 				}
 			}
@@ -608,7 +608,7 @@ class Simplex {
 	}
 
 	private function gomorryrow() {
-		foreach ($this->returnValuePair() as $key => $value) {
+		foreach ($this->getValuePair() as $key => $value) {
 			if ($value->getNumerator() != 1) {
 				return $key;
 			}
@@ -808,4 +808,5 @@ class Simplex {
 	}
 
 }
+
 ?>
