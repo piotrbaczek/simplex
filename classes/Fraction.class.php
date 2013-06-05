@@ -178,7 +178,7 @@ class Fraction {
 		} else {
 			$string.=$this->numerator . '/' . $this->denominator;
 		}
-		if ($this->mnumerator == 0 && $this->mdenominator == 1) {
+		if ($this->mnumerator == 0) {
 			
 		} else {
 			$string.=($this->mnumerator >= 0 ? '+' : '');
