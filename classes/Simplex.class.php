@@ -390,7 +390,7 @@ class Simplex {
 				$a = count($this->matrixes[$i]);
 				$b = count($this->matrixes[$i][0]);
 				if ($this->basecol[$i - 1] == -1 && $this->baserow[$i - 1] == -1) {
-					echo '<table class="result2"><tbody>';
+					echo '<table class="result"><tbody>';
 				} else {
 					echo '<table class="result"><tbody>';
 				}
