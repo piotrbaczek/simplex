@@ -322,6 +322,10 @@ class Fraction {
 		}
 	}
 
+	public function isInteger() {
+		return is_integer($this->numerator / $this->denominator) ? true : false;
+	}
+
 }
 
 ?>
