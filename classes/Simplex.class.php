@@ -210,17 +210,12 @@ class Simplex {
 				}
 				$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
-			//------------------------
-//			if($this->index>0){
-//				break;
-//			}
-			//------------------------
 		}
 		$this->basecol[$this->index] = -1;
 		$this->baserow[$this->index] = -1;
 
 		if ($gomorry && $this->index != 0) {
-			while (true) {
+			while (!$this->gomorrycheck()) {
 				$this->index++;
 				$this->matrixes[$this->index] = $this->matrixes[$this->index - 1];
 				$k = $this->gomorryrow();
@@ -248,9 +243,6 @@ class Simplex {
 				$this->baserow[$this->index] = -1;
 				$this->c[$this->index] = $this->c[$this->index - 1];
 				$this->gaussjordan();
-				if (!$this->gomorrycheck()) {
-					break;
-				}
 			}
 		}
 	}
