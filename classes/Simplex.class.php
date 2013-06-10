@@ -132,12 +132,13 @@ class Simplex {
 			}
 			//for boundaries
 			$this->temp = new Fraction();
+			$b = count($this->matrixes[$this->index][0]);
 			for ($j = 0; $j < $this->N - 1; $j++) {
 				if ($this->signs[$j] != "<=") {
-					$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]);
+					$this->temp->add($this->matrixes[$this->index][$i][$b - 1]);
 				}
 			}
-			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+			$this->matrixes[$this->index][$this->N - 1][$b - 1]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 		} else {
 			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
 				$this->temp = new Fraction();
@@ -177,7 +178,8 @@ class Simplex {
 			} else {
 				$this->baserow[$this->index] = $q;
 			}
-			$this->c[$this->index][$q] = clone $this->matrixes[0][$this->M][$p];
+
+			$this->c[$this->index][$q] = clone $targetfunction[$q];
 			$this->c[$this->index][$q]->minusFraction();
 			$this->c[$this->index][$q] = new Fraction($this->c[$this->index][$q]->getNumerator(), $this->c[$this->index][$q]->getDenominator());
 			$this->swapBase();
@@ -418,7 +420,7 @@ class Simplex {
 				echo '</tr>';
 				for ($j = 0; $j < $a; $j++) {
 					if (isset($this->zmiennebazowe[$i][1 + $j])) {
-						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][1 + $j] . '</th><td class="center">' . $this->c[$this->index][$j]->toString() . '</td>';
+						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][1 + $j] . '</th><td class="center">' . $this->c[$i][$j]->toString() . '</td>';
 					} else {
 						echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
 						echo '<td></td>';
@@ -481,16 +483,15 @@ class Simplex {
 	}
 
 	private function findBaseCol() {
-		$a = count($this->matrixes[$this->index]);
-		$b = count($this->matrixes[$this->index][0]);
+		$count = count($this->matrixes[$this->index]);
 		$startv = new Fraction(100000);
 		$starti = -1;
 		for ($i = 0; $i < $this->M + $this->N - 2; $i++) {
-			if ($this->matrixes[$this->index][$a - 1][$i]->getNumerator() == 0) {
+			if ($this->matrixes[$this->index][$count - 1][$i]->getNumerator() == 0) {
 				continue;
-			} elseif ($startv->compare($this->matrixes[$this->index][$a - 1][$i]) && Fraction::isNegative($this->matrixes[$this->index][$a - 1][$i])) {
+			} elseif ($startv->compare($this->matrixes[$this->index][$count - 1][$i]) && Fraction::isNegative($this->matrixes[$this->index][$count - 1][$i])) {
 				$starti = $i;
-				$startv = $this->matrixes[$this->index][$a - 1][$i];
+				$startv = $this->matrixes[$this->index][$count - 1][$i];
 			}
 		}
 		$this->basecol[$this->index - 1] = $starti;
@@ -574,7 +575,6 @@ class Simplex {
 	}
 
 	public function printValuePair() {
-		$a = count($this->matrixes[$this->index][0]);
 		$x = $this->getValuePair();
 		foreach ($x as $key => $value) {
 			if ($value != 'NaN') {
@@ -591,7 +591,11 @@ class Simplex {
 			$x = Array();
 			$a = count($this->matrixes[$this->index][0]);
 			foreach ($this->basis as $key => $value) {
-				$x[$key] = $this->matrixes[$this->index][$value][$a - 1];
+				if (!isset($value)) {
+					$x[$key] = new Fraction();
+				} else {
+					$x[$key] = $this->matrixes[$this->index][$value][$a - 1];
+				}
 			}
 			return $x;
 		}
@@ -599,8 +603,10 @@ class Simplex {
 
 	private function gomorrycheck() {
 		$x = $this->getValuePair();
-		foreach ($x as $key => $value) {
-			if (!is_integer($value)) {
+		foreach ($x as $value) {
+			if ($value->isInteger()) {
+				continue;
+			} else {
 				return false;
 			}
 		}
@@ -609,7 +615,7 @@ class Simplex {
 
 	private function gomorryrow() {
 		foreach ($this->getValuePair() as $key => $value) {
-			if ($value->getNumerator() != 1) {
+			if (!$value->isInteger()) {
 				return $key;
 			}
 		}
