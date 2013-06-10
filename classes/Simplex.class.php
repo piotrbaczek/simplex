@@ -179,7 +179,7 @@ class Simplex {
 				$this->baserow[$this->index] = $q;
 			}
 
-			$this->c[$this->index][$q] = clone $targetfunction[$q];
+			$this->c[$this->index][$q] = clone $targetfunction[$p];
 			$this->c[$this->index][$q]->minusFraction();
 			$this->c[$this->index][$q] = new Fraction($this->c[$this->index][$q]->getNumerator(), $this->c[$this->index][$q]->getDenominator());
 			$this->swapBase();
