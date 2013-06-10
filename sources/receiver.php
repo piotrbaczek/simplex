@@ -12,7 +12,7 @@ if ($ss) {
 //3x1+2x2+5x3+8x4<=1200';
 //	$_POST['targetfunction'] = '12x1+5x2+10x3+10x4';
 //	$_POST['funct'] = 'true';
-//	$_POST['gomorryf'] = 'true';
+//	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
 			!isset($_POST['textarea']) ? null : $_POST['textarea'], !isset($_POST['targetfunction']) ? null : $_POST['targetfunction'], !isset($_POST['funct']) ? null : $_POST['funct'], !isset($_POST['gomorryf']) ? null : $_POST['gomorryf']
 	);
