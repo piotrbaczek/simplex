@@ -51,7 +51,7 @@ class Simplex {
 		if ($this->d) {
 			foreach ($this->signs as $key => $value) {
 				if ($value != "<=") {
-					$this->c[$this->index][$key] = new Fraction(0, 1, 1, 1);
+					$this->c[$this->index][$key] = new Fraction(0, 1, -1, 1);
 					$this->wrongsigns++;
 				} else {
 					$this->c[$this->index][$key] = new Fraction(0);
@@ -135,7 +135,7 @@ class Simplex {
 			$b = count($this->matrixes[$this->index][0]);
 			for ($j = 0; $j < $this->N - 1; $j++) {
 				if ($this->signs[$j] != "<=") {
-					$this->temp->add($this->matrixes[$this->index][$i][$b - 1]);
+					$this->temp->add($this->matrixes[$this->index][$j][$b - 1]);
 				}
 			}
 			$this->matrixes[$this->index][$this->N - 1][$b - 1]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
@@ -178,8 +178,11 @@ class Simplex {
 			} else {
 				$this->baserow[$this->index] = $q;
 			}
-
-			$this->c[$this->index][$q] = clone $targetfunction[$p];
+			if (isset($targetfunction[$p])) {
+				$this->c[$this->index][$q] = clone $targetfunction[$p];
+			} else {
+				$this->c[$this->index][$q] = new Fraction(0);
+			}
 			$this->c[$this->index][$q]->minusFraction();
 			$this->c[$this->index][$q] = new Fraction($this->c[$this->index][$q]->getNumerator(), $this->c[$this->index][$q]->getDenominator());
 			$this->swapBase();
