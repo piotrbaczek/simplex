@@ -1,5 +1,5 @@
 body {
-	
+
 }
 
 #content {
@@ -173,4 +173,27 @@ table.result td.mainelement {
     padding: 5px;
     opacity: 0.85;
 }
-#tooltip h3, #tooltip div { margin: 0; }
+#tooltip h3, #tooltip div {
+	margin: 0;
+}
+#whatitcandomaindiv{
+	overflow: hidden;
+	widows: 1000px;
+	margin: 0 auto;
+}
+#whatitcandoleft{
+	position: fixed;
+	width:400px;
+	float:left;
+	border:1px solid black;
+}
+#whatitcandoright{
+	width:600px;
+	float:left;
+	margin-left: 400px;
+	border:1px solid black;
+}
+#whatitcandoleftdiv,#whatitcandorightdiv{
+	padding: 15px;
+	margin: 15px;
+}
