@@ -65,18 +65,15 @@ class Simplex {
 				}
 			}
 		}
+		$this->basis->setSize($this->basis->count() + $this->O + $this->wrongsigns - 1);
+
 		for ($i = 1; $i < $this->N; $i++) {
 			$this->zmiennebazowe[$this->index][$i] = 'S<sub>' . $i . '</sub>';
 		}
-		for ($i = 1; $i < $this->O + $this->N; $i++) {
+		for ($i = 1; $i < $this->O + $this->N + $this->wrongsigns; $i++) {
 			$this->zmienneniebazowe[$this->index][$i] = 'x<sub>' . $i . '</sub>';
 		}
 
-		if ($this->wrongsigns != 0) {
-			for ($i = 2 * ($this->N - 1); $i < 2 * ($this->N - 1) + $this->wrongsigns; $i++) {
-				$this->zmienneniebazowe[$this->index][$i] = 'R<sub>' . (1 + $i - 2 * ($this->N - 1)) . '</sub>';
-			}
-		}
 
 		for ($i = 0; $i < $this->N; $i++) {
 			for ($j = 0; $j < $this->N + $this->M - 1 + $this->wrongsigns; $j++) {
@@ -186,11 +183,13 @@ class Simplex {
 			$this->gaussjordan();
 
 			if (!isset($this->basis[$q])) {
+				echo 's=' . $this->basis->getSize();
+				echo 'p=' . $p . ' q=' . $q . '<br/>';
 				$this->basis[$p] = $q;
 			}
 
 			if ($this->wrongsigns != 0) {
-				for ($i = 0; $i < ($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns); $i++) {
+				for ($i = 0; $i < $this->M + $this->N + $this->wrongsigns - 2; $i++) {
 					if (!in_array($i, $this->basecol)) {
 						$this->temp = new Fraction();
 						for ($j = 0; $j < $this->N - 1; $j++) {
@@ -202,13 +201,23 @@ class Simplex {
 					}
 				}
 				//for last column
-				$this->temp = new Fraction();
+				//--
+				//$b = count($this->matrixes[$this->index][0]);
+//			for ($j = 0; $j < $this->N - 1; $j++) {
+//				if ($this->signs[$j] != "<=") {
+//					$this->temp->add($this->matrixes[$this->index][$j][$b - 1]);
+//				}
+//			}
+//			$this->matrixes[$this->index][$this->N - 1][$b - 1]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+				//--
+				$this->temp = new Fraction(0, 1);
+				$b = count($this->matrixes[$this->index][0]);
 				for ($j = 0; $j < $this->N - 1; $j++) {
 					if (!in_array($j, $this->baserow) && $this->signs[$j] != "<=") {
-						$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]);
+						$this->temp->add($this->matrixes[$this->index][$j][$b - 1]);
 					}
 				}
-				$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+				$this->matrixes[$this->index][$this->N - 1][$b - 1]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
 		}
 		$this->basecol[$this->index] = -1;
@@ -571,8 +580,8 @@ class Simplex {
 		foreach ($x as $key => $value) {
 			if ($value != 'NaN') {
 				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value->toString();
-				if(!$value->isInteger()){
-					echo ' ('.round($value->getRealValue(),3).')';
+				if (!$value->isInteger()) {
+					echo ' (' . round($value->getRealValue(), 3) . ')';
 				}
 				echo '<br/>';
 				continue;
@@ -601,10 +610,10 @@ class Simplex {
 		$x = $this->getValuePair();
 		foreach ($x as $value) {
 			if ($value->isInteger()) {
-				echo $value->toString().' is integer';
+				echo $value->toString() . ' is integer';
 				continue;
 			} else {
-				echo $value->toString().' is not an integer';
+				echo $value->toString() . ' is not an integer';
 				return false;
 			}
 		}
