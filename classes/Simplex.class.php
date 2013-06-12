@@ -46,7 +46,6 @@ class Simplex {
 		$this->targetfunction = $targetfunction;
 		$this->signs = $signs;
 		$this->c[$this->index] = Array();
-		$this->basis = new SplFixedArray($this->O);
 
 		if ($this->d) {
 			foreach ($this->signs as $key => $value) {
@@ -65,7 +64,7 @@ class Simplex {
 				}
 			}
 		}
-		$this->basis->setSize($this->basis->count() + $this->O + $this->wrongsigns - 1);
+		$this->basis = new SplFixedArray($this->O + $this->N + $this->wrongsigns - 1);
 
 		for ($i = 1; $i < $this->N; $i++) {
 			$this->zmiennebazowe[$this->index][$i] = 'S<sub>' . $i . '</sub>';
@@ -144,11 +143,12 @@ class Simplex {
 				$this->matrixes[$this->index][$this->N - 1][$i]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 			}
 			//for boundaries
+			$b = count($this->matrixes[$this->index][0]);
 			$this->temp = new Fraction();
 			for ($j = 0; $j < $this->N - 1; $j++) {
-				$this->temp->add($this->matrixes[$this->index][$j][($this->M - 1) + 2 * $this->wrongsigns]);
+				$this->temp->add($this->matrixes[$this->index][$j][$b - 1]);
 			}
-			$this->matrixes[$this->index][$this->N - 1][($this->M - 1) + 2 * $this->wrongsigns + ($this->M - $this->wrongsigns)]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
+			$this->matrixes[$this->index][$this->N - 1][$b - 1]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
 		}
 
 		while (!$this->check()) {
@@ -586,7 +586,7 @@ class Simplex {
 			$a = count($this->matrixes[$this->index][0]);
 			foreach ($this->basis as $key => $value) {
 				if (!isset($value)) {
-					$x[$key] = new Fraction();
+					$x[$key] = new Fraction(0, 1);
 				} else {
 					$x[$key] = $this->matrixes[$this->index][$value][$a - 1];
 				}
