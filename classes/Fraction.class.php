@@ -8,19 +8,19 @@ class Fraction {
 	private $mdenominator;
 
 	public function __construct($numerator = 0, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
-		settype($numerator, 'integer');
-		settype($denominator, 'integer');
-		settype($mnumerator, 'integer');
-		settype($mdenominator, 'integer');
-		if ($denominator == 0 || $mdenominator == 0) {
-			throw new Exception('Denominator can\'t be a 0!');
-		} else {
-			$this->numerator = (int) $numerator;
-			$this->denominator = (int) $denominator;
-			$this->mnumerator = (int) $mnumerator;
-			$this->mdenominator = (int) $mdenominator;
-			$this->reduction();
+		$numerator = $this->realToFraction($numerator);
+		$denominator = $this->realToFraction($denominator);
+		$this->numerator = (int) ( $numerator[0] * $denominator[1] );
+		$this->denominator = (int) ( $denominator[0] * $numerator[1]);
+		
+		$mnumerator = $this->realToFraction($mnumerator);
+		$mdenominator = $this->realToFraction($mdenominator);
+		$this->mnumerator = (int) ( $mnumerator[0] * $mdenominator[1] );
+		$this->mdenominator = (int) ( $mdenominator[0] * $mnumerator[1] );
+		if ($this->denominator == 0 || $this->mdenominator == 0) {
+			throw new Exception('Denominator can\'t be 0!');
 		}
+		$this->reduction();
 	}
 
 	public function getNumerator() {
