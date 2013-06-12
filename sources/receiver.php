@@ -14,7 +14,7 @@ if ($ss) {
 //	$_POST['funct'] = 'true';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
-			!isset($_POST['textarea']) ? Array() : $_POST['textarea'], !isset($_POST['targetfunction']) ? Array() : $_POST['targetfunction'], !isset($_POST['funct']) ? Array() : $_POST['funct'], !isset($_POST['gomorryf']) ? Array() : $_POST['gomorryf']
+			!isset($_POST['textarea']) ? NULL : $_POST['textarea'], !isset($_POST['targetfunction']) ? NULL : $_POST['targetfunction'], !isset($_POST['funct']) ? NULL : $_POST['funct'], !isset($_POST['gomorryf']) ? NULL : $_POST['gomorryf']
 	);
 //echo '<pre>';
 //print_r($_POST);
