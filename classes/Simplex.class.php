@@ -199,15 +199,6 @@ class Simplex {
 					}
 				}
 				//for last column
-				//--
-				//$b = count($this->matrixes[$this->index][0]);
-//			for ($j = 0; $j < $this->N - 1; $j++) {
-//				if ($this->signs[$j] != "<=") {
-//					$this->temp->add($this->matrixes[$this->index][$j][$b - 1]);
-//				}
-//			}
-//			$this->matrixes[$this->index][$this->N - 1][$b - 1]->substract(new Fraction(0, 1, $this->temp->getNumerator(), $this->temp->getDenominator()));
-				//--
 				$this->temp = new Fraction(0, 1);
 				$b = count($this->matrixes[$this->index][0]);
 				for ($j = 0; $j < $this->N - 1; $j++) {
