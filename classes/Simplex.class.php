@@ -68,11 +68,8 @@ class Simplex {
 		for ($i = 1; $i < $this->N; $i++) {
 			$this->zmiennebazowe[$this->index][$i] = 'S<sub>' . $i . '</sub>';
 		}
-		for ($i = 1; $i < $this->M; $i++) {
+		for ($i = 1; $i < $this->O + $this->N; $i++) {
 			$this->zmienneniebazowe[$this->index][$i] = 'x<sub>' . $i . '</sub>';
-		}
-		for ($i = $this->M; $i < $this->O + $this->N; $i++) {
-			$this->zmienneniebazowe[$this->index][$i] = 'a<sub>' . ($i - $this->N + 2) . '</sub>';
 		}
 
 		if ($this->wrongsigns != 0) {
@@ -573,7 +570,11 @@ class Simplex {
 		$x = $this->getValuePair();
 		foreach ($x as $key => $value) {
 			if ($value != 'NaN') {
-				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value->toString() . '<br/>';
+				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value->toString();
+				if(!$value->isInteger()){
+					echo ' ('.round($value->getRealValue(),3).')';
+				}
+				echo '<br/>';
 				continue;
 			}
 		}
@@ -600,8 +601,10 @@ class Simplex {
 		$x = $this->getValuePair();
 		foreach ($x as $value) {
 			if ($value->isInteger()) {
+				echo $value->toString().' is integer';
 				continue;
 			} else {
+				echo $value->toString().' is not an integer';
 				return false;
 			}
 		}
