@@ -183,8 +183,6 @@ class Simplex {
 			$this->gaussjordan();
 
 			if (!isset($this->basis[$q])) {
-				echo 's=' . $this->basis->getSize();
-				echo 'p=' . $p . ' q=' . $q . '<br/>';
 				$this->basis[$p] = $q;
 			}
 
@@ -610,10 +608,8 @@ class Simplex {
 		$x = $this->getValuePair();
 		foreach ($x as $value) {
 			if ($value->isInteger()) {
-				echo $value->toString() . ' is integer';
 				continue;
 			} else {
-				echo $value->toString() . ' is not an integer';
 				return false;
 			}
 		}
