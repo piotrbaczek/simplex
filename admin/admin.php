@@ -14,7 +14,7 @@ if ($_SESSION['admin'] != 'true') {
         <link rel="stylesheet" href="css/admin.css" />
         <link rel="stylesheet"
               href="../js/development-bundle/themes/smoothness/jquery-ui-1.8.16.custom.css" />
-        <script src="../js/jquery-1.6.2.min.js"></script>
+        <script src="../js/js/jquery-1.6.2.min.js"></script>
         <script src="../js/js/jquery-ui-1.8.16.custom.min.js"></script>
         <script src="js/adminsimplex.js"></script>
     </head>
