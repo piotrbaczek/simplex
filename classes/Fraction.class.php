@@ -12,7 +12,7 @@ class Fraction {
 		$denominator = $this->realToFraction($denominator);
 		$this->numerator = (int) ( $numerator[0] * $denominator[1] );
 		$this->denominator = (int) ( $denominator[0] * $numerator[1]);
-		
+
 		$mnumerator = $this->realToFraction($mnumerator);
 		$mdenominator = $this->realToFraction($mdenominator);
 		$this->mnumerator = (int) ( $mnumerator[0] * $mdenominator[1] );
@@ -195,17 +195,9 @@ class Fraction {
 
 	public function isEqual($param) {
 		if ($param instanceof Fraction) {
-			if ($param->getNumerator() == $this->numerator && $param->getDenominator() == $this->denominator) {
-				return true;
-			} else {
-				return false;
-			}
+			return ($param->getNumerator() == $this->numerator && $param->getDenominator() == $this->denominator) ? true : false;
 		} elseif (is_numeric($param)) {
-			if ($this->getRealValue() == $param) {
-				return true;
-			} else {
-				return false;
-			}
+			return ($this->getRealValue() == $param) ? true : false;
 		}
 	}
 
@@ -315,15 +307,11 @@ class Fraction {
 	}
 
 	public function hasM() {
-		if ($this->mnumerator == 0) {
-			return false;
-		} else {
-			return true;
-		}
+		return $this->mnumerator == 0 ? false : true;
 	}
 
 	public function isInteger() {
-		return is_integer($this->numerator / $this->denominator) ? true : false;
+		return is_integer($this->numerator / $this->denominator);
 	}
 
 }
