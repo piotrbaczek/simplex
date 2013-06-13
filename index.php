@@ -112,7 +112,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 			}
 			?>
             <div id="footer">
-                <a href="mailto:pgolasz@gmail.com">Piotr Gołasz</a> &copy; 2013 <a
+                <a href="mailto:pgolasz@gmail.com">Piotr Gołasz</a> dla <a href="http://pg.gda.pl/">Politechnika Gdańska</a> &copy; 2013 <a
                     href="admin/index.php">Panel Administratora</a>
             </div>
         </div>
