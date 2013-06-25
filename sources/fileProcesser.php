@@ -8,7 +8,6 @@ include '../classes/activity.class.php';
 $ss=activity::isactivated2('../activity/active.xml')=='true' ? true : false;
 
 $adres = '../download/' . $_POST['filename'] . '.csv';
-//$adres = '../upload/Book1.csv';
 if (file_exists($adres)) {
 	$plik = new Processer($adres);
 	unlink($adres);

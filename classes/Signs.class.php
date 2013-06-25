@@ -35,12 +35,12 @@ class Signs {
 		}
 	}
 
-	public function toString() {
+	public function __toString() {
 		return $this->sign;
 	}
 
 }
 
-$znak = new Signs("<=");
-var_dump($znak);
+$znak = new Signs(">=");
+echo $znak == enumSigns::_LEQ ? 'tak' : 'nie';
 ?>
