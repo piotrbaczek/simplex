@@ -7,9 +7,9 @@
  */
 class enumSigns {
 
-	const _LEQ = "<=";
-	const _GEQ = ">=";
-	const _EQ = "=";
+	const _LEQ = '<=';
+	const _GEQ = '>=';
+	const _EQ = '=';
 
 }
 
