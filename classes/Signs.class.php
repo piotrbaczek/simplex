@@ -17,15 +17,15 @@ class Signs {
 
 	private $sign;
 
-	public function Signs($param) {
+	public function __construct($param) {
 		if (($param instanceof enumSigns)) {
 			$this->sign = $param;
 		} else {
 			switch ($param) {
-				case "<=":
+				case '<=':
 					$this->sign = enumSigns::_LEQ;
 					break;
-				case ">=":
+				case '>=':
 					$this->sign = enumSigns::_GEQ;
 					break;
 				default:
@@ -41,6 +41,6 @@ class Signs {
 
 }
 
-$znak = new Signs(">=");
+$znak = new Signs('>=');
 echo $znak == enumSigns::_LEQ ? 'tak' : 'nie';
 ?>
