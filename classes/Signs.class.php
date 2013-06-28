@@ -41,6 +41,4 @@ class Signs {
 
 }
 
-$znak = new Signs('>=');
-echo $znak == enumSigns::_LEQ ? 'tak' : 'nie';
 ?>
