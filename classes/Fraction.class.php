@@ -164,7 +164,7 @@ class Fraction {
 		}
 	}
 
-	public function toString() {
+	public function __toString() {
 		$string = '';
 		if ($this->denominator == 1) {
 			$string.=$this->numerator;
@@ -206,13 +206,11 @@ class Fraction {
 			while ($this->numerator >= $this->denominator) {
 				$this->numerator-=$this->denominator;
 			}
-			$this->minusFraction();
 		} elseif (Fraction::isNegative(new Fraction($this->getNumerator(), $this->getDenominator()))) {
 			while ($this->numerator < -$this->denominator) {
 				$this->numerator+=$this->denominator;
 			}
 			$this->add(1);
-			$this->minusFraction();
 		}
 	}
 
@@ -302,7 +300,7 @@ class Fraction {
 		}
 	}
 
-	public function _increment() {
+	public function increment() {
 		$this->add(new Fraction(1));
 	}
 
@@ -315,5 +313,4 @@ class Fraction {
 	}
 
 }
-
 ?>
