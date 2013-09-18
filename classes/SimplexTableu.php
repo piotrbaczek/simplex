@@ -63,7 +63,4 @@ class SimplexTableu {
 
 }
 
-$a = new SimplexTableu(3, 3);
-$a->setValue(2, 2, new Fraction(1));
-echo $a;
 ?>
