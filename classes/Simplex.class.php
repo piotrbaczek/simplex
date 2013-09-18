@@ -253,7 +253,7 @@ class Simplex {
 			for ($j = 0; $j < $a; $j++) {
 				echo '<tr>';
 				for ($k = 0; $k < $b; $k++) {
-					echo '<td>' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+					echo '<td>' . $this->matrixes[$i][$j][$k] . '</td>';
 				}
 				echo '</tr>';
 			}
@@ -286,7 +286,7 @@ class Simplex {
 		echo '<th style="width:30px;text-align:center;" class="ui-state-default"></th>';
 		for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
 			if (isset($this->targetfunction[$j])) {
-				echo '<th class="ui-state-default">' . $this->targetfunction[$j]->toString() . '</th>';
+				echo '<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
 			} else {
 				echo '<th class="ui-state-default">0</th>';
 			}
@@ -302,16 +302,16 @@ class Simplex {
 		echo '</tr>';
 		for ($j = 0; $j < $a; $j++) {
 			if (isset($this->zmiennebazowe[0][$j + 1])) {
-				echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[0][$j + 1] . '</th><td class="center">' . $this->c[0][$j]->toString() . '</td>';
+				echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[0][$j + 1] . '</th><td class="center">' . $this->c[0][$j] . '</td>';
 			} else {
 				echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th><th></th>';
 			}
 
 			for ($k = 0; $k < $b; $k++) {
 				if ($k == $this->basecol[0] && $j == $this->baserow[0] && 0 != $this->index) {
-					echo '<td style="color:white;background-color:red;text-align:center;width:45px;">' . $this->matrixes[0][$j][$k]->toString() . '</td>';
+					echo '<td style="color:white;background-color:red;text-align:center;width:45px;">' . $this->matrixes[0][$j][$k] . '</td>';
 				} else {
-					echo '<td style="text-align:center;width:45px;">' . $this->matrixes[0][$j][$k]->toString() . '</td>';
+					echo '<td style="text-align:center;width:45px;">' . $this->matrixes[0][$j][$k] . '</td>';
 				}
 			}
 			echo '</tr>';
@@ -327,7 +327,7 @@ class Simplex {
 				echo '<tr><th style="width:30px;text-align:center;" class="ui-state-default">(' . $i . ')</th><th style="width:30px;text-align:center;" class="ui-state-default"></th>';
 				for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
 					if (isset($this->targetfunction[$j])) {
-						echo '<th class="ui-state-default">' . $this->targetfunction[$j]->toString() . '</th>';
+						echo '<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
 					} else {
 						echo '<th class="ui-state-default">0</th>';
 					}
@@ -343,30 +343,30 @@ class Simplex {
 				echo '</tr>';
 				for ($j = 0; $j < $a; $j++) {
 					if (isset($this->zmiennebazowe[$i][($j + 1)])) {
-						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][($j + 1)] . '</th><td class="center">' . $this->c[$i][$j]->toString() . '</td>';
+						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][($j + 1)] . '</th><td class="center">' . $this->c[$i][$j] . '</td>';
 					} else {
 						echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th><th></th>';
 					}
 					for ($k = 0; $k < $b; $k++) {
 						if ($k == $this->basecol[$i] && $j == $this->baserow[$i] && $i != $this->index) {
 							if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
-								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} elseif ($k == $this->basecol[$i - 1]) {
-								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} elseif ($j == $this->baserow[$i - 1]) {
-								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} else {
-								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k]->toString() . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k] . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							}
 						} else {
 							if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
-								echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} elseif ($k == $this->basecol[$i - 1]) {
-								echo '<td style="text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} elseif ($j == $this->baserow[$i - 1]) {
-								echo '<td style="text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} else {
-								echo '<td style="text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k]->toString() . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k] . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							}
 						}
 					}
@@ -390,7 +390,7 @@ class Simplex {
 				echo '<th style="width:30px;text-align:center;" class="ui-state-default"></th>';
 				for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
 					if (isset($this->targetfunction[$j])) {
-						echo '<th class="ui-state-default">' . $this->targetfunction[$j]->toString() . '</th>';
+						echo '<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
 					} else {
 						echo '<th class="ui-state-default">0</th>';
 					}
@@ -410,7 +410,7 @@ class Simplex {
 				echo '</tr>';
 				for ($j = 0; $j < $a; $j++) {
 					if (isset($this->zmiennebazowe[$i][1 + $j])) {
-						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][1 + $j] . '</th><td class="center">' . $this->c[$i][$j]->toString() . '</td>';
+						echo '<tr><th class="ui-state-default">' . $this->zmiennebazowe[$i][1 + $j] . '</th><td class="center">' . $this->c[$i][$j] . '</td>';
 					} else {
 						echo '<tr><th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
 						echo '<td></td>';
@@ -421,45 +421,45 @@ class Simplex {
 						//brak wierszy głównych
 						for ($k = 0; $k < $b; $k++) {
 							if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
-								echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} elseif ($k == $this->basecol[$i - 1]) {
-								echo '<td style="text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} elseif ($j == $this->baserow[$i - 1]) {
-								echo '<td style="text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} else {
-								echo '<td style="text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k]->toString() . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k] . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 							}
 						}
 					} elseif ($this->baserow[$i - 1] == -1 && $this->basecol[$i - 1] == -1) {
 						//wiersze główne
 						for ($k = 0; $k < $b; $k++) {
 							if ($k == $this->basecol[$i] && $j == $this->baserow[$i]) {
-								echo '<td style="color:white;background-color:red;text-align:center;width:45px;">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="color:white;background-color:red;text-align:center;width:45px;">' . $this->matrixes[$i][$j][$k] . '</td>';
 							} else {
-								echo '<td style="text-align:center;width:45px;">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+								echo '<td style="text-align:center;width:45px;">' . $this->matrixes[$i][$j][$k] . '</td>';
 							}
 						}
 					} else {
 						for ($k = 0; $k < $b; $k++) {
 							if ($k == $this->basecol[$i] && $j == $this->baserow[$i] && $i != $this->index) {
 								if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
-									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								} elseif ($k == $this->basecol[$i - 1]) {
-									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								} elseif ($j == $this->baserow[$i - 1]) {
-									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								} else {
-									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k]->toString() . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="color:white;background-color:red;text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k] . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								}
 							} else {
 								if ($k == $this->basecol[$i - 1] && $j == $this->baserow[$i - 1]) {
-									echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="text-align:center;width:45px;" data-dane="m,1,' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								} elseif ($k == $this->basecol[$i - 1]) {
-									echo '<td style="text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="text-align:center;width:45px;" data-dane="c,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								} elseif ($j == $this->baserow[$i - 1]) {
-									echo '<td style="text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="text-align:center;width:45px;" data-dane="r,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								} else {
-									echo '<td style="text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k]->toString() . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]]->toString() . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]]->toString() . '">' . $this->matrixes[$i][$j][$k]->toString() . '</td>';
+									echo '<td style="text-align:center;width:45px;" data-dane="g,' . $this->matrixes[$i - 1][$j][$k] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$k] . ',' . $this->matrixes[$i - 1][$j][$this->basecol[$i - 1]] . ',' . $this->matrixes[$i - 1][$this->baserow[$i - 1]][$this->basecol[$i - 1]] . '">' . $this->matrixes[$i][$j][$k] . '</td>';
 								}
 							}
 						}
@@ -568,7 +568,7 @@ class Simplex {
 		$x = $this->getValuePair();
 		foreach ($x as $key => $value) {
 			if ($value != 'NaN') {
-				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value->toString();
+				echo 'x<sub>' . ($key + 1) . '</sub>=' . $value;
 				if (!$value->isInteger()) {
 					echo ' (' . round($value->getRealValue(), 3) . ')';
 				}
@@ -641,7 +641,7 @@ class Simplex {
 	}
 
 	public function printResult() {
-		echo 'W=' . $this->getResult()->toString();
+		echo 'W=' . $this->getResult();
 	}
 
 	public static function errormessage($message) {
