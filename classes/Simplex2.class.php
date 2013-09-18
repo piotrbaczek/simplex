@@ -29,7 +29,7 @@ class Simplex2 {
 		$this->boundaries = $boundaries;
 
 		foreach ($signs as $key => $value) {
-			$this->signs[$key] = Signs::Signs($value);
+			$this->signs[$key] = Signs::setSign($value);
 		}
 
 		if (count($boundaries) != count($signs)) {
