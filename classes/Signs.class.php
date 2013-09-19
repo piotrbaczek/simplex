@@ -17,7 +17,7 @@ class Signs {
 
 	private $sign;
 
-	public static function setSign($param) {
+	public function __construct($param) {
 		if (($param instanceof enumSigns)) {
 			$this->sign = $param;
 		} else {
