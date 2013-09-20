@@ -181,13 +181,8 @@ class Simplex2 {
 				$this->cCoefficient[$this->index][$q] = new Fraction(0);
 			}
 			$this->cCoefficient[$this->index][$q]->minusFraction();
-			$this->cCoefficient[$this->index][$q] = clone $this->cCoefficient[$this->index][$q];
 			$this->swapBase();
 			$this->simplexIteration();
-//			echo 'p=' . $this->matrixes[$this->index - 1]->getMainCol() . '<br/>';
-//			echo 'q=' . $this->matrixes[$this->index - 1]->getMainRow() . '<br/>';
-//			echo 'z=' . $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow()) . '<br/>';
-			//$this->matrixes[$this->index]->simplexIteration($this->matrixes[$this->index - 1]->getMainRow(), $this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow()));
 			//-------------------------------
 			break;
 //			if (!$this->matrixes[$this->index]->checkTargetFunction()) {
@@ -198,8 +193,6 @@ class Simplex2 {
 
 	public function printSolution() {
 		foreach ($this->matrixes as $value) {
-			$a = $value->getRows();
-			$b = $value->getCols();
 			for ($i = 0; $i < $value->getCols(); $i++) {
 				for ($j = 0; $j < $value->getRows(); $j++) {
 					echo $value->getElement($j, $i);
