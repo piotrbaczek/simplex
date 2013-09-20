@@ -227,29 +227,28 @@ class Simplex2 {
 		$previousMainElement = $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
 		for ($i = 0; $i < $this->matrixes[$this->index]->getCols(); $i++) {
 			for ($j = 0; $j < $this->matrixes[$this->index]->getRows(); $j++) {
-				//echo $this->getElement($j, $i);
 				if ($i == $previousBaseRow && $j == $previousBaseCol) {
-					//element główny
+					//Main element
 					$this->matrixes[$this->index]->setValue($i, $j, new Fraction(1));
 				} elseif ($i == $previousBaseRow) {
-					//wiersz główny
+					//Main row
 					$s = clone $this->matrixes[$this->index]->getElement($j, $i);
 					$n = clone $previousMainElement;
 					$s->divide($n);
 					$this->matrixes[$this->index]->setValue($j, $i, clone $s);
 				} elseif ($j == $previousBaseCol) {
-					//kolumna główna
+					//Main column
 					$this->matrixes[$this->index]->setValue($j, $i, new Fraction(0));
 				} else {
-					//normalny element
-//					$s = new Fraction($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$j]->getDenominator());
-//					$m = new Fraction($this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$i][$this->basecol[$this->index - 1]]->getDenominator());
-//					$n = new Fraction($this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getNumerator(), $this->matrixes[$this->index - 1][$this->baserow[$this->index - 1]][$this->basecol[$this->index - 1]]->getDenominator());
-//					$l = new Fraction($this->matrixes[$this->index][$i][$j]->getNumerator(), $this->matrixes[$this->index][$i][$j]->getDenominator());
-//					$s->multiply($m);
-//					$s->divide($n);
-//					$l->substract($s);
-//					$this->matrixes[$this->index]->setValue($j, $i, $l);//[$i][$j] = $l;
+					//Other elements
+					$s = clone $this->matrixes[$this->index - 1]->getElement($j, $this->matrixes[$this->index - 1]->getMainRow());
+					$m = clone $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $i);
+					$n = clone $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
+					$l = clone $this->matrixes[$this->index]->getElement($j, $i);
+					$s->multiply($m);
+					$s->divide($n);
+					$l->substract($s);
+					$this->matrixes[$this->index]->setValue($j, $i, $l);
 				}
 			}
 		}
