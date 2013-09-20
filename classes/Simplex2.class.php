@@ -148,7 +148,7 @@ class Simplex2 {
 		$this->Solve();
 	}
 
-	public function Solve() {
+	private function Solve() {
 		while (true) {
 			$this->index++;
 			$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
@@ -210,18 +210,26 @@ class Simplex2 {
 		}
 	}
 
+	public function getResult() {
+		return $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() -1, $this->matrixes[$this->index]->getCols() -1);
+	}
+
+	public function printResult() {
+		echo $this->getResult();
+	}
+
 	public static function errorMessage($message) {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
-	public function swapBase() {
+	private function swapBase() {
 		$buffer = $this->basisVariable[$this->index][$this->matrixes[$this->index - 1]->getMainRow() + 1];
 		$this->basisVariable[$this->index][$this->matrixes[$this->index - 1]->getMainRow() + 1] = $this->nonBasisVariable[$this->index][$this->matrixes[$this->index - 1]->getMainCol() + 1];
 		$this->nonBasisVariable[$this->index][$this->matrixes[$this->index - 1]->getMainCol() + 1] = $buffer;
 		unset($buffer);
 	}
 
-	public function simplexIteration() {
+	private function simplexIteration() {
 		$previousBaseRow = $this->matrixes[$this->index - 1]->getMainRow();
 		$previousBaseCol = $this->matrixes[$this->index - 1]->getMainCol();
 		$previousMainElement = $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
