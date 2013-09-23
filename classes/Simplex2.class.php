@@ -361,6 +361,7 @@ class Simplex2 {
 			echo 'x<sub>' . $index . '</sub>' . enumSigns::_GEQ . '0<br/>';
 			$index++;
 		}
+		echo '<br/>';
 	}
 
 	public function printValuePair() {
