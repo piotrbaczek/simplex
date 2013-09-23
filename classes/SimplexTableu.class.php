@@ -66,6 +66,10 @@ class SimplexTableu {
 	public function getArray() {
 		return $this->array;
 	}
+	
+	public function getIndex(){
+		return $this->index;
+	}
 
 	public function checkTargetFunction() {
 		for ($i = 0; $i < $this->getRows() - 1; $i++) {
