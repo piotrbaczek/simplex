@@ -138,6 +138,10 @@ class Fraction {
 		}
 	}
 
+	public static function equalsZero($param) {
+		return $param->numerator == 0 && $param->mnumerator == 0 ? true : false;
+	}
+
 	public function reverse() {
 		$sign = 1;
 		$numerator = $this->numerator;
@@ -313,4 +317,5 @@ class Fraction {
 	}
 
 }
+
 ?>

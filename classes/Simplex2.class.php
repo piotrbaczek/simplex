@@ -322,9 +322,43 @@ class Simplex2 {
 			}
 		}
 	}
-	
-	public function printProblem(){
+
+	public function printProblem() {
 		//TODO magic
+		$index = 1;
+		echo $this->extreme == true ? 'max ' : 'min ';
+		foreach ($this->targetfunction as $key => $value) {
+			$a = clone $value;
+			$value->minusFraction();
+			if ($key == 0 && (Fraction::isPositive($value) || Fraction::equalsZero($value))) {
+				echo $value . 'x<sub>' . $index . '</sub>';
+			} else {
+				echo '+' . $value . 'x<sub>' . $index . '</sub>';
+			}
+			$index++;
+		}
+		echo '<br/>';
+		$index = 1;
+		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
+			for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
+				if (Fraction::isPositive($this->matrixes[0]->getElement($j, $i)) || Fraction::equalsZero($this->matrixes[0]->getElement($j, $i))) {
+					echo $j != 0 ? '+' : '';
+					echo $this->matrixes[0]->getElement($j, $i) . 'x<sub>' . $index . '</sub>';
+				} else {
+					echo $this->matrixes[0]->getElement($j, $i) . 'x<sub>' . $index . '</sub>';
+				}
+				$index++;
+			}
+			echo $this->signs[$i];
+			echo $this->boundaries[$i];
+			echo '<br/>';
+			$index = 1;
+		}
+		$index = 1;
+		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
+			echo 'x<sub>' . $index . '</sub>' . enumSigns::_GEQ . '0<br/>';
+			$index++;
+		}
 	}
 
 }

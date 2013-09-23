@@ -28,6 +28,7 @@ if ($ss) {
 //echo '</pre>';
 	if ($tp->isCorrect()) {
 		$simplex2 = new Simplex2($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
+		$simplex2->printProblem();
 		$simplex2->printSolution();
 //		$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 //		echo '<div style="width:60%;height:100%;float:left;">';
