@@ -331,11 +331,11 @@ class Simplex2 {
 		echo $this->extreme == true ? 'max ' : 'min ';
 		foreach ($this->targetfunction as $key => $value) {
 			$a = clone $value;
-			$value->minusFraction();
-			if ($key == 0 && (Fraction::isPositive($value) || Fraction::equalsZero($value))) {
-				echo $value . 'x<sub>' . $index . '</sub>';
+			$a->minusFraction();
+			if ($key == 0 && (Fraction::isPositive($a) || Fraction::equalsZero($a))) {
+				echo $a . 'x<sub>' . $index . '</sub>';
 			} else {
-				echo '+' . $value . 'x<sub>' . $index . '</sub>';
+				echo '+' . $a . 'x<sub>' . $index . '</sub>';
 			}
 			$index++;
 		}
