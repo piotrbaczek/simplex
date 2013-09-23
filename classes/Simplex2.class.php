@@ -183,6 +183,9 @@ class Simplex2 {
 			$this->cCoefficient[$this->index][$q]->minusFraction();
 			$this->swapBase();
 			$this->simplexIteration();
+			if (!isset($this->basis[$q])) {
+				$this->basis[$p] = $q;
+			}
 			//-------------------------------
 			//break;
 			if ($this->matrixes[$this->index]->checkTargetFunction()) {
@@ -276,7 +279,7 @@ class Simplex2 {
 	}
 
 	public function printResult() {
-		echo $this->getResult();
+		echo 'W=' . $this->getResult();
 	}
 
 	public static function errorMessage($message) {
@@ -324,7 +327,6 @@ class Simplex2 {
 	}
 
 	public function printProblem() {
-		//TODO magic
 		$index = 1;
 		echo $this->extreme == true ? 'max ' : 'min ';
 		foreach ($this->targetfunction as $key => $value) {
@@ -358,6 +360,28 @@ class Simplex2 {
 		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
 			echo 'x<sub>' . $index . '</sub>' . enumSigns::_GEQ . '0<br/>';
 			$index++;
+		}
+	}
+
+	public function printValuePair() {
+		foreach ($this->getValuePair() as $key => $value) {
+			echo 'x<sub>' . ($key + 1) . '</sub>=' . $value . '<br/>';
+		}
+	}
+
+	public function getValuePair() {
+		if ($this->index == 0) {
+			return Array("NaN");
+		} else {
+			$x = Array();
+			foreach ($this->basis as $key => $value) {
+				if (!isset($value)) {
+					$x[$key] = new Fraction(0, 1);
+				} else {
+					$x[$key] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $value);
+				}
+			}
+			return $x;
 		}
 	}
 

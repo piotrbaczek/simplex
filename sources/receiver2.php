@@ -9,12 +9,12 @@ include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------
-	$_POST['textarea'] = '2x1+5x2<=30
-2x1+3x2<=26
-0x1+3x2<=15';
-	$_POST['targetfunction'] = '2x1+6x2';
-	$_POST['funct'] = 'true';
-	$_POST['gomorryf'] = 'false';
+//	$_POST['textarea'] = '2x1+5x2<=30
+//2x1+3x2<=26
+//0x1+3x2<=15';
+//	$_POST['targetfunction'] = '2x1+6x2';
+//	$_POST['funct'] = 'true';
+//	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
 			!isset($_POST['textarea']) ? NULL : $_POST['textarea'], !isset($_POST['targetfunction']) ? NULL : $_POST['targetfunction'], !isset($_POST['funct']) ? NULL : $_POST['funct'], !isset($_POST['gomorryf']) ? NULL : $_POST['gomorryf']
 	);
@@ -30,6 +30,8 @@ if ($ss) {
 		$simplex2 = new Simplex2($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 		$simplex2->printProblem();
 		$simplex2->printSolution();
+		$simplex2->printValuePair();
+		$simplex2->printResult();
 //		$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 //		echo '<div style="width:60%;height:100%;float:left;">';
 //		$simplex->printSolution();
