@@ -184,27 +184,83 @@ class Simplex2 {
 			$this->swapBase();
 			$this->simplexIteration();
 			//-------------------------------
-			break;
-//			if (!$this->matrixes[$this->index]->checkTargetFunction()) {
-//				break;
-//			}
+			//break;
+			if ($this->matrixes[$this->index]->checkTargetFunction()) {
+				$this->matrixes[$this->index]->setMainCol(-1);
+				$this->matrixes[$this->index]->setMainRow(-1);
+				break;
+			}
 		}
 	}
 
 	public function printSolution() {
-		foreach ($this->matrixes as $value) {
-			for ($i = 0; $i < $value->getCols(); $i++) {
-				for ($j = 0; $j < $value->getRows(); $j++) {
-					echo $value->getElement($j, $i);
+		foreach ($this->matrixes as $key => $value) {
+			echo '<table class="result">';
+			echo '<tbody>';
+			echo '<tr>';
+			echo '<th class="ui-state-default">(' . $value->getIndex() . ')</th>';
+			echo '<th class="ui-state-default"></th>';
+			for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
+				if (isset($this->targetfunction[$j])) {
+					echo '<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
+				} else {
+					echo '<th class="ui-state-default">0</th>';
 				}
-				echo '<br/>';
 			}
+			echo '<th class="ui-state-default" rowspan="2">Warto&#347;&#263;</th>';
+			echo '</tr>';
+			echo '<tr><th class="ui-state-default">Baza</th>';
+			echo '<th class="ui-state-default">c</th>';
+			for ($j = 0; $j < $this->N + $this->wrongsigns + $this->M - 2; $j++) {
+				if (isset($this->nonBasisVariable[$key][$j + 1])) {
+					echo '<th class="ui-state-default">' . $this->nonBasisVariable[$key][$j + 1] . '</th>';
+				}
+			}
+			echo '</tr>';
+			for ($i = 0; $i < $value->getCols(); $i++) {
+				echo '<tr>';
+				if (isset($this->basisVariable[$key][($i + 1)])) {
+					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
+					echo '<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
+				} else {
+					echo '<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
+					echo '<th></th>';
+				}
+				for ($j = 0; $j < $value->getRows(); $j++) {
+					if ($key != 0) {
+						//HERE PICTURES
+						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
+							echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
+						} elseif ($j == $this->matrixes[$key]->getMainCol()) {
+							echo '<td>' . $value->getElement($j, $i) . '</td>';
+						} elseif ($i == $this->matrixes[$key]->getMainRow()) {
+							echo '<td>' . $value->getElement($j, $i) . '</td>';
+						} else {
+							echo '<td>' . $value->getElement($j, $i) . '</td>';
+						}
+					} else {
+						//FIRST MATRIX - NO PICTURES NEEDED
+						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
+							echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
+						} elseif ($j == $this->matrixes[$key]->getMainCol()) {
+							echo '<td>' . $value->getElement($j, $i) . '</td>';
+						} elseif ($i == $this->matrixes[$key]->getMainRow()) {
+							echo '<td>' . $value->getElement($j, $i) . '</td>';
+						} else {
+							echo '<td>' . $value->getElement($j, $i) . '</td>';
+						}
+					}
+				}
+				echo '</tr>';
+			}
+			echo '</tbody>';
+			echo '</table>';
 			echo '<br/>';
 		}
 	}
 
 	public function getResult() {
-		return $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() -1, $this->matrixes[$this->index]->getCols() -1);
+		return $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1);
 	}
 
 	public function printResult() {

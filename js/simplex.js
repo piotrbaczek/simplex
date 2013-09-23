@@ -43,7 +43,7 @@ $(document).ajaxStart(function(){
             s=$('#solvethisform input,textarea,select').serialize();
             $.ajax({
                 type: "POST",
-                url: "sources/receiver.php",
+                url: "sources/receiver2.php",
                 data: s,
 				dataType: "html",
                 success: function(data){
