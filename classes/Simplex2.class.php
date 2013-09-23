@@ -228,18 +228,30 @@ class Simplex2 {
 				}
 				for ($j = 0; $j < $value->getRows(); $j++) {
 					if ($key != 0) {
-						//HERE PICTURES
+						//ALL PICTURES NEEDED
 						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
-							echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
-						} elseif ($j == $this->matrixes[$key]->getMainCol()) {
-							echo '<td>' . $value->getElement($j, $i) . '</td>';
-						} elseif ($i == $this->matrixes[$key]->getMainRow()) {
-							echo '<td>' . $value->getElement($j, $i) . '</td>';
+							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
+								echo '<td class="mainelement">' . $value->getElement($j, $i) . '(m)</td>';
+							} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
+								echo '<td class="mainelement">' . $value->getElement($j, $i) . '(c)</td>';
+							} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
+								echo '<td class="mainelement">' . $value->getElement($j, $i) . '(r)</td>';
+							} else {
+								echo '<td class="mainelement">' . $value->getElement($j, $i) . '(g)</td>';
+							}
 						} else {
-							echo '<td>' . $value->getElement($j, $i) . '</td>';
+							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
+								echo '<td>' . $value->getElement($j, $i) . '(m)</td>';
+							} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
+								echo '<td>' . $value->getElement($j, $i) . '(c)</td>';
+							} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
+								echo '<td>' . $value->getElement($j, $i) . '(r)</td>';
+							} else {
+								echo '<td>' . $value->getElement($j, $i) . '(g)</td>';
+							}
 						}
 					} else {
-						//FIRST MATRIX - NO PICTURES NEEDED
+						//NO PICTURES
 						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
 							echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
 						} elseif ($j == $this->matrixes[$key]->getMainCol()) {
