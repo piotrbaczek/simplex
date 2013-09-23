@@ -313,9 +313,9 @@ class Simplex2 {
 					$this->matrixes[$this->index]->setValue($j, $i, new Fraction(0));
 				} else {
 					//Other elements
-					$s = clone $this->matrixes[$this->index - 1]->getElement($j, $this->matrixes[$this->index - 1]->getMainRow());
-					$m = clone $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $i);
-					$n = clone $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
+					$s = clone $this->matrixes[$this->index - 1]->getElement($j, $previousBaseRow);
+					$m = clone $this->matrixes[$this->index - 1]->getElement($previousBaseCol, $i);
+					$n = clone $this->matrixes[$this->index - 1]->getElement($previousBaseCol, $previousBaseRow);
 					$l = clone $this->matrixes[$this->index]->getElement($j, $i);
 					$s->multiply($m);
 					$s->divide($n);
