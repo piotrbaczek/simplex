@@ -22,7 +22,7 @@ class Simplex2 {
 	private $basisVariable;
 	private $nonBasisVariable;
 
-	public function __construct(Array $variables = [], Array $boundaries = [], Array $signs = [], Array $targetfunction = [], $max = true, $gomory = false) {
+	public function __construct(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomory = false) {
 		$this->gomory = (boolean) $gomory;
 		$this->extreme = (boolean) $max;
 		$this->variables = $variables;
