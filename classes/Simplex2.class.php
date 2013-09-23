@@ -322,6 +322,10 @@ class Simplex2 {
 			}
 		}
 	}
+	
+	public function printProblem(){
+		//TODO magic
+	}
 
 }
 
