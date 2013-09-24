@@ -66,8 +66,8 @@ class SimplexTableu {
 	public function getArray() {
 		return $this->array;
 	}
-	
-	public function getIndex(){
+
+	public function getIndex() {
 		return $this->index;
 	}
 
@@ -81,12 +81,12 @@ class SimplexTableu {
 	}
 
 	public function findBaseCol() {
-		$startv = new Fraction(100000);
+		$startv = new Fraction(PHP_INT_MAX);
 		$starti = -1;
 		for ($i = 0; $i < $this->getRows() - 1; $i++) {
-			if ($this->getElement($i, $this->getCols() - 1)->getNumerator() == 0) {
+			if (Fraction::equalsZero($this->getElement($i, $this->getCols() - 1))) {
 				continue;
-			} elseif ($startv->compare($this->getElement($i, $this->getCols() - 1)->getNumerator()) && Fraction::isNegative($this->getElement($i, $this->getCols() - 1)->getNumerator())) {
+			} elseif ($startv->compare($this->getElement($i, $this->getCols() - 1)) && Fraction::isNegative($this->getElement($i, $this->getCols() - 1))) {
 				$starti = $i;
 				$startv = clone $this->getElement($i, $this->getCols() - 1);
 			}
@@ -95,12 +95,12 @@ class SimplexTableu {
 	}
 
 	public function findBaseRow($p) {
-		$startv = new Fraction(100000);
+		$startv = new Fraction(PHP_INT_MAX);
 		$starti = -1;
 		for ($i = 0; $i < $this->getCols() - 1; $i++) {
 			$s = clone $this->getElement($this->getRows() - 1, $i);
 			$n = clone $this->getElement($p, $i);
-			if ($n->getNumerator() == 0) {
+			if (Fraction::equalsZero($n) || Fraction::isNegative($n)) {
 				continue;
 			} else {
 				$s->divide($n);
