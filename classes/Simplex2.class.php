@@ -443,6 +443,9 @@ class Simplex2 {
 			echo 'x<sub>' . $index . '</sub>' . enumSigns::_GEQ . '0<br/>';
 			$index++;
 		}
+		if($this->gomory){
+			echo '<u>in integers</u>';
+		}
 		echo '<br/>';
 		unset($index);
 	}
