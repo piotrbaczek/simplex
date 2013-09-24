@@ -188,10 +188,31 @@ class Simplex2 {
 			}
 			//-------------------------------
 			//break;
-			if ($this->matrixes[$this->index]->checkTargetFunction()) {
+			if ($this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
+			}
+		}
+
+		if ($this->gomory && $this->index != 0) {
+			//GOMORY'S CUTTING PLANE METHOD
+			//TODO Implement!
+			while (true) {
+				$k = $this->gomoryRow();
+				$this->index++;
+				$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows());
+				$this->matrixes[$this->index]->setIndex($this->index);
+				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
+				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
+				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+				$this->gomoryNewTableau($k);
+				$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
+				//-------------------------------------------
+				break;
+//				if($this->checkTargetIntegerFunction()){
+//					break;
+//				}
 			}
 		}
 	}
@@ -276,6 +297,9 @@ class Simplex2 {
 
 	public function testPrint() {
 		foreach ($this->matrixes as $key => $value) {
+			echo 'Index:' . $value->getIndex() . '<br/>';
+			echo 'Col: ' . $value->getMainCol() . '<br/>';
+			echo 'Row: ' . $value->getMainRow() . '<br/>';
 			echo '<table border="1">';
 			for ($i = 0; $i < $value->getCols(); $i++) {
 				echo '<tr>';
@@ -286,6 +310,50 @@ class Simplex2 {
 			}
 			echo '</table><br/>';
 		}
+	}
+
+	private function gomoryRow() {
+		foreach ($this->getValuePair() as $key => $value) {
+			if (!$value->isInteger()) {
+				return $key;
+			}
+		}
+		return -1;
+	}
+
+	private function gomoryNewTableau($k) {
+		for ($i = 0; $i < $this->matrixes[$this->index - 1]->getCols() - 1; $i++) {
+			for ($j = 0; $j < $this->matrixes[$this->index - 1]->getRows(); $j++) {
+				$this->matrixes[$this->index]->setValue($j, $i, $this->matrixes[$this->index - 1]->getElement($j, $i));
+			}
+		}
+		for ($j = 0; $j < $this->matrixes[$this->index - 1]->getRows(); $j++) {
+			$this->matrixes[$this->index]->setValue($j, $this->matrixes[$this->index]->getCols() - 1, $this->matrixes[$this->index - 1]->getElement($j, $this->matrixes[$this->index - 1]->getCols() - 1));
+			$s = clone $this->matrixes[$this->index - 1]->getElement($j, $k);
+			$s->getImproperPart();
+			$this->matrixes[$this->index]->setValue($j, $this->matrixes[$this->index]->getCols() - 2, $s);
+		}
+	}
+
+	private function checkTargetFunction() {
+		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
+			if (Fraction::isNegative($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private function checkTargetIntegerFunction() {
+		$x = clone $this->getValuePair();
+		foreach ($x as $value) {
+			if ($value->isInteger()) {
+				continue;
+			} else {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public function getResult() {
