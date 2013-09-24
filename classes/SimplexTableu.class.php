@@ -71,15 +71,6 @@ class SimplexTableu {
 		return $this->index;
 	}
 
-	public function checkTargetFunction() {
-		for ($i = 0; $i < $this->getRows() - 1; $i++) {
-			if (Fraction::isNegative($this->getElement($i, $this->getCols() - 1))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public function findBaseCol() {
 		$startv = new Fraction(PHP_INT_MAX);
 		$starti = -1;
