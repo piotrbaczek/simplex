@@ -28,18 +28,16 @@ if ($ss) {
 //echo '</pre>';
 	if ($tp->isCorrect()) {
 		$simplex2 = new Simplex2($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
+		echo '<div style="width:60%;height:100%;float:left;">';
 		$simplex2->printProblem();
 		$simplex2->printSolution();
+		//$simplex2->testPrint();
 		$simplex2->printValuePair();
 		$simplex2->printResult();
-//		$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-//		echo '<div style="width:60%;height:100%;float:left;">';
-//		$simplex->printSolution();
-//		$simplex->printValuePair();
-//		$simplex->printResult();
-//		echo '</div><div style="width:40%;float:left">';
-//		$simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), $tp->getSigns());
-//		echo '</div><div style="width:1000px;clear:both;"></div>';
+		echo '</div>';
+		echo '<div style="width:40%;float:right">';
+		$simplex2->getJSON();
+		echo '</div><div style="width:1000px;clear:both;"></div>';
 	} else {
 		TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
 	}

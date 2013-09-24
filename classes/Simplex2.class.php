@@ -401,6 +401,165 @@ class Simplex2 {
 		}
 	}
 
+	public function getJSON() {
+		$a = count($this->targetfunction);
+		$b = count($this->boundaries);
+		$json = Array();
+		switch ($a) {
+			case 2:
+				$maxx = new Fraction(0);
+				$maxy = new Fraction(0);
+				for ($i = 0; $i < $b; $i++) {
+					if ($this->variables[$i][1]->getNumerator() == 0) {
+						continue;
+					}
+					$s = clone $this->boundaries[$i];
+					$s->divide($this->variables[$i][1]);
+					if ($s->compare($maxy)) {
+						$maxy = $s;
+					}
+					if ($this->variables[$i][0]->getNumerator() == 0) {
+						continue;
+					}
+					$s = clone $this->boundaries[$i];
+					$s->divide($this->variables[$i][0]);
+					if ($s->compare($maxx)) {
+						$maxx = $s;
+					}
+				}
+				for ($i = 0; $i < $b; $i++) {
+					$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
+					if ($this->variables[$i][1]->getNumerator() == 0) {
+						$s = clone $this->boundaries[$i];
+						$s->divide($this->variables[$i][0]);
+						$json[$i]['data'][] = Array($s->getRealValue(), $maxy->getRealValue());
+					} else {
+						$j = clone $this->boundaries[$i];
+						$j->divide($this->variables[$i][1]);
+						$json[$i]['data'][] = Array(0, $j->getRealValue());
+					}
+					if ($this->variables[$i][0]->getNumerator() == 0) {
+						$s = clone $this->boundaries[$i];
+						$s->divide($this->variables[$i][1]);
+						$json[$i]['data'][] = Array($maxx->getRealValue(), $s->getRealValue());
+					} else {
+						$j = clone $this->boundaries[$i];
+						$j->divide($this->variables[$i][0]);
+						$json[$i]['data'][] = Array($j->getRealValue(), 0);
+					}
+				}
+				if ($this->targetfunction[0]->getNumerator() != 0 && $this->targetfunction[1]->getNumerator() != 0) {
+					$t = clone $this->targetfunction[0];
+					$t->multiply($maxx);
+					$t->divide($this->targetfunction[1]);
+					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getRealValue(), $t->getRealValue())));
+				}
+				echo '<script>';
+				echo '$(document).ready(function(){';
+				echo '$.plot($("#placeholder1"),' . json_encode($json) . ');';
+				echo '});';
+				echo '</script>';
+				echo '<div style="width:480px;float:right;">';
+				echo '<div id="placeholder1" style="width: 480px; height: 360px;"></div>';
+				echo '</div>';
+				break;
+			default:
+				$maxx = new Fraction(0);
+				$maxy = new Fraction(0);
+				$maxz = new Fraction(0);
+				for ($i = 0; $i < $b; $i++) {
+					if ($this->variables[$i][1]->getNumerator() == 0) {
+						continue;
+					}
+					$s = clone $this->boundaries[$i];
+					$s->divide($this->variables[$i][1]);
+					if ($s->compare($maxy)) {
+						$maxy = $s;
+					}
+
+					if ($this->variables[$i][0]->getNumerator() == 0) {
+						continue;
+					}
+					$s = clone $this->boundaries[$i];
+					$s->divide($this->variables[$i][0]);
+					if ($s->compare($maxx)) {
+						$maxx = $s;
+					}
+					if ($this->variables[$i][2]->getNumerator() == 0) {
+						continue;
+					}
+
+					$s = clone $this->boundaries;
+					$s->divide($this->variables[$i][2]);
+					if ($s->compare($maxz)) {
+						$maxz = $s;
+					}
+				}
+				for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 25)) {
+					for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 25)) {
+						for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 25)) {
+							if (Simplex::isValidPoint($i, $j, $k)) {
+								$json[] = Array($i, $j, $k);
+							}
+						}
+					}
+				}
+				echo '<canvas id="canvas1" width="613" height="500"></canvas>';
+				echo '<script>';
+				echo '$(document).ready(function() {';
+				echo 'var vars = [];';
+				echo 'a =' . json_encode($json) . ';';
+				echo 'for (var i = 0; i < a.length; i++) {';
+				echo 'vars.push("Punkt" + (i + 1));';
+				echo '}';
+				echo 'var x = {
+                            "y": {
+                                "vars": vars,
+                                "smps": [
+                                    "X",
+                                    "Y",
+                                    "Z"
+                                ],
+                                "desc": [
+                                    "Simplex method"
+                                ],
+                                "data": a
+                            }
+                        };';
+				echo 'new CanvasXpress("canvas1", x, {';
+				echo '"graphType": "Scatter3D",';
+				echo '"useFlashIE": true,';
+				echo '"xAxis": [';
+				echo '"X"';
+				echo '],';
+				echo '"yAxis": [';
+				echo '"Y"';
+				echo '],';
+				echo '"zAxis": [';
+				echo '"Z"';
+				echo '],';
+				echo '"scatterType": false,';
+				echo '"setMinX": 0,';
+				echo '"setMinY": 0';
+				echo '});';
+				echo '});';
+				echo '</script>';
+				break;
+		}
+	}
+
+	private function isValidPoint($x, $y, $z) {
+		$b = count($this->boundaries);
+		$str = false;
+		for ($i = 0; $i < $b; $i++) {
+			eval("\$str = ((\$this->variables[$i][0]->getRealValue()*$x+\$this->variables[$i][1]->getRealValue()*$y+\$this->variables[$i][2]->getRealValue()*$z)$this->signs[$i](\$this->boundaries[$i]->getRealValue())) ? true : false;");
+			if (!$str) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }
 
 ?>
