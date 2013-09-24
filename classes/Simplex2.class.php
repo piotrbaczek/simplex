@@ -197,6 +197,7 @@ class Simplex2 {
 	}
 
 	public function printSolution() {
+		echo '<pre>';
 		foreach ($this->matrixes as $key => $value) {
 			echo '<table class="result">';
 			echo '<tbody>';
@@ -234,7 +235,7 @@ class Simplex2 {
 						//ALL PICTURES NEEDED
 						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
 							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
-								echo '<td class="mainelement">' . $value->getElement($j, $i) . '(m)</td>';
+								echo '<td class="mainelement" data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '(m)</td>';
 							} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
 								echo '<td class="mainelement">' . $value->getElement($j, $i) . '(c)</td>';
 							} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
@@ -244,7 +245,7 @@ class Simplex2 {
 							}
 						} else {
 							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
-								echo '<td>' . $value->getElement($j, $i) . '(m)</td>';
+								echo '<td >' . $value->getElement($j, $i) . '(m)</td>';
 							} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
 								echo '<td>' . $value->getElement($j, $i) . '(c)</td>';
 							} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
@@ -271,6 +272,20 @@ class Simplex2 {
 			echo '</tbody>';
 			echo '</table>';
 			echo '<br/>';
+		}
+	}
+
+	public function testPrint() {
+		foreach ($this->matrixes as $key => $value) {
+			echo '<table border="1">';
+			for ($i = 0; $i < $value->getCols(); $i++) {
+				echo '<tr>';
+				for ($j = 0; $j < $value->getRows(); $j++) {
+					echo '<td>' . $value->getElement($j, $i) . '</td>';
+				}
+				echo '</tr>';
+			}
+			echo '</table><br/>';
 		}
 	}
 
@@ -301,7 +316,7 @@ class Simplex2 {
 			for ($j = 0; $j < $this->matrixes[$this->index]->getRows(); $j++) {
 				if ($i == $previousBaseRow && $j == $previousBaseCol) {
 					//Main element
-					$this->matrixes[$this->index]->setValue($i, $j, new Fraction(1));
+					$this->matrixes[$this->index]->setValue($j, $i, new Fraction(1));
 				} elseif ($i == $previousBaseRow) {
 					//Main row
 					$s = clone $this->matrixes[$this->index]->getElement($j, $i);
@@ -362,6 +377,7 @@ class Simplex2 {
 			$index++;
 		}
 		echo '<br/>';
+		unset($index);
 	}
 
 	public function printValuePair() {
