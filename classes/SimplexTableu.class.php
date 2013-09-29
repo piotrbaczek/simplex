@@ -17,6 +17,7 @@ class SimplexTableu {
 	private $mainRow = -1;
 	private $mainCol = -1;
 	private $index = 0;
+	private $gomoryTable = false;
 	private $array;
 
 	public function __construct($rows = 1, $cols = 1) {
@@ -110,6 +111,14 @@ class SimplexTableu {
 
 	public function getMainCol() {
 		return $this->mainCol;
+	}
+
+	public function swapGomory() {
+		$this->gomoryTable = ($this->gomoryTable == true ? false : true);
+	}
+	
+	public function isGomory(){
+		return $this->gomoryTable;
 	}
 
 }
