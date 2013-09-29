@@ -105,47 +105,51 @@ class Simplex2 {
 			$targetfunction[$i]->minusFraction();
 			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $targetfunction[$i]);
 		}
+		$this->partialAdding();
 
-		if ($this->extreme) {
-			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
-				$temp = new Fraction();
-				for ($j = 0; $j < $this->N - 1; $j++) {
-					if ($this->signs[$j] == enumSigns::_GEQ) {
-						$temp->add($this->matrixes[$this->index]->getElement($i, $j));
-					}
-				}
-				$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-			}
-			//for boundaries
-			$temp = new Fraction();
-			$b = count($this->matrixes[$this->index]->getRows());
-			for ($j = 0; $j < $this->N - 1; $j++) {
-				if ($this->signs[$j] != enumSigns::_LEQ) {
-					$temp->add($this->matrixes[$this->index]->getElement($b - 1, $j));
-				}
-			}
-			$this->matrixes[$this->index]->getElement($b - 1, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-		} else {
-			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
-				$temp = new Fraction();
-				for ($j = 0; $j < $this->N - 1; $j++) {
-					if ($this->signs[$j] == enumSigns::_GEQ) {
-						$temp->add($this->matrixes[$this->index]->getElement($i, $j));
-					}
-				}
-				$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-			}
-			//for boundaries
-			$b = count($this->matrixes[$this->index]->getRows());
-			$temp = new Fraction();
-			for ($j = 0; $j < $this->N - 1; $j++) {
-				$temp->add($this->matrixes[$this->index]->getElement($b - 1, $j));
-			}
-			$this->matrixes[$this->index]->getElement($b - 1, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-		}
 
 		//--------------------------------------------
 		$this->Solve();
+	}
+
+	private function partialAdding() {
+//		if ($this->extreme) {
+//			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
+//				$temp = new Fraction();
+//				for ($j = 0; $j < $this->N - 1; $j++) {
+//					if ($this->signs[$j] == enumSigns::_GEQ) {
+//						$temp->add($this->matrixes[$this->index]->getElement($i, $j));
+//					}
+//				}
+//				$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+//			}
+//			//for boundaries
+//			$temp = new Fraction();
+//			$b = count($this->matrixes[$this->index]->getRows());
+//			for ($j = 0; $j < $this->N - 1; $j++) {
+//				if ($this->signs[$j] != enumSigns::_LEQ) {
+//					$temp->add($this->matrixes[$this->index]->getElement($b - 1, $j));
+//				}
+//			}
+//			$this->matrixes[$this->index]->getElement($b - 1, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+//		} else {
+//			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
+//				$temp = new Fraction();
+//				for ($j = 0; $j < $this->N - 1; $j++) {
+//					if ($this->signs[$j] == enumSigns::_GEQ) {
+//						$temp->add($this->matrixes[$this->index]->getElement($i, $j));
+//					}
+//				}
+//				$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+//			}
+//			//for boundaries
+//			$b = count($this->matrixes[$this->index]->getRows());
+//			$temp = new Fraction();
+//			for ($j = 0; $j < $this->N - 1; $j++) {
+//				$temp->add($this->matrixes[$this->index]->getElement($b - 1, $j));
+//			}
+//			$this->matrixes[$this->index]->getElement($b - 1, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+//		}
 	}
 
 	private function Solve() {
@@ -200,19 +204,38 @@ class Simplex2 {
 			//TODO Implement!
 			while (true) {
 				$k = $this->gomoryRow();
+				if ($k == -1) {
+					break;
+				}
 				$this->index++;
 				$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows());
+				$this->matrixes[$this->index]->swapGomory();
 				$this->matrixes[$this->index]->setIndex($this->index);
 				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 				$this->gomoryNewTableau($k);
 				$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
+				$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
+				$this->signs[count($this->signs)] = '>=';
+				$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
+				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
 				//-------------------------------------------
-				break;
-//				if($this->checkTargetIntegerFunction()){
-//					break;
-//				}
+				$this->index++;
+				$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
+				$this->matrixes[$this->index]->swapGomory();
+				$this->matrixes[$this->index]->setIndex($this->index);
+				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
+				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
+				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+				$this->swapBase();
+				$this->simplexIteration();
+				//-------------------------------------------
+				if ($this->checkTargetIntegerFunction()) {
+					$this->matrixes[$this->index]->setMainCol(-1);
+					$this->matrixes[$this->index]->setMainRow(-1);
+					break;
+				}
 			}
 		}
 	}
@@ -251,7 +274,7 @@ class Simplex2 {
 					echo '<th></th>';
 				}
 				for ($j = 0; $j < $value->getRows(); $j++) {
-					if ($key != 0) {
+					if ($key != 0 && !$value->isGomory()) {
 						//ALL PICTURES NEEDED
 						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
 							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
@@ -300,6 +323,7 @@ class Simplex2 {
 			echo 'Index:' . $value->getIndex() . '<br/>';
 			echo 'Col: ' . $value->getMainCol() . '<br/>';
 			echo 'Row: ' . $value->getMainRow() . '<br/>';
+			echo 'Gomory: ' . $value->isGomory() . '<br/>';
 			echo '<table border="1">';
 			for ($i = 0; $i < $value->getCols(); $i++) {
 				echo '<tr>';
@@ -345,8 +369,7 @@ class Simplex2 {
 	}
 
 	private function checkTargetIntegerFunction() {
-		$x = clone $this->getValuePair();
-		foreach ($x as $value) {
+		foreach ($this->getValuePair() as $value) {
 			if ($value->isInteger()) {
 				continue;
 			} else {
@@ -443,7 +466,7 @@ class Simplex2 {
 			echo 'x<sub>' . $index . '</sub>' . enumSigns::_GEQ . '0<br/>';
 			$index++;
 		}
-		if($this->gomory){
+		if ($this->gomory) {
 			echo '<u>in integers</u>';
 		}
 		echo '<br/>';
