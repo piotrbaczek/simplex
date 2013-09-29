@@ -2,15 +2,17 @@
 
 include '../classes/TextareaProcesser.class.php';
 include '../classes/Fraction.class.php';
-include '../classes/Simplex.class.php';
+include '../classes/SimplexTableu.class.php';
+include '../classes/Signs.class.php';
+include '../classes/Simplex2.class.php';
 include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------
-//	$_POST['textarea'] = '5x1+1x2+9x3+12x4>=1500
-//2x1+3x2+4x3+5x4<=1000
-//3x1+2x2+5x3+8x4<=1200';
-//	$_POST['targetfunction'] = '12x1+5x2+10x3+10x4';
+//	$_POST['textarea'] = '2x1+5x2<=30
+//2x1+3x2<=26
+//0x1+3x2<=15';
+//	$_POST['targetfunction'] = '2x1+6x2';
 //	$_POST['funct'] = 'true';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
@@ -25,15 +27,18 @@ if ($ss) {
 //print_r($tp->getMaxMin());
 //echo '</pre>';
 	if ($tp->isCorrect()) {
-		$simplex = new Simplex();
-		$simplex->Solve($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
+		$simplex2 = new Simplex2($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 		echo '<div style="width:60%;height:100%;float:left;">';
-		$simplex->printSolution();
-		$simplex->printValuePair();
-		$simplex->printResult();
-		echo '</div><div style="width:40%;float:left">';
-		$simplex->getjsonData($tp->getVariables(), $tp->getBoundaries(), $tp->getTargetfunction(), $tp->getSigns());
-		echo '</div><div style="width:1000px;clear:both;"></div>';
+		$simplex2->printProblem();
+		$simplex2->printSolution();
+		//$simplex2->testPrint();
+		$simplex2->printValuePair();
+		$simplex2->printResult();
+		echo '</div>';
+		echo '<div style="width:40%;float:right">';
+		$simplex2->getJSON();
+		echo '</div><div style="width:1000px;clear:both;">';
+		echo '</div>';
 	} else {
 		TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
 	}

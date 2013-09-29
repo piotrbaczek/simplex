@@ -43,7 +43,7 @@ $(document).ajaxStart(function(){
             s=$('#solvethisform input,textarea,select').serialize();
             $.ajax({
                 type: "POST",
-                url: "sources/receiver2.php",
+                url: "sources/receiver.php",
                 data: s,
 				dataType: "html",
                 success: function(data){
@@ -114,8 +114,8 @@ $(document).ajaxStart(function(){
                     id:'id'
                 },
                 success: function (data, status){
-                    if(typeof(data.error) != 'undefined'){
-                        if(data.error != ''){
+                    if(typeof(data.error) !== 'undefined'){
+                        if(data.error !== ''){
                             alert(data.error);
                         }else{
                             $('#result2').load("sources/fileProcesser.php", {
