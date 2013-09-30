@@ -319,7 +319,7 @@ class Simplex2 {
 	}
 
 	public function testPrint() {
-		foreach ($this->matrixes as $key => $value) {
+		foreach ($this->matrixes as $value) {
 			echo 'Index:' . $value->getIndex() . '<br/>';
 			echo 'Col: ' . $value->getMainCol() . '<br/>';
 			echo 'Row: ' . $value->getMainRow() . '<br/>';
@@ -592,7 +592,7 @@ class Simplex2 {
 				for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 25)) {
 					for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 25)) {
 						for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 25)) {
-							if (Simplex::isValidPoint($i, $j, $k)) {
+							if ($this->isValidPoint($i, $j, $k)) {
 								$json[] = Array($i, $j, $k);
 							}
 						}
