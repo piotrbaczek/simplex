@@ -1,27 +1,28 @@
 <?php
 
 include '../classes/CSVReader.class.php';
-include '../classes/Simplex.class.php';
+include '../classes/Simplex2.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';
 $ss=activity::isactivated2('../activity/active.xml')=='true' ? true : false;
-
 $adres = '../download/' . $_POST['filename'] . '.csv';
 if (file_exists($adres)) {
 	$plik = new Processer($adres);
 	unlink($adres);
 	if($ss){
-		$ss = new Simplex();
-		$ss->Solve($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetFunction(), $plik->getMinMax(), $plik->getGomorry());
-		echo '<div style="width:40%;float:left;">';
-		$ss->printSolution();
-		$ss->printValuePair();
-		$ss->printResult();
-		echo '</div><div style="width:60%;float:right">';
-		echo '<div style="margin:0px auto;">';
-		$ss->getjsonData($plik->getVariables(), $plik->getBoundaries(),$plik->getTargetfunction(),$plik->getSigns());
-		echo '</div></div><div style="width:1000px;clear:both;"></div>';
+		$simplex2 = new Simplex2($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
+		echo '<div style="width:60%;height:100%;float:left;">';
+		$simplex2->printProblem();
+		$simplex2->printSolution();
+		//$simplex2->testPrint();
+		$simplex2->printValuePair();
+		$simplex2->printResult();
+		echo '</div>';
+		echo '<div style="width:40%;float:right">';
+		$simplex2->getJSON();
+		echo '</div><div style="width:1000px;clear:both;">';
+		echo '</div>';
 	}else{
 		echo '<script>';
 		echo '$(document).ready(function(){';
