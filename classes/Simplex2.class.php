@@ -504,7 +504,7 @@ class Simplex2 {
 				$maxx = new Fraction(0);
 				$maxy = new Fraction(0);
 				for ($i = 0; $i < $b; $i++) {
-					if ($this->variables[$i][1]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][1])) {
 						continue;
 					}
 					$s = clone $this->boundaries[$i];
@@ -512,7 +512,7 @@ class Simplex2 {
 					if ($s->compare($maxy)) {
 						$maxy = $s;
 					}
-					if ($this->variables[$i][0]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][0])) {
 						continue;
 					}
 					$s = clone $this->boundaries[$i];
@@ -523,7 +523,7 @@ class Simplex2 {
 				}
 				for ($i = 0; $i < $b; $i++) {
 					$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
-					if ($this->variables[$i][1]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][1])) {
 						$s = clone $this->boundaries[$i];
 						$s->divide($this->variables[$i][0]);
 						$json[$i]['data'][] = Array($s->getRealValue(), $maxy->getRealValue());
@@ -532,7 +532,7 @@ class Simplex2 {
 						$j->divide($this->variables[$i][1]);
 						$json[$i]['data'][] = Array(0, $j->getRealValue());
 					}
-					if ($this->variables[$i][0]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][0])) {
 						$s = clone $this->boundaries[$i];
 						$s->divide($this->variables[$i][1]);
 						$json[$i]['data'][] = Array($maxx->getRealValue(), $s->getRealValue());
@@ -542,7 +542,7 @@ class Simplex2 {
 						$json[$i]['data'][] = Array($j->getRealValue(), 0);
 					}
 				}
-				if ($this->targetfunction[0]->getNumerator() != 0 && $this->targetfunction[1]->getNumerator() != 0) {
+				if (!Fraction::equalsZero($this->targetfunction[0]) && !Fraction::equalsZero($this->targetfunction[1])) {
 					$t = clone $this->targetfunction[0];
 					$t->multiply($maxx);
 					$t->divide($this->targetfunction[1]);
@@ -562,7 +562,7 @@ class Simplex2 {
 				$maxy = new Fraction(0);
 				$maxz = new Fraction(0);
 				for ($i = 0; $i < $b; $i++) {
-					if ($this->variables[$i][1]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][1])) {
 						continue;
 					}
 					$s = clone $this->boundaries[$i];
@@ -571,7 +571,7 @@ class Simplex2 {
 						$maxy = $s;
 					}
 
-					if ($this->variables[$i][0]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][0])) {
 						continue;
 					}
 					$s = clone $this->boundaries[$i];
@@ -579,7 +579,7 @@ class Simplex2 {
 					if ($s->compare($maxx)) {
 						$maxx = $s;
 					}
-					if ($this->variables[$i][2]->getNumerator() == 0) {
+					if (Fraction::equalsZero($this->variables[$i][2])) {
 						continue;
 					}
 
