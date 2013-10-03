@@ -140,15 +140,14 @@ class Simplex {
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-			$p = $this->matrixes[$this->index]->findBaseCol();
 			$this->partialAdding();
+			$p = $this->matrixes[$this->index]->findBaseCol();
 			if ($p == -1) {
 				break;
 			} else {
 				$this->matrixes[$this->index - 1]->setMainCol($p);
 				$this->matrixes[$this->index]->setMainCol($p);
 			}
-
 			$q = $this->matrixes[$this->index]->findBaseRow($p);
 			if ($q == -1) {
 				$this->errorMessage("Linear problem is unbounded");
@@ -184,8 +183,8 @@ class Simplex {
 			//GOMORY'S CUTTING PLANE METHOD
 			//TODO Implement!
 			while (true) {
-				$k = $this->gomoryRow();
-				if ($k == -1) {
+				$q = $this->gomoryRow();
+				if ($q == -1) {
 					break;
 				}
 				$this->index++;
@@ -195,7 +194,7 @@ class Simplex {
 				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-				$this->gomoryNewTableau($k);
+				$this->gomoryNewTableau($q);
 				$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
 				$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
 				$this->signs[count($this->signs)] = '>=';
