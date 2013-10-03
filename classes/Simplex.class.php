@@ -456,7 +456,7 @@ class Simplex {
 
 	public function printValuePair() {
 		foreach ($this->getValuePair() as $key => $value) {
-			echo 'x<sub>' . ($key + 1) . '</sub>=' . $value . '<br/>';
+			echo 'x<sub>' . ($key + 1) . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
 		}
 	}
 

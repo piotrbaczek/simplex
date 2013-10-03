@@ -142,6 +142,10 @@ class Fraction {
 		return $param->numerator == 0 && $param->mnumerator == 0 ? true : false;
 	}
 
+	public static function isFraction($param) {
+		return $param->denominator != 1 ? true : false;
+	}
+
 	public function reverse() {
 		$sign = 1;
 		$numerator = $this->numerator;
