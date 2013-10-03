@@ -234,7 +234,7 @@ class Simplex {
 					echo '<th class="ui-state-default">0</th>';
 				}
 			}
-			echo '<th class="ui-state-default" rowspan="2">Warto&#347;&#263;</th>';
+			echo '<th class="ui-state-default" rowspan="2">P<sub>o</sub></th>';
 			echo '</tr>';
 			echo '<tr><th class="ui-state-default">Baza</th>';
 			echo '<th class="ui-state-default">c</th>';
