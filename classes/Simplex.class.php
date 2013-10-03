@@ -113,43 +113,23 @@ class Simplex {
 	}
 
 	private function partialAdding() {
-//		if ($this->extreme) {
-//			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
-//				$temp = new Fraction();
-//				for ($j = 0; $j < $this->N - 1; $j++) {
-//					if ($this->signs[$j] == enumSigns::_GEQ) {
-//						$temp->add($this->matrixes[$this->index]->getElement($i, $j));
-//					}
-//				}
-//				$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-//			}
-//			//for boundaries
-//			$temp = new Fraction();
-//			$b = count($this->matrixes[$this->index]->getRows());
-//			for ($j = 0; $j < $this->N - 1; $j++) {
-//				if ($this->signs[$j] != enumSigns::_LEQ) {
-//					$temp->add($this->matrixes[$this->index]->getElement($b - 1, $j));
-//				}
-//			}
-//			$this->matrixes[$this->index]->getElement($b - 1, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-//		} else {
-//			for ($i = 0; $i < $this->N + $this->M - 2; $i++) {
-//				$temp = new Fraction();
-//				for ($j = 0; $j < $this->N - 1; $j++) {
-//					if ($this->signs[$j] == enumSigns::_GEQ) {
-//						$temp->add($this->matrixes[$this->index]->getElement($i, $j));
-//					}
-//				}
-//				$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-//			}
-//			//for boundaries
-//			$b = count($this->matrixes[$this->index]->getRows());
-//			$temp = new Fraction();
-//			for ($j = 0; $j < $this->N - 1; $j++) {
-//				$temp->add($this->matrixes[$this->index]->getElement($b - 1, $j));
-//			}
-//			$this->matrixes[$this->index]->getElement($b - 1, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
-//		}
+		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
+			$temp = new Fraction(0);
+			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
+				if ($this->signs[$j] != enumSigns::_LEQ) {
+					$temp->add($this->matrixes[$this->index]->getElement($i, $j));
+				}
+			}
+			$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+		}
+		//for boundaries
+		$temp = new Fraction(0);
+		for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
+			if ($this->signs[$j] != enumSigns::_LEQ) {
+				$temp->add($this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $j));
+			}
+		}
+		$this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $j)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
 	}
 
 	private function Solve() {
@@ -161,6 +141,7 @@ class Simplex {
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$p = $this->matrixes[$this->index]->findBaseCol();
+			$this->partialAdding();
 			if ($p == -1) {
 				break;
 			} else {
@@ -543,10 +524,10 @@ class Simplex {
 					}
 				}
 				if (!Fraction::equalsZero($this->targetfunction[0]) && !Fraction::equalsZero($this->targetfunction[1])) {
-					$t = clone $this->targetfunction[0];
+					$t = clone $this->targetfunction[1];
 					$t->multiply($maxx);
-					$t->divide($this->targetfunction[1]);
-					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getRealValue(), $t->getRealValue())));
+					$t->divide($this->targetfunction[0]);
+					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getRealValue() / 4, $t->getRealValue() / 4)));
 				}
 				echo '<script>';
 				echo '$(document).ready(function(){';

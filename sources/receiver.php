@@ -28,14 +28,14 @@ if ($ss) {
 //echo '</pre>';
 	if ($tp->isCorrect()) {
 		$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-		echo '<div style="width:60%;height:100%;float:left;">';
+		echo '<div style="width:700px;height:100%;float:left;">';
 		$simplex->printProblem();
 		$simplex->printSolution();
 		//$simplex2->testPrint();
 		$simplex->printValuePair();
 		$simplex->printResult();
 		echo '</div>';
-		echo '<div style="width:40%;float:right">';
+		echo '<div style="width:500px;float:right;">';
 		$simplex->getJSON();
 		echo '</div><div style="width:1000px;clear:both;">';
 		echo '</div>';

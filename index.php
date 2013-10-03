@@ -69,8 +69,8 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 																id="targetfunction" value="2x1+6x2"><br />
 										<textarea rows="10" name="textarea" id="textarea"
 												  style="width: 100%; resize: none;">2x1+5x2<=30
-2x1+3x2<=26
-0x1+3x2<=15</textarea>
+											2x1+3x2<=26
+											0x1+3x2<=15</textarea>
 										<button id="solvethis">Rozwiąż!</button>
 									</form>
 								</div>
@@ -80,7 +80,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 							<div id="loadbackbutton3">
 								<button id="backbutton3">Wróć</button>
 							</div>
-							<div id="resultdiv2" style="width: 960px;"></div>
+							<div id="resultdiv2" style="width: 1200px;"></div>
 						</div>
 					</div>
 					<div id="tabs-2">
@@ -106,7 +106,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 						</div>
 					</div>
 				</div>
-			<?php
+				<?php
 			} else {
 				activity::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 			}
