@@ -1,7 +1,7 @@
 <?php
 
 include '../classes/CSVReader.class.php';
-include '../classes/Simplex2.class.php';
+include '../classes/Simplex.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';
@@ -11,7 +11,7 @@ if (file_exists($adres)) {
 	$plik = new Processer($adres);
 	unlink($adres);
 	if($ss){
-		$simplex2 = new Simplex2($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
+		$simplex2 = new Simplex($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
 		echo '<div style="width:60%;height:100%;float:left;">';
 		$simplex2->printProblem();
 		$simplex2->printSolution();

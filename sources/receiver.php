@@ -4,7 +4,7 @@ include '../classes/TextareaProcesser.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/SimplexTableu.class.php';
 include '../classes/Signs.class.php';
-include '../classes/Simplex2.class.php';
+include '../classes/Simplex.class.php';
 include '../classes/activity.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
@@ -16,7 +16,7 @@ if ($ss) {
 //	$_POST['funct'] = 'true';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
-			!isset($_POST['textarea']) ? NULL : $_POST['textarea'], !isset($_POST['targetfunction']) ? NULL : $_POST['targetfunction'], !isset($_POST['funct']) ? NULL : $_POST['funct'], !isset($_POST['gomorryf']) ? NULL : $_POST['gomorryf']
+			!isset($_POST['textarea']) ? Array() : $_POST['textarea'], !isset($_POST['targetfunction']) ? Array() : $_POST['targetfunction'], !isset($_POST['funct']) ? Array() : $_POST['funct'], !isset($_POST['gomorryf']) ? Array() : $_POST['gomorryf']
 	);
 //echo '<pre>';
 //print_r($_POST);
@@ -27,16 +27,16 @@ if ($ss) {
 //print_r($tp->getMaxMin());
 //echo '</pre>';
 	if ($tp->isCorrect()) {
-		$simplex2 = new Simplex2($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
+		$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 		echo '<div style="width:60%;height:100%;float:left;">';
-		$simplex2->printProblem();
-		$simplex2->printSolution();
+		$simplex->printProblem();
+		$simplex->printSolution();
 		//$simplex2->testPrint();
-		$simplex2->printValuePair();
-		$simplex2->printResult();
+		$simplex->printValuePair();
+		$simplex->printResult();
 		echo '</div>';
 		echo '<div style="width:40%;float:right">';
-		$simplex2->getJSON();
+		$simplex->getJSON();
 		echo '</div><div style="width:1000px;clear:both;">';
 		echo '</div>';
 	} else {
@@ -46,7 +46,7 @@ if ($ss) {
 	echo '<script>';
 	echo '$(document).ready(function(){';
 	echo '$(\'#tabs\').remove();';
-	echo '$(\'#header\').after(\'' . activity::errormessage2('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!') . '\');';
+	echo '$(\'#header\').after(\'' . TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!') . '\');';
 	echo '});';
 	echo '</script>';
 }
