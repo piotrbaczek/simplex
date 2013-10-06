@@ -116,9 +116,21 @@ class SimplexTableu {
 	public function swapGomory() {
 		$this->gomoryTable = ($this->gomoryTable == true ? false : true);
 	}
-	
-	public function isGomory(){
+
+	public function isGomory() {
 		return $this->gomoryTable;
+	}
+
+	public function printArray() {
+		echo '<table>';
+		for ($i = 0; $i < $this->getCols(); $i++) {
+			echo '<tr>';
+			for ($j = 0; $j < $this->getRows(); $j++) {
+				echo '<td>'.$this->getElement($j, $i).'</td>';
+			}
+			echo '</tr>';
+		}
+		echo '</table>';
 	}
 
 }
