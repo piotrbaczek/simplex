@@ -106,30 +106,30 @@ class Simplex {
 			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $targetfunction[$i]);
 		}
 		$this->partialAdding();
-
-
 		//--------------------------------------------
 		$this->Solve();
 	}
 
-	private function partialAdding() {
-		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
+	private function partialAdding($q = -1) {
+		for ($i = 0; $i < -3 + 2 * $this->N; $i++) {
 			$temp = new Fraction(0);
 			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
-				if ($this->signs[$j] != enumSigns::_LEQ) {
-					$temp->add($this->matrixes[$this->index]->getElement($i, $j));
+				if ($this->signs[$j] != enumSigns::_LEQ && $j!=$q) {
+					$temp->substract($this->matrixes[$this->index]->getElement($i, $j));
 				}
 			}
-			$this->matrixes[$this->index]->getElement($i, $this->N - 1)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+			$temp2 = $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1);
+			$this->matrixes[$this->index]->setValue($i, $this->matrixes[$this->index]->getCols() - 1, new Fraction($temp2->getNumerator(), $temp2->getDenominator(), $temp->getNumerator(), $temp->getDenominator()));
 		}
 		//for boundaries
 		$temp = new Fraction(0);
 		for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
 			if ($this->signs[$j] != enumSigns::_LEQ) {
-				$temp->add($this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $j));
+				$temp->substract($this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $j));
 			}
 		}
-		$this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $j)->substract(new Fraction(0, 1, $temp->getNumerator(), $temp->getDenominator()));
+		$temp2 = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1);
+		$this->matrixes[$this->index]->setValue($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1, new Fraction($temp2->getNumerator(), $temp2->getDenominator(), $temp->getNumerator(), $temp->getDenominator()));
 	}
 
 	private function Solve() {
@@ -140,7 +140,6 @@ class Simplex {
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-			$this->partialAdding();
 			$p = $this->matrixes[$this->index]->findBaseCol();
 			if ($p == -1) {
 				break;
@@ -170,11 +169,14 @@ class Simplex {
 			if (!isset($this->basis[$q])) {
 				$this->basis[$p] = $q;
 			}
+			$this->partialAdding($q);
 			//-------------------------------
-			//break;
 			if ($this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
 				$this->matrixes[$this->index]->setMainRow(-1);
+				break;
+			}
+			if ($this->index >= 4) {
 				break;
 			}
 		}
