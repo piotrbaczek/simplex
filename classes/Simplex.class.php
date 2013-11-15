@@ -226,12 +226,12 @@ class Simplex {
 	public function printSolution() {
 		foreach ($this->matrixes as $key => $value) {
 			if (($key + 1) > $this->index) {
-				$divisionArrray = Array();
-				foreach ($value->getDivisionArray() as $key => $darray) {
-					$divisionArrray[$key] = '-';
+				$divisionArray = Array();
+				foreach ($value->getDivisionArray() as $key2 => $darray) {
+					$divisionArray[$key2] = '-';
 				}
 			} else {
-				$divisionArrray = $this->matrixes[$key + 1]->getDivisionArray();
+				$divisionArray = $this->matrixes[$key + 1]->getDivisionArray();
 			}
 			echo '<table class="result">';
 			echo '<tbody>';
@@ -301,7 +301,7 @@ class Simplex {
 						}
 					}
 				}
-				echo '<td class="ui-state-default">' . (!isset($divisionArrray[$i]) ? '-' : $divisionArrray[$i]) . '</td>';
+				echo '<td class="ui-state-default">' . (!isset($divisionArray[$i]) ? '-' : $divisionArray[$i]) . '</td>';
 				echo '</tr>';
 			}
 			echo '</tbody>';
