@@ -19,6 +19,7 @@ class SimplexTableu {
 	private $index = 0;
 	private $gomoryTable = false;
 	private $array;
+	private $divisionArray;
 
 	public function __construct($rows = 1, $cols = 1) {
 		for ($i = 0; $i < $cols; $i++) {
@@ -93,9 +94,11 @@ class SimplexTableu {
 			$s = clone $this->getElement($this->getRows() - 1, $i);
 			$n = clone $this->getElement($p, $i);
 			if (Fraction::equalsZero($n) || Fraction::isNegative($n)) {
+				$this->divisionArray[$i] = '-';
 				continue;
 			} else {
 				$s->divide($n);
+				$this->divisionArray[$i] = clone $s;
 				if (!$s->compare($startv) && Fraction::isPositive($s)) {
 					$starti = $i;
 					$startv = $s;
@@ -126,11 +129,15 @@ class SimplexTableu {
 		for ($i = 0; $i < $this->getCols(); $i++) {
 			echo '<tr>';
 			for ($j = 0; $j < $this->getRows(); $j++) {
-				echo '<td>'.$this->getElement($j, $i).'</td>';
+				echo '<td>' . $this->getElement($j, $i) . '</td>';
 			}
 			echo '</tr>';
 		}
 		echo '</table>';
+	}
+
+	public function getDivisionArray() {
+		return $this->divisionArray;
 	}
 
 }

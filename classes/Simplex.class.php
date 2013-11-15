@@ -114,7 +114,7 @@ class Simplex {
 		for ($i = 0; $i < -3 + 2 * $this->N; $i++) {
 			$temp = new Fraction(0);
 			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
-				if ($this->signs[$j] != enumSigns::_LEQ && $j!=$q) {
+				if ($this->signs[$j] != enumSigns::_LEQ && $j != $q) {
 					$temp->substract($this->matrixes[$this->index]->getElement($i, $j));
 				}
 			}
@@ -202,6 +202,7 @@ class Simplex {
 				$this->signs[count($this->signs)] = '>=';
 				$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
 				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
+
 				//-------------------------------------------
 				$this->index++;
 				$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
@@ -224,6 +225,14 @@ class Simplex {
 
 	public function printSolution() {
 		foreach ($this->matrixes as $key => $value) {
+			if (($key + 1) > $this->index) {
+				$divisionArrray = Array();
+				foreach ($value->getDivisionArray() as $key => $darray) {
+					$divisionArrray[$key] = '-';
+				}
+			} else {
+				$divisionArrray = $this->matrixes[$key + 1]->getDivisionArray();
+			}
 			echo '<table class="result">';
 			echo '<tbody>';
 			echo '<tr>';
@@ -292,6 +301,7 @@ class Simplex {
 						}
 					}
 				}
+				echo '<td class="ui-state-default">' . (!isset($divisionArrray[$i]) ? '-' : $divisionArrray[$i]) . '</td>';
 				echo '</tr>';
 			}
 			echo '</tbody>';
