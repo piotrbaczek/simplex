@@ -10,7 +10,6 @@
  *
  * @author PETTER
  */
-include_once 'Fraction.class.php';
 
 class SimplexTableu {
 

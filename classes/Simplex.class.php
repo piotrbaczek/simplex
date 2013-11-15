@@ -166,7 +166,7 @@ class Simplex {
 			$this->cCoefficient[$this->index][$q]->minusFraction();
 			$this->swapBase();
 			$this->simplexIteration();
-			if (!isset($this->basis[$q])) {
+			if (!isset($this->basis[$p])) {
 				$this->basis[$p] = $q;
 			}
 			$this->partialAdding($q);
@@ -467,7 +467,7 @@ class Simplex {
 
 	public function printValuePair() {
 		foreach ($this->getValuePair() as $key => $value) {
-			echo 'x<sub>' . ($key + 1) . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
+			echo 'x<sub>' . $key . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
 		}
 	}
 
@@ -477,10 +477,10 @@ class Simplex {
 		} else {
 			$x = Array();
 			foreach ($this->basis as $key => $value) {
-				if (!isset($value)) {
-					$x[$key] = new Fraction(0, 1);
+				if (isset($value)) {
+					$x[$key + 1] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $value);
 				} else {
-					$x[$key] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $value);
+					$x[$key + 1] = new Fraction(0);
 				}
 			}
 			return $x;
