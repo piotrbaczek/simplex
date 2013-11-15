@@ -534,7 +534,7 @@ class Simplex {
 						$json[$i]['data'][] = Array($j->getRealValue(), 0);
 					}
 				}
-				if (!Fraction::equalsZero($this->targetfunction[0]) && !Fraction::equalsZero($this->targetfunction[1])) {
+				if (!Fraction::equalsZero($this->targetfunction[0])) {
 					$t = clone $this->targetfunction[1];
 					$t->multiply($maxx);
 					$t->divide($this->targetfunction[0]);
