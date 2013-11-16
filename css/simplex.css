@@ -196,3 +196,6 @@ table.result td.mainelement {
 	padding: 15px;
 	margin: 15px;
 }
+tr.underlined td, tr.underlined th{
+	border-top: 3px solid black;
+}
