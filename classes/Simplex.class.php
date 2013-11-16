@@ -21,6 +21,7 @@ class Simplex {
 	private $basis;
 	private $basisVariable;
 	private $nonBasisVariable;
+	private $zj;
 
 	public function __construct(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomory = false) {
 		$this->gomory = (boolean) $gomory;
@@ -35,6 +36,7 @@ class Simplex {
 		$this->cCoefficient[$this->index] = Array();
 		$this->basisVariable = Array();
 		$this->nonBasisVariable = Array();
+		$this->zj[$this->index] = Array();
 
 		if (empty($variables) || empty($boundaries) || empty($signs) || empty($targetfunction)) {
 			throw new Exception('Input array is empty!.');
@@ -62,6 +64,9 @@ class Simplex {
 		}
 
 		$this->basis = new SplFixedArray($this->O + $this->N + $this->wrongsigns - 1);
+		for ($i = 0; $i < $this->O + $this->N + $this->wrongsigns - 1; $i++) {
+			$this->zj[$this->index][$i] = new Fraction(0);
+		}
 
 		for ($i = 1; $i < $this->N; $i++) {
 			$this->basisVariable[$this->index][$i] = 'S<sub>' . $i . '</sub>';
@@ -141,6 +146,7 @@ class Simplex {
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$p = $this->matrixes[$this->index]->findBaseCol();
+			$this->zj[$this->index] = $this->zj[$this->index - 1];
 			if ($p == -1) {
 				break;
 			} else {
@@ -166,6 +172,7 @@ class Simplex {
 			$this->cCoefficient[$this->index][$q]->minusFraction();
 			$this->swapBase();
 			$this->simplexIteration();
+			$this->setZj($p);
 			if (!isset($this->basis[$p])) {
 				$this->basis[$p] = $q;
 			}
@@ -183,7 +190,6 @@ class Simplex {
 
 		if ($this->gomory && $this->index != 0) {
 			//GOMORY'S CUTTING PLANE METHOD
-			//TODO Implement!
 			while (true) {
 				$q = $this->gomoryRow();
 				if ($q == -1) {
@@ -202,7 +208,7 @@ class Simplex {
 				$this->signs[count($this->signs)] = '>=';
 				$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
 				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
-
+				$this->zj[$this->index] = $this->zj[$this->index - 1];
 				//-------------------------------------------
 				$this->index++;
 				$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
@@ -211,6 +217,7 @@ class Simplex {
 				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+				$this->zj[$this->index] = $this->zj[$this->index - 1];
 				$this->swapBase();
 				$this->simplexIteration();
 				//-------------------------------------------
@@ -255,58 +262,84 @@ class Simplex {
 				}
 			}
 			echo '</tr>';
-			for ($i = 0; $i < $value->getCols(); $i++) {
+			for ($i = 0; $i < $value->getCols() - 1; $i++) {
 				echo '<tr>';
 				if (isset($this->basisVariable[$key][($i + 1)])) {
 					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
 					echo '<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
 				} else {
 					echo '<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
-					echo '<th></th>';
+					echo '<th class="ui-state-default"></th>';
 				}
-				for ($j = 0; $j < $value->getRows(); $j++) {
-					if ($key != 0 && !$value->isGomory()) {
-						//ALL PICTURES NEEDED
-						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
-							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
-								echo '<td class="mainelement" data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
-								echo '<td class="mainelement" data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
-								echo '<td class="mainelement" data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							} else {
-								echo '<td class="mainelement" data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							}
-						} else {
-							if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
-								echo '<td data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
-								echo '<td data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
-								echo '<td data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							} else {
-								echo '<td data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
-							}
-						}
-					} else {
-						//NO PICTURES
-						if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
-							echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
-						} elseif ($j == $this->matrixes[$key]->getMainCol()) {
-							echo '<td>' . $value->getElement($j, $i) . '</td>';
-						} elseif ($i == $this->matrixes[$key]->getMainRow()) {
-							echo '<td>' . $value->getElement($j, $i) . '</td>';
-						} else {
-							echo '<td>' . $value->getElement($j, $i) . '</td>';
-						}
-					}
+				$this->printImages($value, $key, $i, $j);
+				echo '<td class="ui-state-default">' . (!isset($divisionArray[$i]) ? '-' : $divisionArray[$i]) . '</td>';
+				echo '</tr>';
+			}
+
+			echo '<tr class="underlined">';
+			echo '<th class="ui-state-default">z<sub>j</sub></th>';
+			echo '<th class="ui-state-default"></th>';
+			foreach ($this->zj[$key] as $value3) {
+				echo '<td>' . $value3 . '</td>';
+			}
+			echo '<td  class="ui-state-default"></td><td class="ui-state-default">-</td>';
+			echo '</tr>';
+			for ($i = $value->getCols() - 1; $i < $value->getCols(); $i++) {
+				echo '<tr>';
+				if (isset($this->basisVariable[$key][($i + 1)])) {
+					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
+					echo '<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
+				} else {
+					echo '<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
+					echo '<th class="ui-state-default"></th>';
 				}
+				$this->printImages($value, $key, $i, $j);
 				echo '<td class="ui-state-default">' . (!isset($divisionArray[$i]) ? '-' : $divisionArray[$i]) . '</td>';
 				echo '</tr>';
 			}
 			echo '</tbody>';
 			echo '</table>';
 			echo '<br/>';
+		}
+	}
+
+	private function printImages($value, $key, $i, $j) {
+		for ($j = 0; $j < $value->getRows(); $j++) {
+			if ($key != 0 && !$value->isGomory()) {
+				//ALL PICTURES NEEDED
+				if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
+					if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
+						echo '<td class="mainelement" data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
+						echo '<td class="mainelement" data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
+						echo '<td class="mainelement" data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					} else {
+						echo '<td class="mainelement" data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					}
+				} else {
+					if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
+						echo '<td data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
+						echo '<td data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
+						echo '<td data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					} else {
+						echo '<td data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+					}
+				}
+			} else {
+				//NO PICTURES
+				if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
+					echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
+				} elseif ($j == $this->matrixes[$key]->getMainCol()) {
+					echo '<td>' . $value->getElement($j, $i) . '</td>';
+				} elseif ($i == $this->matrixes[$key]->getMainRow()) {
+					echo '<td>' . $value->getElement($j, $i) . '</td>';
+				} else {
+					echo '<td>' . $value->getElement($j, $i) . '</td>';
+				}
+			}
 		}
 	}
 
@@ -335,6 +368,21 @@ class Simplex {
 			}
 		}
 		return -1;
+	}
+
+	private function setZj($p) {
+		for ($i = count($this->targetfunction); $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
+			if (Fraction::equalsZero($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1))) {
+				continue;
+			} elseif ($i == $p) {
+				continue;
+			} else {
+				$this->zj[$this->index][$i] = clone $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1);
+				$this->zj[$this->index][$i]->minusFraction();
+			}
+		}
+		$this->zj[$this->index][$p] = clone $this->matrixes[$this->index - 1]->getElement($p, $this->matrixes[$this->index - 1]->getCols() - 1);
+		$this->zj[$this->index][$p]->minusFraction();
 	}
 
 	private function gomoryNewTableau($k) {
