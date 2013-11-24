@@ -308,6 +308,11 @@ class Fraction {
 		}
 	}
 
+	public function removeM() {
+		$this->mnumerator = 0;
+		$this->mdenominator = 1;
+	}
+
 	public function increment() {
 		$this->add(new Fraction(1));
 	}
