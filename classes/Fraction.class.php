@@ -346,7 +346,4 @@ class Fraction {
 
 }
 
-$a=new Fraction(0,1,-1,1);
-$b=new Fraction(3);
-echo $a.'*'.$b.'='.$a->multiply($b).$a;
 ?>
