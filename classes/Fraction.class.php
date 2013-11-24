@@ -327,9 +327,9 @@ class Fraction {
 		}
 	}
 
-	public function removeM() {
-		$this->mnumerator = 0;
-		$this->mdenominator = 1;
+	public static function removeM($param) {
+		$param->mnumerator = 0;
+		$param->mdenominator = 1;
 	}
 
 	public function increment() {
