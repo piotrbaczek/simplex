@@ -317,8 +317,8 @@ class Fraction {
 		$this->add(new Fraction(1));
 	}
 
-	public function hasM() {
-		return $this->mnumerator == 0 ? false : true;
+	public static function hasM($param) {
+		return $param->getMNumerator() == 0 ? false : true;
 	}
 
 	public function isInteger() {
