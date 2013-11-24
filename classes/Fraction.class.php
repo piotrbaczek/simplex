@@ -306,8 +306,8 @@ class Fraction {
 		} elseif ($param instanceof Fraction) {
 			$this->numerator*=$param->numerator;
 			$this->denominator*=$param->denominator;
-			$this->mnumerator*=$param->mnumerator;
-			$this->mdenominator*=$param->mdenominator;
+			$this->mnumerator*=$param->numerator;
+			$this->mdenominator*=$param->denominator;
 			$this->reduction();
 		}
 	}
@@ -319,8 +319,8 @@ class Fraction {
 		} elseif ($param instanceof Fraction) {
 			$this->numerator*=$param->denominator;
 			$this->denominator*=$param->numerator;
-			$this->mnumerator*=$param->mdenominator;
-			$this->mdenominator*=$param->mnumerator;
+			$this->mnumerator*=$param->denominator;
+			$this->mdenominator*=$param->numerator;
 			$this->reduction();
 		} else {
 			$this->errormessage('Must be a fraction or number!');
@@ -345,9 +345,8 @@ class Fraction {
 	}
 
 }
-$a=new Fraction(0,1,2,3);
-$b=new Fraction(0,1,3,1);
-$a->multiply($b);
-echo $a;
 
+$a=new Fraction(0,1,-1,1);
+$b=new Fraction(3);
+echo $a.'*'.$b.'='.$a->multiply($b).$a;
 ?>
