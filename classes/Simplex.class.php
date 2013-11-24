@@ -120,6 +120,9 @@ class Simplex {
 
 	private function partialAdding() {
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
+			Fraction::removeM($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1));
+		}
+		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
 			$temp = new Fraction(0);
 			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
 				if (Fraction::hasM($this->cCoefficient[$this->index][$j])) {
@@ -129,12 +132,6 @@ class Simplex {
 				}
 			}
 			$this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1)->add($temp);
-		}
-	}
-
-	private function nullifyMs() {
-		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
-			Fraction::removeM($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1));
 		}
 	}
 
@@ -177,7 +174,6 @@ class Simplex {
 			if (!isset($this->basis[$p])) {
 				$this->basis[$p] = $q;
 			}
-			$this->nullifyMs();
 			$this->partialAdding($q);
 			//$this->setZj($p);
 			//-------------------------------
