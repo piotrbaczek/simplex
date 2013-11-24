@@ -58,6 +58,25 @@ class Fraction {
 			$this->numerator /= $hcd;
 			$this->denominator /= $hcd;
 		}
+		//----------------------------------
+		if ($this->mdenominator < 0) {
+			$this->mexpansion(-1);
+			$this->reduction();
+		} elseif ($this->mnumerator == 0) {
+			$this->mdenominator = 1;
+		} elseif (abs($this->mnumerator) == 1 || abs($this->mdenominator) == 1) {
+			//do nothing - cannot reduce fraction with 1
+		} elseif ($this->mnumerator < 0) {
+			$this->mnumerator = abs($this->mnumerator);
+			$hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
+			$this->mnumerator /= $hcd;
+			$this->mdenominator /= $hcd;
+			$this->mnumerator*=-1;
+		} else {
+			$hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
+			$this->mnumerator /= $hcd;
+			$this->mdenominator /= $hcd;
+		}
 	}
 
 	public function expansion($num) {
@@ -326,5 +345,9 @@ class Fraction {
 	}
 
 }
+$a=new Fraction(0,1,2,3);
+$b=new Fraction(0,1,3,1);
+$a->multiply($b);
+echo $a;
 
 ?>
