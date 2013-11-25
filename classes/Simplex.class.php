@@ -110,8 +110,8 @@ class Simplex {
 		unset($ax);
 
 		for ($i = 0; $i < $this->O; $i++) {
-			$targetfunction[$i]->minusFraction();
-			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $targetfunction[$i]);
+			$this->targetfunction[$i]->minusFraction();
+			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $this->targetfunction[$i]);
 		}
 		$this->partialAdding();
 		//--------------------------------------------
@@ -123,15 +123,20 @@ class Simplex {
 			Fraction::removeM($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1));
 		}
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
+			$hasM=FALSE;
 			$temp = new Fraction(0);
 			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
+				if(isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i])){
+					continue;
+				}
 				if (Fraction::hasM($this->cCoefficient[$this->index][$j])) {
+					$hasM=TRUE;
 					$temp2 = clone $this->cCoefficient[$this->index][$j];
 					$temp2->multiply($this->matrixes[$this->index]->getElement($i, $j));
 					$temp->add($temp2);
 				}
 			}
-			if (isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i]) && !Fraction::hasM($temp)) {
+			if (isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i]) && !Fraction::hasM($temp) && !$hasM) {
 				$temp->add(new Fraction(0, 1, 1, 1));
 			}
 			$this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1)->add($temp);
@@ -182,7 +187,7 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
 			}
-//			if ($this->index >= 3) {
+//			if ($this->index >= 0) {
 //				break;
 //			}
 		}
