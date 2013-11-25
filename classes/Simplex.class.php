@@ -18,7 +18,6 @@ class Simplex {
 	private $wrongsigns = 0;
 	private $M, $N, $O;
 	private $cCoefficient;
-	private $basis;
 	private $basisVariable;
 	private $nonBasisVariable;
 	private $zj;
@@ -63,15 +62,11 @@ class Simplex {
 			}
 		}
 
-		$this->basis = new SplFixedArray($this->O + $this->N + $this->wrongsigns - 1);
 
 		for ($i = 0; $i < $this->O + $this->N + $this->wrongsigns - 1; $i++) {
 			$this->zj[$this->index][$i] = new Fraction(0);
 		}
 
-		for ($i = 1; $i < $this->N; $i++) {
-			$this->basisVariable[$this->index][$i] = 'S<sub>' . $i . '</sub>';
-		}
 		for ($i = 1; $i < $this->O + $this->N + $this->wrongsigns; $i++) {
 			$this->nonBasisVariable[$this->index][$i] = 'x<sub>' . $i . '</sub>';
 		}
@@ -93,9 +88,12 @@ class Simplex {
 			switch ($value) {
 				case enumSigns::_GEQ:
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(-1));
-					$this->zj[$this->index][$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
+					//$this->zj[$this->index][$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
+
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $this->N - 1 + $ax, $key, new Fraction(1));
-					$this->zj[$this->index][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, 1, 1);
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M - 1 + $this->N + $ax) . '</sub>';
+					//$this->zj[$this->index][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, 1, 1);
+
 					$this->targetfunction[$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
 					break;
@@ -103,6 +101,7 @@ class Simplex {
 					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
 						if (($j - ($this->M - 1)) == $key) {
 							$this->matrixes[$this->index]->setValue($j, $key, new Fraction(1));
+							$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
 						}
 					}
 					break;
@@ -132,8 +131,8 @@ class Simplex {
 					$temp->add($temp2);
 				}
 			}
-			if(isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i]) && !Fraction::hasM($temp)){
-				$temp->add(new Fraction(0,1,1,1));
+			if (isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i]) && !Fraction::hasM($temp)) {
+				$temp->add(new Fraction(0, 1, 1, 1));
 			}
 			$this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1)->add($temp);
 		}
@@ -175,9 +174,6 @@ class Simplex {
 			$this->swapBase();
 
 			$this->simplexIteration();
-			if (!isset($this->basis[$p])) {
-				$this->basis[$p] = $q;
-			}
 			$this->partialAdding($q);
 			//$this->setZj($p);
 			//-------------------------------
@@ -186,10 +182,9 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
 			}
-			if ($this->index >= 3) {
-				print_r($this->basis);
-				break;
-			}
+//			if ($this->index >= 3) {
+//				break;
+//			}
 		}
 
 		if ($this->gomory && $this->index != 0) {
@@ -528,13 +523,16 @@ class Simplex {
 			return Array("NaN");
 		} else {
 			$x = Array();
-			foreach ($this->basis as $key => $value) {
-				if (isset($value)) {
-					$x[$key + 1] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $value);
-				} else {
-					$x[$key + 1] = new Fraction(0);
-				}
+			for ($i = 1; $i < 2 + max(array_keys($this->targetfunction)); $i++) {
+				$x[$i] = new Fraction();
 			}
+			$index = 0;
+			foreach ($this->basisVariable[$this->index] as $value) {
+				$temp = explode('<sub>', $value);
+				$x[(int) $temp['1']] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $index);
+				$index++;
+			}
+			unset($index);
 			return $x;
 		}
 	}
