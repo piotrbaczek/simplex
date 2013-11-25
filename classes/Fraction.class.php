@@ -209,6 +209,9 @@ class Fraction {
 				$string.='0';
 			}
 		} elseif ($this->mdenominator == 1) {
+			if (!$equalszero) {
+				$string.=($this->mnumerator >= 0 ? '+' : '');
+			}
 			$string.=$this->mnumerator;
 			$string.='M';
 		} else {
@@ -357,5 +360,6 @@ class Fraction {
 
 }
 
-
+$a = new Fraction(0, 1, 11, 1);
+echo $a;
 ?>
