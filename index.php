@@ -14,7 +14,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
               href="js/development-bundle/themes/smoothness/jquery-ui-1.8.16.custom.css" />
         <link rel="stylesheet" href="css/simplex.css" />
         <script src="js/excanvas.js"></script>
-        <script src="js/js/jquery-1.6.2.min.js"></script>
+        <script src="js/jquery.js"></script>
         <script src="js/js/jquery-ui-1.8.16.custom.min.js"></script>
         <script src="js/jquery.bgiframe.js"></script>
         <script src="js/jquery.dimensions.js"></script>
