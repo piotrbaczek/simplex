@@ -46,7 +46,7 @@ class Fraction {
 		} elseif ($this->numerator == 0) {
 			$this->denominator = 1;
 		} elseif (abs($this->numerator) == 1 || abs($this->denominator) == 1) {
-			//do nothing - cannot reduce fraction with 1
+//do nothing - cannot reduce fraction with 1
 		} elseif ($this->numerator < 0) {
 			$this->numerator = abs($this->numerator);
 			$hcd = $this->highestCommonDivisor($this->numerator, $this->denominator);
@@ -58,14 +58,14 @@ class Fraction {
 			$this->numerator /= $hcd;
 			$this->denominator /= $hcd;
 		}
-		//----------------------------------
+//----------------------------------
 		if ($this->mdenominator < 0) {
 			$this->mexpansion(-1);
 			$this->reduction();
 		} elseif ($this->mnumerator == 0) {
 			$this->mdenominator = 1;
 		} elseif (abs($this->mnumerator) == 1 || abs($this->mdenominator) == 1) {
-			//do nothing - cannot reduce fraction with 1
+//do nothing - cannot reduce fraction with 1
 		} elseif ($this->mnumerator < 0) {
 			$this->mnumerator = abs($this->mnumerator);
 			$hcd = $this->highestCommonDivisor($this->mnumerator, $this->mdenominator);
@@ -100,10 +100,10 @@ class Fraction {
 			$b = $this->denominator * $param->getNumerator();
 			if ($a > $b) {
 				return true;
-				//this fraction is bigger
+//this fraction is bigger
 			} else {
 				return false;
-				//param fraction is bigger
+//param fraction is bigger
 			}
 		} elseif (is_numeric($param)) {
 			$p = $this->realToFraction($param);
@@ -193,22 +193,33 @@ class Fraction {
 
 	public function __toString() {
 		$string = '';
-		if ($this->denominator == 1) {
+		$equalszero = false;
+		if ($this->numerator == 0) {
+			//Fraction equals 0
+			$equalszero = true;
+		} elseif ($this->denominator == 1) {
+			//Fraction is an integer
 			$string.=$this->numerator;
 		} else {
-			$string.=$this->numerator . '/' . $this->denominator;
+			//It's a Fraction
+			$string.=($this->numerator . '/' . $this->denominator);
 		}
 		if ($this->mnumerator == 0) {
-			return $string;
+			if ($equalszero) {
+				$string.='0';
+			}
+		} elseif ($this->mdenominator == 1) {
+			$string.=$this->mnumerator;
+			$string.='M';
 		} else {
-			$string.=($this->mnumerator >= 0 ? '+' : '');
+			$string.=($this->mnumerator >= 0 ? '+' : '-');
 			$string.=($this->mdenominator == 1 ? $this->mnumerator . 'M' : $this->mnumerator . '/' . $this->mdenominator . 'M');
 		}
 		return $string;
 	}
 
 	public static function highestCommonDivisor($a, $b) {
-		//echo 'hcd('.$a.','.$b.')';
+//echo 'hcd('.$a.','.$b.')';
 		$a = abs($a);
 		while ($a != $b) {
 			if ($a > $b) {
@@ -346,4 +357,15 @@ class Fraction {
 
 }
 
+$a = Array();
+$a[] = new Fraction(0);
+$a[] = new Fraction(1);
+$a[] = new Fraction(1, 3);
+$a[] = new Fraction(0.55);
+$a[] = new Fraction(0, 1, 1, 1);
+$a[] = new Fraction(1, 1, 0, 1);
+$a[] = new Fraction(-11, 1, 3, 5);
+foreach ($a as $key => $value) {
+	echo $key . ': ' . $value . '<br/>';
+}
 ?>
