@@ -10,7 +10,6 @@
  *
  * @author PETTER
  */
-
 class SimplexTableu {
 
 	private $mainRow = -1;
@@ -92,9 +91,12 @@ class SimplexTableu {
 		for ($i = 0; $i < $this->getCols() - 1; $i++) {
 			$s = clone $this->getElement($this->getRows() - 1, $i);
 			$n = clone $this->getElement($p, $i);
-			if (Fraction::equalsZero($n) || Fraction::isNegative($n)) {
-				$this->divisionArray[$i] = new Fraction(0,1,1,1);
+			if (Fraction::equalsZero($n)) {
+				$this->divisionArray[$i] = new Fraction(0, 1, 1, 1);
 				continue;
+			} elseif (Fraction::isNegative($n)) {
+				$s->divide($n);
+				$this->divisionArray[$i] = clone $s;
 			} else {
 				$s->divide($n);
 				$this->divisionArray[$i] = clone $s;
