@@ -357,15 +357,5 @@ class Fraction {
 
 }
 
-$a = Array();
-$a[] = new Fraction(0);
-$a[] = new Fraction(1);
-$a[] = new Fraction(1, 3);
-$a[] = new Fraction(0.55);
-$a[] = new Fraction(0, 1, 1, 1);
-$a[] = new Fraction(1, 1, 0, 1);
-$a[] = new Fraction(-11, 1, 3, 5);
-foreach ($a as $key => $value) {
-	echo $key . ': ' . $value . '<br/>';
-}
+
 ?>
