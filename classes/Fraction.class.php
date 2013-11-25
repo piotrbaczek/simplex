@@ -360,6 +360,4 @@ class Fraction {
 
 }
 
-$a = new Fraction(0, 1, 11, 1);
-echo $a;
 ?>
