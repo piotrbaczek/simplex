@@ -96,6 +96,7 @@ class Simplex {
 					$this->zj[$this->index][$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $this->N - 1 + $ax, $key, new Fraction(1));
 					$this->zj[$this->index][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, 1, 1);
+					$this->targetfunction[$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
 					break;
 				default:
@@ -130,6 +131,9 @@ class Simplex {
 					$temp2->multiply($this->matrixes[$this->index]->getElement($i, $j));
 					$temp->add($temp2);
 				}
+			}
+			if(isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i]) && !Fraction::hasM($temp)){
+				$temp->add(new Fraction(0,1,1,1));
 			}
 			$this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1)->add($temp);
 		}
@@ -183,6 +187,7 @@ class Simplex {
 				break;
 			}
 			if ($this->index >= 3) {
+				print_r($this->basis);
 				break;
 			}
 		}
