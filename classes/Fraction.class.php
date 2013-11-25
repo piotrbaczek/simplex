@@ -212,7 +212,7 @@ class Fraction {
 			$string.=$this->mnumerator;
 			$string.='M';
 		} else {
-			$string.=($this->mnumerator >= 0 ? '+' : '-');
+			$string.=($this->mnumerator >= 0 ? '+' : '');
 			$string.=($this->mdenominator == 1 ? $this->mnumerator . 'M' : $this->mnumerator . '/' . $this->mdenominator . 'M');
 		}
 		return $string;
