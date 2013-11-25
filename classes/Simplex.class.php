@@ -471,17 +471,18 @@ class Simplex {
 	}
 
 	public function printProblem() {
-		$index = 1;
-		echo $this->extreme == true ? 'max ' : 'min ';
+		echo $this->extreme ? 'max ' : 'min ';
 		foreach ($this->targetfunction as $key => $value) {
-			$a = clone $value;
-			$a->minusFraction();
-			if ($key == 0 && (Fraction::isPositive($a) || Fraction::equalsZero($a))) {
-				echo $a . 'x<sub>' . $index . '</sub>';
-			} else {
-				echo '+' . $a . 'x<sub>' . $index . '</sub>';
+			$temp = clone $value;
+			if (!Fraction::hasM($value)) {
+				$temp->minusFraction();
 			}
-			$index++;
+			if ($key != 0) {
+				if (Fraction::isPositive($temp)) {
+					echo '+';
+				}
+			}
+			echo $temp . 'x<sub>' . ($key + 1) . '</sub>';
 		}
 		echo '<br/>';
 		$index = 1;
@@ -489,10 +490,8 @@ class Simplex {
 			for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
 				if (Fraction::isPositive($this->matrixes[0]->getElement($j, $i)) || Fraction::equalsZero($this->matrixes[0]->getElement($j, $i))) {
 					echo $j != 0 ? '+' : '';
-					echo $this->matrixes[0]->getElement($j, $i) . 'x<sub>' . $index . '</sub>';
-				} else {
-					echo $this->matrixes[0]->getElement($j, $i) . 'x<sub>' . $index . '</sub>';
 				}
+				echo $this->matrixes[0]->getElement($j, $i) . 'x<sub>' . $index . '</sub>';
 				$index++;
 			}
 			echo $this->signs[$i];
