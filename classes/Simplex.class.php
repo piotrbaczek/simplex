@@ -485,24 +485,20 @@ class Simplex {
 			echo $temp . 'x<sub>' . ($key + 1) . '</sub>';
 		}
 		echo '<br/>';
-		$index = 1;
 		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
 			for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
-				if (Fraction::isPositive($this->matrixes[0]->getElement($j, $i)) || Fraction::equalsZero($this->matrixes[0]->getElement($j, $i))) {
+				$element = clone $this->matrixes[0]->getElement($j, $i);
+				if (Fraction::isPositive($element) || Fraction::equalsZero($element)) {
 					echo $j != 0 ? '+' : '';
 				}
-				echo $this->matrixes[0]->getElement($j, $i) . 'x<sub>' . $index . '</sub>';
-				$index++;
+				echo $element . 'x<sub>' . ($j + 1) . '</sub>';
 			}
 			echo $this->signs[$i];
 			echo $this->boundaries[$i];
 			echo '<br/>';
-			$index = 1;
 		}
-		$index = 1;
 		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
-			echo 'x<sub>' . $index . '</sub>' . enumSigns::_GEQ . '0<br/>';
-			$index++;
+			echo 'x<sub>' . ($i + 1) . '</sub>' . enumSigns::_GEQ . '0<br/>';
 		}
 		if ($this->gomory) {
 			echo '<u>in integers</u>';
