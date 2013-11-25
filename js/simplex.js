@@ -182,7 +182,7 @@ $(document).ajaxStart(function() {
 				window.external.AddFavorite(url, title);
 			}
 		} catch (e) {
-			alert('Naci\u015bnij Ctrl+D aby doda\u0107 zakładkę do strony!')
+			alert('Naci\u015bnij Ctrl+D aby doda\u0107 zakładkę do strony!');
 			console.log(e);
 		}
 	}).delay(1000).effect("bounce", 500);
