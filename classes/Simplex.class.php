@@ -46,11 +46,9 @@ class Simplex {
 		}
 		if ($this->extreme) {
 			foreach ($this->signs as $key => $value) {
-				if ($value == enumSigns::_GEQ) {
+				if ($value != enumSigns::_LEQ) {
 					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 					$this->wrongsigns++;
-				} elseif ($value == enumSigns::_EQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 				} else {
 					$this->cCoefficient[$this->index][$key] = new Fraction(0);
 				}
@@ -99,14 +97,13 @@ class Simplex {
 					$this->targetfunction[$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
 					break;
-				case enumSigns::_EQ:
-					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
-					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
-					$this->targetfunction[$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
-					break;
 				default:
-					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
-					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
+					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
+						if (($j - ($this->M - 1)) == $key) {
+							$this->matrixes[$this->index]->setValue($j, $key, new Fraction(1));
+							$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
+						}
+					}
 					break;
 			}
 		}
@@ -198,13 +195,8 @@ class Simplex {
 //				break;
 //			}
 		}
-		if ($this->gomory) {
-			$this->gomorrySolve();
-		}
-	}
 
-	private function gomorrySolve() {
-		if ($this->index > 1) {
+		if ($this->gomory && $this->index != 0) {
 			//GOMORY'S CUTTING PLANE METHOD
 			while (true) {
 				$q = $this->gomoryRow();
@@ -222,7 +214,7 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
 				$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
 				$this->signs[count($this->signs)] = '>=';
-				$this->basisVariable[$this->index][count($this->basisVariable)] = 'x<sub>' . (count($this->nonBasisVariable[$this->index]) + 1) . '</sub>';
+				$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
 				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
 				$this->zj[$this->index] = $this->zj[$this->index - 1];
 				//-------------------------------------------
@@ -249,10 +241,10 @@ class Simplex {
 	public function printSolution() {
 		foreach ($this->matrixes as $key => $value) {
 			if (($key + 1) > $this->index) {
-//				$divisionArray = Array();
-//				foreach ($value->getDivisionArray() as $key2 => $darray) {
-//					$divisionArray[$key2] = '-';
-//				}
+				$divisionArray = Array();
+				foreach ($value->getDivisionArray() as $key2 => $darray) {
+					$divisionArray[$key2] = '-';
+				}
 			} else {
 				$divisionArray = $this->matrixes[$key + 1]->getDivisionArray();
 			}
@@ -380,7 +372,7 @@ class Simplex {
 	private function gomoryRow() {
 		foreach ($this->getValuePair() as $key => $value) {
 			if (!$value->isInteger()) {
-				return $key - 1;
+				return $key;
 			}
 		}
 		return -1;
@@ -522,6 +514,7 @@ class Simplex {
 			echo '<u>in integers</u>';
 		}
 		echo '<br/>';
+		unset($index);
 	}
 
 	public function printValuePair() {
@@ -545,7 +538,6 @@ class Simplex {
 				$index++;
 			}
 			unset($index);
-			ksort($x);
 			return $x;
 		}
 	}
