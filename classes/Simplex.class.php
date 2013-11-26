@@ -543,7 +543,12 @@ class Simplex {
 	}
 
 	public function getJSON() {
-		$a = count($this->targetfunction);
+		$a = 0;
+		foreach ($this->targetfunction as $key => $value) {
+			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
+				$a++;
+			}
+		}
 		$b = count($this->boundaries);
 		$json = Array();
 		switch ($a) {
