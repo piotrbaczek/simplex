@@ -49,7 +49,7 @@ $(document).ajaxStart(function() {
 				success: function(data) {
 					$('#defaultdiv').slideUp('fast');
 					$('#resultdiv2').empty().append(data);
-					$('table.result:gt(0) td').tooltip({
+					$('table.result:gt(0) td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,
 						fixPNG: true,
@@ -62,8 +62,6 @@ $(document).ajaxStart(function() {
 									'background-color': 'transparent',
 									'text-align': 'center'
 								});
-							}else{
-								return false;
 							}
 						}
 					});
