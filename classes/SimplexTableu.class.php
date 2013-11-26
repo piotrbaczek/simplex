@@ -17,13 +17,16 @@ class SimplexTableu {
 	private $index = 0;
 	private $gomoryTable = false;
 	private $array;
-	private $divisionArray;
+	private $divisionArray = Array();
 
 	public function __construct($rows = 1, $cols = 1) {
 		for ($i = 0; $i < $cols; $i++) {
 			for ($j = 0; $j < $rows; $j++) {
 				$this->array[$i][$j] = new Fraction(0);
 			}
+		}
+		for ($i = 0; $i < $this->getRows() - 1; $i++) {
+			$this->divisionArray[$i] = '-';
 		}
 	}
 
@@ -118,7 +121,7 @@ class SimplexTableu {
 	}
 
 	public function swapGomory() {
-		$this->gomoryTable = ($this->gomoryTable == true ? false : true);
+		$this->gomoryTable = ($this->gomoryTable ? false : true);
 	}
 
 	public function isGomory() {
