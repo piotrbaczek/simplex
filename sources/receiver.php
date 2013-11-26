@@ -26,21 +26,25 @@ if ($ss) {
 //print_r($tp->getGomorry());
 //print_r($tp->getMaxMin());
 //echo '</pre>';
-	if ($tp->isCorrect()) {
-		$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-		echo '<div style="width:700px;height:100%;float:left;">';
-		//$simplex->printProblem();
-		$simplex->printSolution();
-		//$simplex->testPrint();
-		//$simplex->printValuePair();
-		//$simplex->printResult();
-		echo '</div>';
-		echo '<div style="width:500px;float:right;">';
-		//$simplex->getJSON();
-		echo '</div><div style="width:1000px;clear:both;">';
-		echo '</div>';
-	} else {
-		TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
+	try {
+		if ($tp->isCorrect()) {
+			$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
+			echo '<div style="width:700px;height:100%;float:left;">';
+			$simplex->printProblem();
+			$simplex->printSolution();
+			$simplex->printValuePair();
+			$simplex->printResult();
+			
+			echo '</div>';
+			echo '<div style="width:500px;float:right;">';
+			$simplex->getJSON();
+			echo '</div><div style="width:1000px;clear:both;">';
+			echo '</div>';
+		} else {
+			TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
+		}
+	} catch (Exception $e) {
+		echo $e->getMessage();
 	}
 } else {
 	echo '<script>';
