@@ -109,8 +109,12 @@ class Simplex {
 		}
 		unset($ax);
 
-		for ($i = 0; $i < $this->O; $i++) {
-			$this->targetfunction[$i]->minusFraction();
+		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
+			if (!isset($this->targetfunction[$i])) {
+				$this->targetfunction[$i] = new Fraction();
+			} elseif (isset($this->targetfunction[$i]) && !Fraction::hasM($this->targetfunction[$i])) {
+				$this->targetfunction[$i]->minusFraction();
+			}
 			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $this->targetfunction[$i]);
 		}
 		$this->partialAdding();
@@ -122,15 +126,15 @@ class Simplex {
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
 			Fraction::removeM($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1));
 		}
+		$hasM = FALSE;
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
-			$hasM=FALSE;
 			$temp = new Fraction(0);
 			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
-				if(isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i])){
+				if (isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i])) {
 					continue;
 				}
 				if (Fraction::hasM($this->cCoefficient[$this->index][$j])) {
-					$hasM=TRUE;
+					$hasM = TRUE;
 					$temp2 = clone $this->cCoefficient[$this->index][$j];
 					$temp2->multiply($this->matrixes[$this->index]->getElement($i, $j));
 					$temp->add($temp2);
@@ -477,13 +481,14 @@ class Simplex {
 
 	public function printProblem() {
 		echo $this->extreme ? 'max ' : 'min ';
+		ksort($this->targetfunction);
 		foreach ($this->targetfunction as $key => $value) {
 			$temp = clone $value;
 			if (!Fraction::hasM($value)) {
 				$temp->minusFraction();
 			}
 			if ($key != 0) {
-				if (Fraction::isPositive($temp)) {
+				if (Fraction::isPositive($temp) || Fraction::equalsZero($temp)) {
 					echo '+';
 				}
 			}
