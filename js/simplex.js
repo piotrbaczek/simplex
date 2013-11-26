@@ -63,6 +63,7 @@ $(document).ajaxStart(function() {
 									'text-align': 'center'
 								});
 							}
+							return 0;
 						}
 					});
 					$('#resultdiv3').slideDown('slow');
