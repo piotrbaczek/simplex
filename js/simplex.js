@@ -62,8 +62,9 @@ $(document).ajaxStart(function() {
 									'background-color': 'transparent',
 									'text-align': 'center'
 								});
+							}else{
+								return false;
 							}
-							return 0;
 						}
 					});
 					$('#resultdiv3').slideDown('slow');
