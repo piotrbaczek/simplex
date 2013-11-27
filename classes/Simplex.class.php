@@ -491,7 +491,7 @@ class Simplex {
 			echo '<br/>';
 		}
 		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
-			echo 'x<sub>' . ($i + 1) . '</sub>&gt;0<br/>';
+			echo 'x<sub>' . ($i + 1) . '</sub>&ge;0<br/>';
 		}
 		if ($this->gomory) {
 			echo '<u>in integers</u>';
