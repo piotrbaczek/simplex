@@ -5,6 +5,7 @@ include '../classes/Simplex.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';
+include '../classes/Signs.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------
