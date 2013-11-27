@@ -46,22 +46,27 @@ class Simplex {
 		}
 		if ($this->extreme) {
 			foreach ($this->signs as $key => $value) {
-				if ($value != enumSigns::_LEQ) {
+				if ($value == enumSigns::_LEQ) {
+					$this->cCoefficient[$this->index][$key] = new Fraction(0);
+				} elseif ($value == enumSigns::_GEQ) {
 					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 					$this->wrongsigns++;
-				} else {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0);
+				} elseif ($value == enumSigns::_EQ) {
+					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 				}
 			}
 		} else {
 			foreach ($this->signs as $key => $value) {
-				$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, 1, 1);
-				if ($value != enumSigns::_LEQ) {
+				if ($value == enumSigns::_LEQ) {
+					$this->cCoefficient[$this->index][$key] = new Fraction(0);
+				} elseif ($value == enumSigns::_GEQ) {
+					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 					$this->wrongsigns++;
+				} elseif ($value == enumSigns::_EQ) {
+					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 				}
 			}
 		}
-
 
 		for ($i = 0; $i < $this->O + $this->N + $this->wrongsigns - 1; $i++) {
 			$this->zj[$this->index][$i] = new Fraction(0);
@@ -79,8 +84,8 @@ class Simplex {
 			}
 		}
 
-		for ($i = 0; $i < $this->N - 1; $i++) {
-			$this->matrixes[$this->index]->setValue($this->N + $this->wrongsigns + $this->M - 2, $i, clone $boundaries[$i]);
+		for ($i = 0; $i < $this->matrixes[$this->index]->getCols() - 1; $i++) {
+			$this->matrixes[$this->index]->setValue($this->matrixes[$this->index]->getRows() - 1, $i, clone $boundaries[$i]);
 		}
 
 		$ax = 0;
@@ -88,14 +93,17 @@ class Simplex {
 			switch ($value) {
 				case enumSigns::_GEQ:
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(-1));
-					//$this->zj[$this->index][$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $this->N - 1 + $ax, $key, new Fraction(1));
 					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M - 1 + $this->N + $ax) . '</sub>';
-					//$this->zj[$this->index][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, 1, 1);
 
 					$this->targetfunction[$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
+					break;
+				case enumSigns::_EQ:
+					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
+					$this->targetfunction[$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 					break;
 				default:
 					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
@@ -108,6 +116,7 @@ class Simplex {
 			}
 		}
 		unset($ax);
+
 
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
 			if (!isset($this->targetfunction[$i])) {
@@ -158,6 +167,10 @@ class Simplex {
 			$p = $this->matrixes[$this->index]->findBaseCol();
 			$this->zj[$this->index] = $this->zj[$this->index - 1];
 			if ($p == -1) {
+				if ($this->index == 1) {
+					unset($this->matrixes[$this->index]);
+					$this->index--;
+				}
 				break;
 			} else {
 				$this->matrixes[$this->index - 1]->setMainCol($p);
@@ -191,7 +204,7 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
 			}
-//			if ($this->index >= 0) {
+//			if ($this->index >= 2) {
 //				break;
 //			}
 		}
@@ -484,6 +497,9 @@ class Simplex {
 		ksort($this->targetfunction);
 		foreach ($this->targetfunction as $key => $value) {
 			$temp = clone $value;
+			if (Fraction::equalsZero($temp)) {
+				continue;
+			}
 			if (!Fraction::hasM($value)) {
 				$temp->minusFraction();
 			}
@@ -524,22 +540,18 @@ class Simplex {
 	}
 
 	public function getValuePair() {
-		if ($this->index == 0) {
-			return Array("NaN");
-		} else {
-			$x = Array();
-			for ($i = 1; $i < 2 + max(array_keys($this->targetfunction)); $i++) {
-				$x[$i] = new Fraction();
-			}
-			$index = 0;
-			foreach ($this->basisVariable[$this->index] as $value) {
-				$temp = explode('<sub>', $value);
-				$x[(int) $temp['1']] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $index);
-				$index++;
-			}
-			unset($index);
-			return $x;
+		$x = Array();
+		for ($i = 1; $i < 2 + max(array_keys($this->targetfunction)); $i++) {
+			$x[$i] = new Fraction();
 		}
+		$index = 0;
+		foreach ($this->basisVariable[$this->index] as $value) {
+			$temp = explode('<sub>', $value);
+			$x[(int) $temp['1']] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $index);
+			$index++;
+		}
+		unset($index);
+		return $x;
 	}
 
 	public function getJSON() {
@@ -578,27 +590,27 @@ class Simplex {
 					if (Fraction::equalsZero($this->variables[$i][1])) {
 						$s = clone $this->boundaries[$i];
 						$s->divide($this->variables[$i][0]);
-						$json[$i]['data'][] = Array($s->getRealValue(), $maxy->getRealValue());
+						$json[$i]['data'][] = Array($s->getValue(), $maxy->getValue());
 					} else {
 						$j = clone $this->boundaries[$i];
 						$j->divide($this->variables[$i][1]);
-						$json[$i]['data'][] = Array(0, $j->getRealValue());
+						$json[$i]['data'][] = Array(0, $j->getValue());
 					}
 					if (Fraction::equalsZero($this->variables[$i][0])) {
 						$s = clone $this->boundaries[$i];
 						$s->divide($this->variables[$i][1]);
-						$json[$i]['data'][] = Array($maxx->getRealValue(), $s->getRealValue());
+						$json[$i]['data'][] = Array($maxx->getValue(), $s->getValue());
 					} else {
 						$j = clone $this->boundaries[$i];
 						$j->divide($this->variables[$i][0]);
-						$json[$i]['data'][] = Array($j->getRealValue(), 0);
+						$json[$i]['data'][] = Array($j->getValue(), 0);
 					}
 				}
 				if (!Fraction::equalsZero($this->targetfunction[0])) {
 					$t = clone $this->targetfunction[1];
 					$t->multiply($maxx);
 					$t->divide($this->targetfunction[0]);
-					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getRealValue() / 4, $t->getRealValue() / 4)));
+					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
 				}
 				echo '<script>';
 				echo '$(document).ready(function(){';
@@ -641,9 +653,9 @@ class Simplex {
 						$maxz = $s;
 					}
 				}
-				for ($i = 0; $i < $maxx->getRealValue(); $i = $i + ($maxx->getRealValue() / 25)) {
-					for ($j = 0; $j < $maxy->getRealValue(); $j = $j + ($maxy->getRealValue() / 25)) {
-						for ($k = 0; $k < $maxz->getRealValue(); $k = $k + ($maxz->getRealValue() / 25)) {
+				for ($i = 0; $i < $maxx->getValue(); $i = $i + ($maxx->getValue() / 25)) {
+					for ($j = 0; $j < $maxy->getValue(); $j = $j + ($maxy->getValue() / 25)) {
+						for ($k = 0; $k < $maxz->getValue(); $k = $k + ($maxz->getValue() / 25)) {
 							if ($this->isValidPoint($i, $j, $k)) {
 								$json[] = Array($i, $j, $k);
 							}
