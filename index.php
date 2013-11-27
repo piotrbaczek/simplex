@@ -103,7 +103,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 							<div id="loadbackdiv">
 								<button id="loadback">Wróć</button>
 							</div>
-							<div id="result2" style="width: 960px;"></div>
+							<div id="result2"></div>
 						</div>
 					</div>
 				</div>
