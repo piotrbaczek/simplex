@@ -79,13 +79,6 @@ $(document).ajaxStart(function() {
 		$('#resultdiv3').slideUp('fast');
 		$('#defaultdiv').slideDown('slow');
 	});
-	/*$('#solvethisform textarea,input').focus(function(){
-	 $(this).val('');
-	 }).blur(function(){
-	 if($(this).val()==""){
-	 $(this).val($(this).prop('defaultValue'));
-	 }
-	 });*/
 	$('form[name=form]').validate({
 		rules: {
 			fileToUpload: {
@@ -173,16 +166,20 @@ $(document).ajaxStart(function() {
 			primary: "ui-icon-plusthick"
 		}
 	}).click(function() {
-		title = "Simplex";
-		url = window.location.href;
+		var title = "Simplex";
+		var href = window.location.href;
 		try {
-			if (window.sidebar) { // Mozilla Firefox Bookmark
-				window.sidebar.addPanel(title, url, "");
-			} else if (window.external) { // IE Favorite
-				window.external.AddFavorite(url, title);
+			if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
+				window.sidebar.addPanel(title, href, '');
+			} else if (window.external && ('AddFavorite' in window.external)) { // IE Favorite
+				window.external.AddFavorite(href, title);
+			} else if (window.opera && window.print) { // Opera Hotlist
+				this.title = title;
+				return true;
+			} else { // webkit - safari/chrome
+				alert('Naciśnij ' + (navigator.userAgent.toLowerCase().indexOf('mac') !== -1 ? 'Command/Cmd' : 'CTRL') + ' + D aby dodać zakładkę.');
 			}
 		} catch (e) {
-			alert('Naci\u015bnij Ctrl+D aby doda\u0107 zakładkę do strony!');
 			console.log(e);
 		}
 	}).delay(1000).effect("bounce", 500);
