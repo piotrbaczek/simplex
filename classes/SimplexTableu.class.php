@@ -54,7 +54,7 @@ class SimplexTableu {
 	}
 
 	public function getElement($rowNum, $colNum) {
-		if ($rowNum >= $this->getRows() || $colNum >= $this->getCols()) {
+		if ($rowNum >= $this->getRows() || $colNum >= $this->getCols() || $rowNum < 0 || $colNum < 0) {
 			throw new Exception('SimplexTableu (' . __FUNCTION__ . '): Incorrect index of Array: [' . $rowNum . ',' . $colNum . ']');
 		} else {
 			return $this->array[$rowNum][$colNum];
