@@ -199,41 +199,45 @@ class Simplex {
 		}
 
 		if ($this->gomory && $this->index != 0) {
-			//GOMORY'S CUTTING PLANE METHOD
-			while (true) {
-				$q = $this->gomoryRow() - 1;
-				if ($q == -1) {
-					break;
-				}
-				$this->index++;
-				$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows());
-				$this->matrixes[$this->index]->swapGomory();
-				$this->matrixes[$this->index]->setIndex($this->index);
-				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
-				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
-				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-				$this->gomoryNewTableau($q);
-				$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
-				$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
-				$this->signs[count($this->signs)] = '>=';
-				$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
-				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
-				//-------------------------------------------
-				$this->index++;
-				$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
-				$this->matrixes[$this->index]->swapGomory();
-				$this->matrixes[$this->index]->setIndex($this->index);
-				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
-				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
-				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-				$this->swapBase();
-				$this->simplexIteration();
-				//-------------------------------------------
-				if ($this->checkTargetIntegerFunction()) {
-					$this->matrixes[$this->index]->setMainCol(-1);
-					$this->matrixes[$this->index]->setMainRow(-1);
-					break;
-				}
+			$this->gomorrySolve();
+		}
+	}
+
+	private function gomorrySolve() {
+		//GOMORY'S CUTTING PLANE METHOD
+		while (true) {
+			$q = $this->gomoryRow() - 1;
+			if ($q == -2) {
+				break;
+			}
+			$this->index++;
+			$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows());
+			$this->matrixes[$this->index]->swapGomory();
+			$this->matrixes[$this->index]->setIndex($this->index);
+			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
+			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
+			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+			$this->gomoryNewTableau($q);
+			$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
+			$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
+			$this->signs[count($this->signs)] = '>=';
+			$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
+			$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
+			//-------------------------------------------
+			$this->index++;
+			$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
+			$this->matrixes[$this->index]->swapGomory();
+			$this->matrixes[$this->index]->setIndex($this->index);
+			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
+			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
+			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+			$this->swapBase();
+			$this->simplexIteration();
+			//-------------------------------------------
+			if ($this->checkTargetIntegerFunction()) {
+				$this->matrixes[$this->index]->setMainCol(-1);
+				$this->matrixes[$this->index]->setMainRow(-1);
+				break;
 			}
 		}
 	}
