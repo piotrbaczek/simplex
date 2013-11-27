@@ -269,21 +269,7 @@ class Simplex {
 				}
 			}
 			echo '</tr>';
-			for ($i = 0; $i < $value->getCols() - 1; $i++) {
-				echo '<tr>';
-				if (isset($this->basisVariable[$key][($i + 1)])) {
-					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
-					echo '<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
-				} else {
-					echo '<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
-					echo '<th class="ui-state-default"></th>';
-				}
-				$this->printImages($value, $key, $i, $j);
-				echo '<td class="ui-state-default">' . (!isset($divisionArray[$i]) ? '-' : $divisionArray[$i]) . '</td>';
-				echo '</tr>';
-			}
-
-			for ($i = $value->getCols() - 1; $i < $value->getCols(); $i++) {
+			for ($i = 0; $i < $value->getCols(); $i++) {
 				echo '<tr>';
 				if (isset($this->basisVariable[$key][($i + 1)])) {
 					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
