@@ -26,17 +26,16 @@ if (!empty($_FILES[$fileElementName]['error'])) {
         case '8':
             $error = 'File upload stopped by extension';
             break;
-        case '999':
         default:
             $error = 'No error code avaiable';
     }
-} elseif (empty($_FILES['fileToUpload']['tmp_name']) || $_FILES['fileToUpload']['tmp_name'] == 'none') {
+} elseif (empty($_FILES[$fileElementName]['tmp_name']) || $_FILES[$fileElementName]['tmp_name'] == 'none') {
     $error = 'No file was uploaded..';
 } else {
-    $filename=md5($_FILES['fileToUpload']['name']);
+    $filename=md5($_FILES[$fileElementName]['name']);
     $msg .= $filename;
     try {
-        copy($_FILES['fileToUpload']['tmp_name'], "../download/" . $filename.'.csv');
+        copy($_FILES[$fileElementName]['tmp_name'], "../download/" . $filename.'.csv');
     } catch (Exception $e) {
         $error.=$e;
     }

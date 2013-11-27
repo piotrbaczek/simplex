@@ -1,9 +1,8 @@
 ﻿<?php
-
 /*
  * To change this template, choose Tools | Templates
-* and open the template in the editor.
-*/
+ * and open the template in the editor.
+ */
 
 /**
  * Description of Processer
@@ -14,25 +13,25 @@ class Processer extends Csv_Reader {
 
 	public $tabela;
 	private $a = array();
-	private $b= array();
-	private $c= array();
-	private $d= array();
+	private $b = array();
+	private $c = array();
+	private $d = array();
 	private $funkcja;
 	private $gomorry;
 	private $znaki = array("<=", ">=", "=");
 
 	public function __construct($plik) {
-		$a = parent::__construct($plik);
+		parent::__construct($plik);
 		$this->tabela = parent::get();
 		if ($this->tabela['0']['0'] != "max" && $this->tabela['0']['0'] != "min") {
 			$this->errormessage('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.');
 		} else {
 			$this->funkcja = $this->tabela['0']['0'];
 		}
-		if($this->tabela['0']['1'] != 'false' && $this->tabela['0']['1'] != 'true'){
+		if ($this->tabela['0']['1'] != 'false' && $this->tabela['0']['1'] != 'true') {
 			$this->errormessage('Nierozpoznane zastosowanie algorytmu Gomorry\'ego. Drugie pole powinno zawierać \'true\' lub \'false\'.');
-		}else{
-			$this->gomorry=($this->tabela['0']['1']=='true' ? true : false);
+		} else {
+			$this->gomorry = ($this->tabela['0']['1'] == 'true' ? true : false);
 		}
 		$bb = count($this->tabela['1']);
 		for ($i = 1; $i < $bb; $i++) {
@@ -41,13 +40,13 @@ class Processer extends Csv_Reader {
 				break;
 			}
 		}
-		foreach ($this->tabela[0] as $key=>$value){
-			if(is_numeric(trim($value))){
-				if(strpos($value, '/')){
-					$temp=explode('/', value);
-					$this->a[]=new Fraction($temp[0],$temp[1]);
-				}else{
-					$this->a[]=new Fraction(trim($value));
+		foreach ($this->tabela[0] as $key => $value) {
+			if (is_numeric(trim($value))) {
+				if (strpos($value, '/')) {
+					$temp = explode('/', value);
+					$this->a[] = new Fraction($temp[0], $temp[1]);
+				} else {
+					$this->a[] = new Fraction(trim($value));
 				}
 			}
 		}
@@ -57,55 +56,55 @@ class Processer extends Csv_Reader {
 		for ($i = 1; $i < $aa; $i++) {
 			for ($j = 0; $j < $bb; $j++) {
 				if (in_array($this->tabela[$i][$j], $this->znaki)) {
-					$this->c[]=$this->tabela[$i][$j];
-					$a=trim($this->tabela[$i][++$j]);
-					if(strpos($a, '/')){
-						$temp=explode('/', $a);
-						$this->d[]=new Fraction($temp[0],$temp[1]);
-					}else{
-						$this->d[]=new Fraction($a);
+					$this->c[] = $this->tabela[$i][$j];
+					$a = trim($this->tabela[$i][++$j]);
+					if (strpos($a, '/')) {
+						$temp = explode('/', $a);
+						$this->d[] = new Fraction($temp[0], $temp[1]);
+					} else {
+						$this->d[] = new Fraction($a);
 					}
 				} else {
-					$value=trim($this->tabela[$i][$j]);
-					if(strpos($value, '/')){
-						$temp=explode('/', $value);
-						$this->b[$k][$j]=new Fraction($temp[0],$temp[1]);
-					}else{
-						$this->b[$k][$j]=new Fraction($value);
+					$value = trim($this->tabela[$i][$j]);
+					if (strpos($value, '/')) {
+						$temp = explode('/', $value);
+						$this->b[$k][$j] = new Fraction($temp[0], $temp[1]);
+					} else {
+						$this->b[$k][$j] = new Fraction($value);
 					}
 				}
 			}
 			$k++;
 		}
 	}
-	public static function errormessage($message){
-		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>'.$message.'</p></div>';
+
+	public static function errormessage($message) {
+		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
-	
-	public function getTargetFunction(){
+
+	public function getTargetFunction() {
 		return $this->a;
 	}
-	
-	public function getVariables(){
+
+	public function getVariables() {
 		return $this->b;
 	}
-	
-	public function getSigns(){
+
+	public function getSigns() {
 		return $this->c;
 	}
-	
-	public function getBoundaries(){
+
+	public function getBoundaries() {
 		return $this->d;
 	}
-	
-	public function getGomorry(){
+
+	public function getGomorry() {
 		return $this->gomorry;
 	}
-	
-	public function getMinMax(){
+
+	public function getMinMax() {
 		return $this->funkcja;
 	}
 
 }
-
 ?>
