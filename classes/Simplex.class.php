@@ -615,7 +615,7 @@ class Simplex {
 						continue;
 					}
 
-					$s = clone $this->boundaries;
+					$s = clone $this->boundaries[$i];
 					$s->divide($this->variables[$i][2]);
 					if ($s->compare($maxz)) {
 						$maxz = $s;
