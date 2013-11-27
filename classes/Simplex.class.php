@@ -160,10 +160,6 @@ class Simplex {
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$p = $this->matrixes[$this->index]->findBaseCol();
 			if ($p == -1) {
-				if ($this->index == 1) {
-					unset($this->matrixes[$this->index]);
-					$this->index--;
-				}
 				break;
 			} else {
 				$this->matrixes[$this->index - 1]->setMainCol($p);
@@ -196,6 +192,9 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
 			}
+			if ($this->index > 20) {
+				break;
+			}
 		}
 
 		if ($this->gomory && $this->index != 0) {
@@ -220,8 +219,8 @@ class Simplex {
 			$this->gomoryNewTableau($q);
 			$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
 			$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
-			$this->signs[count($this->signs)] = '>=';
-			$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
+			$this->signs[count($this->signs)] = '<=';
+			$this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction) + 1) . '</sub>';
 			$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
 			//-------------------------------------------
 			$this->index++;
@@ -621,9 +620,9 @@ class Simplex {
 						$maxz = $s;
 					}
 				}
-				for ($i = 0; $i < $maxx->getValue(); $i = $i + ($maxx->getValue() / 25)) {
-					for ($j = 0; $j < $maxy->getValue(); $j = $j + ($maxy->getValue() / 25)) {
-						for ($k = 0; $k < $maxz->getValue(); $k = $k + ($maxz->getValue() / 25)) {
+				for ($i = 0; $i < $maxx->getValue(); $i += ($maxx->getValue() / 20)) {
+					for ($j = 0; $j < $maxy->getValue(); $j += ($maxy->getValue() / 20)) {
+						for ($k = 0; $k < $maxz->getValue(); $k += ($maxz->getValue() / 20)) {
 							if ($this->isValidPoint($i, $j, $k)) {
 								$json[] = Array($i, $j, $k);
 							}
@@ -675,12 +674,28 @@ class Simplex {
 	}
 
 	private function isValidPoint($x, $y, $z) {
-		$b = count($this->boundaries);
-		$str = false;
+		$b = $this->N - 1;
 		for ($i = 0; $i < $b; $i++) {
-			eval("\$str = ((\$this->variables[$i][0]->getRealValue()*$x+\$this->variables[$i][1]->getRealValue()*$y+\$this->variables[$i][2]->getRealValue()*$z)$this->signs[$i](\$this->boundaries[$i]->getRealValue())) ? true : false;");
-			if (!$str) {
-				return false;
+			$left = ($this->variables[$i][0]->getValue() * $x) + ($this->variables[$i][1]->getValue() * $y) + ($this->variables[$i][2]->getValue() * $z);
+			$right = $this->boundaries[$i]->getValue();
+			switch ($this->signs[$i]) {
+				case enumSigns::_GEQ:
+					if ($left < $right) {
+						return FALSE;
+					}
+					break;
+				case enumSigns::_LEQ:
+					if ($left > $right) {
+						return FALSE;
+					}
+					break;
+				case enumSigns::_EQ:
+					if ($left != $right) {
+						return FALSE;
+					}
+					break;
+				default :
+					return FALSE;
 			}
 		}
 		return true;
