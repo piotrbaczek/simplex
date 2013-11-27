@@ -204,15 +204,12 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
 			}
-//			if ($this->index >= 2) {
-//				break;
-//			}
 		}
 
 		if ($this->gomory && $this->index != 0) {
 			//GOMORY'S CUTTING PLANE METHOD
 			while (true) {
-				$q = $this->gomoryRow();
+				$q = $this->gomoryRow() - 1;
 				if ($q == -1) {
 					break;
 				}
