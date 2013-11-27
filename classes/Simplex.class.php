@@ -20,7 +20,6 @@ class Simplex {
 	private $cCoefficient;
 	private $basisVariable;
 	private $nonBasisVariable;
-	private $zj;
 
 	public function __construct(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomory = false) {
 		$this->gomory = (boolean) $gomory;
@@ -35,7 +34,6 @@ class Simplex {
 		$this->cCoefficient[$this->index] = Array();
 		$this->basisVariable = Array();
 		$this->nonBasisVariable = Array();
-		$this->zj[$this->index] = Array();
 
 		if (empty($variables) || empty($boundaries) || empty($signs) || empty($targetfunction)) {
 			throw new Exception('Input array is empty!.');
@@ -66,10 +64,6 @@ class Simplex {
 					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 				}
 			}
-		}
-
-		for ($i = 0; $i < $this->O + $this->N + $this->wrongsigns - 1; $i++) {
-			$this->zj[$this->index][$i] = new Fraction(0);
 		}
 
 		for ($i = 1; $i < $this->O + $this->N + $this->wrongsigns; $i++) {
@@ -165,7 +159,6 @@ class Simplex {
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$p = $this->matrixes[$this->index]->findBaseCol();
-			$this->zj[$this->index] = $this->zj[$this->index - 1];
 			if ($p == -1) {
 				if ($this->index == 1) {
 					unset($this->matrixes[$this->index]);
@@ -197,7 +190,6 @@ class Simplex {
 
 			$this->simplexIteration();
 			$this->partialAdding($q);
-			//$this->setZj($p);
 			//-------------------------------
 			if ($this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
@@ -226,7 +218,6 @@ class Simplex {
 				$this->signs[count($this->signs)] = '>=';
 				$this->basisVariable[$this->index][count($this->basisVariable)] = 'S<sub>' . (count($this->boundaries) + 1) . '</sub>';
 				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
-				$this->zj[$this->index] = $this->zj[$this->index - 1];
 				//-------------------------------------------
 				$this->index++;
 				$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
@@ -235,7 +226,6 @@ class Simplex {
 				$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 				$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 				$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-				$this->zj[$this->index] = $this->zj[$this->index - 1];
 				$this->swapBase();
 				$this->simplexIteration();
 				//-------------------------------------------
@@ -294,14 +284,6 @@ class Simplex {
 				echo '</tr>';
 			}
 
-			echo '<tr class="underlined">';
-			echo '<th class="ui-state-default">z<sub>j</sub></th>';
-			echo '<th class="ui-state-default"></th>';
-			foreach ($this->zj[$key] as $value3) {
-				echo '<td>' . $value3 . '</td>';
-			}
-			echo '<td  class="ui-state-default"></td><td class="ui-state-default">-</td>';
-			echo '</tr>';
 			for ($i = $value->getCols() - 1; $i < $value->getCols(); $i++) {
 				echo '<tr>';
 				if (isset($this->basisVariable[$key][($i + 1)])) {
@@ -386,21 +368,6 @@ class Simplex {
 			}
 		}
 		return -1;
-	}
-
-	private function setZj($p) {
-		for ($i = count($this->targetfunction); $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
-			if (Fraction::equalsZero($this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1))) {
-				continue;
-			} elseif ($i == $p) {
-				continue;
-			} else {
-				$this->zj[$this->index][$i] = clone $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1);
-				$this->zj[$this->index][$i]->minusFraction();
-			}
-		}
-		$this->zj[$this->index][$p] = clone $this->matrixes[$this->index - 1]->getElement($p, $this->matrixes[$this->index - 1]->getCols() - 1);
-		$this->zj[$this->index][$p]->minusFraction();
 	}
 
 	private function gomoryNewTableau($k) {
