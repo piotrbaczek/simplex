@@ -100,12 +100,8 @@ class Simplex {
 					$this->targetfunction[$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 					break;
 				default:
-					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
-						if (($j - ($this->M - 1)) == $key) {
-							$this->matrixes[$this->index]->setValue($j, $key, new Fraction(1));
-							$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
-						}
-					}
+					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
 					break;
 			}
 		}
