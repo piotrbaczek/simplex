@@ -94,26 +94,30 @@ class Fraction {
 		$this->denominator /= $num;
 	}
 
+	public function getRealM() {
+		return (int) $this->mnumerator / $this->mdenominator;
+	}
+
+	public function getRealValue() {
+		return (int) $this->numerator / $this->denominator;
+	}
+
 	public function compare($param) {
 		if ($param instanceof Fraction) {
-			$a = $this->numerator * $param->getDenominator();
-			$b = $this->denominator * $param->getNumerator();
-			if ($a > $b) {
-				return true;
-//this fraction is bigger
-			} else {
-				return false;
-//param fraction is bigger
+			if ($this->getRealM() > $param->getRealM()) {
+				return TRUE;
+			}elseif($this->getRealM() < $param->getRealM()){
+				return FALSE;
+			}else{
+				if($this->getRealValue()>$param->getRealValue()){
+					return TRUE;
+				}else{
+					return FALSE;
+				}
 			}
 		} elseif (is_numeric($param)) {
-			$p = $this->realToFraction($param);
-			$a = $this->numerator * $p[1];
-			$b = $this->denominator * $p[0];
-			if ($a > $b) {
-				return true;
-			} else {
-				return false;
-			}
+			$param=new Fraction($param);
+			$this->compare($param);
 		}
 	}
 
@@ -238,7 +242,7 @@ class Fraction {
 		if ($param instanceof Fraction) {
 			return ($param->getNumerator() == $this->numerator && $param->getDenominator() == $this->denominator) ? true : false;
 		} elseif (is_numeric($param)) {
-			return ($this->getRealValue() == $param) ? true : false;
+			return ($this->getValue() == $param) ? true : false;
 		}
 	}
 
@@ -266,8 +270,8 @@ class Fraction {
 		return ( $a * $b ) / $this->highestCommonDivisor($a, $b);
 	}
 
-	public function getRealValue() {
-		return ($this->mnumerator != 0 ? ($this->mnumerator > 0 ? PHP_INT_MAX : ~PHP_INT_MAX) : $this->numerator / $this->denominator);
+	public function getValue() {
+		return ($this->mnumerator != 0 ? ($this->mnumerator > 0 ? PHP_INT_MAX : -PHP_INT_MAX) : $this->numerator / $this->denominator);
 	}
 
 	public static function errormessage($message) {
