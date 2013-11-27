@@ -12,7 +12,7 @@ if ($ss) {
 	$plik = new Processer($adres);
 	unlink($adres);
 	try {
-		$simplex = new Simplex($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMaxMin(), $plik->getGomorry());
+		$simplex = new Simplex($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
 		echo '<div style="width:700px;height:100%;float:left;">';
 		$simplex->printProblem();
 		$simplex->printSolution();
