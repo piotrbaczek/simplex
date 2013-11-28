@@ -55,11 +55,4 @@ class DivisionCoefficient {
 
 }
 
-//include 'Fraction.class.php';
-//$a[] = new DivisionCoefficient();
-//$a[] = new DivisionCoefficient(new Fraction(2), new Fraction(3), new Fraction(2, 3));
-//$a[] = new DivisionCoefficient(new Fraction(20), new Fraction(0));
-//foreach ($a as $value) {
-//	echo $value . '<br/>';
-//}
 ?>
