@@ -42,27 +42,15 @@ class Simplex {
 		if (count($boundaries) != count($signs) || count($signs) == 0) {
 			throw new Exception('Sizes of arrays Boundaries and Signs have to be the same.');
 		}
-		if ($this->extreme) {
-			foreach ($this->signs as $key => $value) {
-				if ($value == enumSigns::_LEQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0);
-				} elseif ($value == enumSigns::_GEQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
-					$this->wrongsigns++;
-				} elseif ($value == enumSigns::_EQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
-				}
-			}
-		} else {
-			foreach ($this->signs as $key => $value) {
-				if ($value == enumSigns::_LEQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0);
-				} elseif ($value == enumSigns::_GEQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
-					$this->wrongsigns++;
-				} elseif ($value == enumSigns::_EQ) {
-					$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
-				}
+
+		foreach ($this->signs as $key => $value) {
+			if ($value == enumSigns::_LEQ) {
+				$this->cCoefficient[$this->index][$key] = new Fraction(0);
+			} elseif ($value == enumSigns::_GEQ) {
+				$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
+				$this->wrongsigns++;
+			} elseif ($value == enumSigns::_EQ) {
+				$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 			}
 		}
 
@@ -100,12 +88,9 @@ class Simplex {
 					$this->targetfunction[$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 					break;
 				default:
-					for ($j = $this->M - 1; $j < $this->N + $this->M - 2; $j++) {
-						if (($j - ($this->M - 1)) == $key) {
-							$this->matrixes[$this->index]->setValue($j, $key, new Fraction(1));
-							$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
-						}
-					}
+					//case LEQ
+					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
 					break;
 			}
 		}
@@ -246,7 +231,7 @@ class Simplex {
 			if (($key + 1) > $this->index) {
 				$divisionArray = Array();
 				foreach ($value->getDivisionArray() as $key2 => $darray) {
-					$divisionArray[$key2] = '-';
+					$divisionArray[$key2] = new DivisionCoefficient();
 				}
 			} else {
 				$divisionArray = $this->matrixes[$key + 1]->getDivisionArray();
@@ -264,6 +249,7 @@ class Simplex {
 				}
 			}
 			echo '<th class="ui-state-default" rowspan="2">P<sub>o</sub></th>';
+			echo '<th class="ui-state-default" rowspan="2">P<sub>o</sub>/a<sub>ij</sub></th>';
 			echo '</tr>';
 			echo '<tr><th class="ui-state-default">Baza</th>';
 			echo '<th class="ui-state-default">c</th>';
@@ -283,7 +269,7 @@ class Simplex {
 					echo '<th class="ui-state-default"></th>';
 				}
 				$this->printImages($value, $key, $i, $j);
-				echo '<td class="ui-state-default">' . (!isset($divisionArray[$i]) ? '-' : $divisionArray[$i]) . '</td>';
+				echo $divisionArray[$i];
 				echo '</tr>';
 			}
 
@@ -297,7 +283,7 @@ class Simplex {
 					echo '<th class="ui-state-default"></th>';
 				}
 				$this->printImages($value, $key, $i, $j);
-				echo '<td class="ui-state-default">' . (!isset($divisionArray[$i]) ? '-' : $divisionArray[$i]) . '</td>';
+				echo '<td class="ui-state-default"></td>';
 				echo '</tr>';
 			}
 			echo '</tbody>';
@@ -497,7 +483,6 @@ class Simplex {
 			echo '<u>in integers</u>';
 		}
 		echo '<br/>';
-		unset($index);
 	}
 
 	public function printValuePair() {
@@ -523,7 +508,7 @@ class Simplex {
 
 	public function getJSON() {
 		$a = 0;
-		foreach ($this->targetfunction as $key => $value) {
+		foreach ($this->targetfunction as $value) {
 			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
 				$a++;
 			}

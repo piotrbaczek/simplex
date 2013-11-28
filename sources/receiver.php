@@ -6,6 +6,7 @@ include '../classes/SimplexTableu.class.php';
 include '../classes/Signs.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/activity.class.php';
+include '../classes/DivisionCoefficient.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 if ($ss) {
 	//----------------------------------------------------------------------------

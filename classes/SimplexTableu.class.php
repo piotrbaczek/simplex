@@ -21,7 +21,7 @@ class SimplexTableu {
 			}
 		}
 		for ($i = 0; $i < $this->getRows() - 1; $i++) {
-			$this->divisionArray[$i] = '-';
+			$this->divisionArray[$i] = new DivisionCoefficient();
 		}
 	}
 
@@ -90,14 +90,14 @@ class SimplexTableu {
 			$s = clone $this->getElement($this->getRows() - 1, $i);
 			$n = clone $this->getElement($p, $i);
 			if (Fraction::equalsZero($n)) {
-				$this->divisionArray[$i] = new Fraction(0, 1, 1, 1);
+				$this->divisionArray[$i] = new DivisionCoefficient(clone $s, clone $n);
 				continue;
 			} elseif (Fraction::isNegative($n)) {
+				$this->divisionArray[$i] = new DivisionCoefficient(clone $s, clone $n);
 				$s->divide($n);
-				$this->divisionArray[$i] = clone $s;
 			} else {
+				$this->divisionArray[$i] = new DivisionCoefficient(clone $s, clone $n);
 				$s->divide($n);
-				$this->divisionArray[$i] = clone $s;
 				if (!$s->compare($startv) && Fraction::isPositive($s)) {
 					$starti = $i;
 					$startv = $s;
