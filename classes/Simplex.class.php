@@ -177,9 +177,6 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
 			}
-			if ($this->index > 20) {
-				break;
-			}
 		}
 
 		if ($this->gomory && $this->index != 0) {
