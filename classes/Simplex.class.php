@@ -77,20 +77,20 @@ class Simplex {
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(-1));
 
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $this->N - 1 + $ax, $key, new Fraction(1));
-					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M - 1 + $this->N + $ax) . '</sub>';
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
 
 					$this->targetfunction[$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
 					break;
 				case enumSigns::_EQ:
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
-					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
 					$this->targetfunction[$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 					break;
 				default:
 					//case LEQ
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
-					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($j + 1) . '</sub>';
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
 					break;
 			}
 		}
