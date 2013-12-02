@@ -452,6 +452,10 @@ class Simplex {
 			}
 			if (!Fraction::hasM($value)) {
 				$temp->minusFraction();
+			}else{
+				if(!$this->extreme){
+					$temp->minusFraction();
+				}
 			}
 			if ($key != 0) {
 				if (Fraction::isPositive($temp) || Fraction::equalsZero($temp)) {
