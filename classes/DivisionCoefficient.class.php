@@ -29,8 +29,6 @@ class DivisionCoefficient {
 	private function reduction() {
 		if ($this->numerator == DivisionCoefficient::none && $this->denominator == DivisionCoefficient::none) {
 			$this->result = DivisionCoefficient::none;
-		} elseif ($this->denominator instanceof Fraction && $this->denominator->getRealValue() == 0) {
-			$this->result = new Fraction(0, 1, 1, 1);
 		} else {
 			$this->result = clone $this->numerator;
 			$this->result->divide($this->denominator);

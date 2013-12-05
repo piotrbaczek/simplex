@@ -90,7 +90,7 @@ class SimplexTableu {
 			$s = clone $this->getElement($this->getRows() - 1, $i);
 			$n = clone $this->getElement($p, $i);
 			if (Fraction::equalsZero($n)) {
-				$this->divisionArray[$i] = new DivisionCoefficient(clone $s, clone $n);
+				$this->divisionArray[$i] = new DivisionCoefficient();
 				continue;
 			} elseif (Fraction::isNegative($n)) {
 				$this->divisionArray[$i] = new DivisionCoefficient(clone $s, clone $n);
