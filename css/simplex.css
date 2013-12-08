@@ -60,7 +60,13 @@ body {
 	padding-bottom: 5px;
 }
 
+#header_leftlogo{
+	margin-left: 50px;
+	margin-top: 50px;
+}
+
 #rightdiv{
+	margin-top: 30px;
 	width: 50%;
 	float: right;
 	min-height: 300px;
@@ -130,7 +136,7 @@ form[name=form] {
 }
 
 #funct,#gomorryf, #targetfunction,input.fake{
-	height: 25px;
+	height: 22px;
 	margin-bottom: 3px;
 }
 

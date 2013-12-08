@@ -38,7 +38,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
             </div>
 			<?php if ($ss) { ?>
 				<div id="defaultdiv">
-					<img src="images/logo_header.png" alt="logo"/>
+					<img src="images/logo_header.png" id="header_leftlogo" alt="logo"/>
 					<div id="rightdiv">
 						<div class="left" style="width: 49%; text-align: right;">
 							<div class="label">Ekstremum funkcji celu:</div>
