@@ -88,8 +88,8 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 						<button id="backbutton">Cofnij</button>
 						<div id="resultdiv2"></div>
 						<div id="resultdiv3">
-							<div id="placeholder1"></div>
-							<canvas id="canvas1"></canvas>
+							<div id="placeholder1" style="width: 480px; height: 360px;"></div>
+							<canvas id="canvas1" style="width: 620px;height: 500px;"></canvas>
 						</div>
 					</div>
 				</div>

@@ -50,8 +50,28 @@ $(document).ajaxStart(function() {
 				success: function(data) {
 					if (data[0] === 2) {
 						//placeholder
+						$.plot($("#placeholder1"), data[1]);
 					} else if (data[0] === 3) {
 						//canvas
+						var vars = [];
+						a = data[2];
+						for (var i = 0; i < a.length; i++) {
+							vars.push("Punkt" + (i + 1));
+						}
+						var x = {
+							"y": {
+								"vars": vars,
+								"smps": [
+									"X",
+									"Y",
+									"Z"
+								],
+								"desc": [
+									"Simplex method"
+								],
+								"data": a
+							}
+						};
 					} else if (data[0] === -1) {
 						//strona wyłączona
 					} else {
@@ -103,11 +123,11 @@ $(document).ajaxStart(function() {
 			}
 		}
 	});
-//	$('#loadfile').button({
-//		icons: {
-//			secondary: "ui-icon-transferthick-e-w"
-//		}
-//	}).click(function() {
+	$('#loadfile').button({
+		icons: {
+			secondary: "ui-icon-transferthick-e-w"
+		}
+	}).click(function() {
 //		if ($('form[name=form]').valid()) {
 //			$.ajaxFileUpload({
 //				url: 'sources/doajaxfileupload.php',
@@ -154,17 +174,7 @@ $(document).ajaxStart(function() {
 //			});
 //		}
 //		return false;
-//	});
-//	$('#loadback').button({
-//		icons: {
-//			primary: "ui-icon-carat-1-w"
-//		}
-//	}).click(function() {
-//		$('#result').slideUp('fast');
-//		$('#fileloader').slideDown('slow');
-//		$('input.fake').val("");
-//		$("#fileToUpload").val("");
-//	});
+	});
 	$('input.fake').click(function() {
 		$('input[name=fileToUpload]').click();
 	});
