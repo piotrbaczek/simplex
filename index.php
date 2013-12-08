@@ -84,10 +84,17 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 							</form>
 						</div>
 					</div>
+					<div id="resultdiv" class="hidden">
+						<button id="backbutton">Cofnij</button>
+						<div id="resultdiv2"></div>
+						<div id="resultdiv3">
+							<div id="placeholder1"></div>
+							<canvas id="canvas1"></canvas>
+						</div>
+					</div>
 				</div>
-			<div style="clear: both;"></div>
-			<div id="resultdiv" class="hidden"></div>
-			<?php
+				<div style="clear: both;"></div>
+				<?php
 			} else {
 				activity::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 			}

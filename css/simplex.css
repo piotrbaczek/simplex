@@ -213,3 +213,9 @@ table.result td.mainelement {
 tr.underlined td, tr.underlined th{
 	border-top: 3px solid black;
 }
+
+#resultdiv{
+	margin-left: 30px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}

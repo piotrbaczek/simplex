@@ -37,18 +37,27 @@ $(document).ajaxStart(function() {
 			}
 		}
 	});
-	$('#tabs').tabs();
 	$('#solvethis').button().click(function() {
 		if ($('#solvethisform').valid()) {
+			$('#rightdiv').slideUp();
+			$('#header_leftlogo').hide();
 			s = $('#solvethisform input,textarea,select').serialize();
 			$.ajax({
 				type: "POST",
 				url: "sources/receiver.php",
 				data: s,
-				dataType: "html",
+				dataType: "json",
 				success: function(data) {
-					$('#defaultdiv').slideUp('fast');
-					$('#resultdiv2').empty().append(data);
+					if (data[0] === 2) {
+						//placeholder
+					} else if (data[0] === 3) {
+						//canvas
+					} else if (data[0] === -1) {
+						//strona wyłączona
+					} else {
+						//error
+					}
+					$('#resultdiv2').empty().append(data[2]);
 					$('table.result td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,
@@ -65,19 +74,20 @@ $(document).ajaxStart(function() {
 							}
 						}
 					});
-					$('#resultdiv3').slideDown('slow');
+					$('#resultdiv').slideDown('slow');
 				}
 			});
 		}
 		return false;
 	});
-	$('#backbutton3').button({
+	$('#backbutton').button({
 		icons: {
 			primary: "ui-icon-carat-1-w"
 		}
 	}).click(function() {
-		$('#resultdiv3').slideUp('fast');
-		$('#defaultdiv').slideDown('slow');
+		$('#resultdiv').slideUp('fast');
+		$('#header_leftlogo').show();
+		$('#rightdiv').slideDown('slow');
 	});
 	$('form[name=form]').validate({
 		rules: {
@@ -93,68 +103,68 @@ $(document).ajaxStart(function() {
 			}
 		}
 	});
-	$('#loadfile').button({
-		icons: {
-			secondary: "ui-icon-transferthick-e-w"
-		}
-	}).click(function() {
-		if ($('form[name=form]').valid()) {
-			$.ajaxFileUpload({
-				url: 'sources/doajaxfileupload.php',
-				secureuri: false,
-				fileElementId: 'fileToUpload',
-				dataType: 'json',
-				data: {
-					name: 'logan',
-					id: 'id'
-				},
-				success: function(data, status) {
-					if (typeof (data.error) !== 'undefined') {
-						if (data.error !== '') {
-							alert(data.error);
-						} else {
-							$('#result2').load("sources/fileProcesser.php", {
-								'filename': data.msg
-							}, function() {
-								$('#fileloader').slideUp('fast');
-								$('#result').slideDown('slow');
-								$('table.result:gt(0) td').tooltip({
-									delay: 0,
-									showURL: false,
-									fixPNG: true,
-									track: true,
-									bodyHandler: function() {
-										ss = $(this).attr('data-dane');
-										temp = ss.split(",");
-										return $("<img/>").attr("src", './sources/Picture.php?a=' + temp[0] + '&b=' + temp[1] + '&c=' + temp[2] + '&d=' + temp[3] + '&e=' + temp[4]).css({
-											'background-color': 'transparent',
-											'text-align': 'center'
-										});
-									}
-
-								});
-							});
-						}
-					}
-
-				},
-				error: function(data, status, e) {
-					alert(e);
-				}
-			});
-		}
-		return false;
-	});
-	$('#loadback').button({
-		icons: {
-			primary: "ui-icon-carat-1-w"
-		}
-	}).click(function() {
-		$('#result').slideUp('fast');
-		$('#fileloader').slideDown('slow');
-		$('input.fake').val("");
-		$("#fileToUpload").val("");
-	});
+//	$('#loadfile').button({
+//		icons: {
+//			secondary: "ui-icon-transferthick-e-w"
+//		}
+//	}).click(function() {
+//		if ($('form[name=form]').valid()) {
+//			$.ajaxFileUpload({
+//				url: 'sources/doajaxfileupload.php',
+//				secureuri: false,
+//				fileElementId: 'fileToUpload',
+//				dataType: 'json',
+//				data: {
+//					name: 'logan',
+//					id: 'id'
+//				},
+//				success: function(data, status) {
+//					if (typeof (data.error) !== 'undefined') {
+//						if (data.error !== '') {
+//							alert(data.error);
+//						} else {
+//							$('#result2').load("sources/fileProcesser.php", {
+//								'filename': data.msg
+//							}, function() {
+//								$('#fileloader').slideUp('fast');
+//								$('#result').slideDown('slow');
+//								$('table.result:gt(0) td').tooltip({
+//									delay: 0,
+//									showURL: false,
+//									fixPNG: true,
+//									track: true,
+//									bodyHandler: function() {
+//										ss = $(this).attr('data-dane');
+//										temp = ss.split(",");
+//										return $("<img/>").attr("src", './sources/Picture.php?a=' + temp[0] + '&b=' + temp[1] + '&c=' + temp[2] + '&d=' + temp[3] + '&e=' + temp[4]).css({
+//											'background-color': 'transparent',
+//											'text-align': 'center'
+//										});
+//									}
+//
+//								});
+//							});
+//						}
+//					}
+//
+//				},
+//				error: function(data, status, e) {
+//					alert(e);
+//				}
+//			});
+//		}
+//		return false;
+//	});
+//	$('#loadback').button({
+//		icons: {
+//			primary: "ui-icon-carat-1-w"
+//		}
+//	}).click(function() {
+//		$('#result').slideUp('fast');
+//		$('#fileloader').slideDown('slow');
+//		$('input.fake').val("");
+//		$("#fileToUpload").val("");
+//	});
 	$('input.fake').click(function() {
 		$('input[name=fileToUpload]').click();
 	});

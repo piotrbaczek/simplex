@@ -224,6 +224,7 @@ class Simplex {
 	}
 
 	public function printSolution() {
+		$string = '';
 		foreach ($this->matrixes as $key => $value) {
 			if (($key + 1) > $this->index) {
 				$divisionArray = Array();
@@ -233,100 +234,103 @@ class Simplex {
 			} else {
 				$divisionArray = $this->matrixes[$key + 1]->getDivisionArray();
 			}
-			echo '<table class="result">';
-			echo '<tbody>';
-			echo '<tr>';
-			echo '<th class="ui-state-default">(' . $value->getIndex() . ')</th>';
-			echo '<th class="ui-state-default"></th>';
+			$string.='<table class="result">';
+			$string.='<tbody>';
+			$string.='<tr>';
+			$string.='<th class="ui-state-default">(' . $value->getIndex() . ')</th>';
+			$string.='<th class="ui-state-default"></th>';
 			for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
 				if (isset($this->targetfunction[$j])) {
-					echo '<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
+					$string.='<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
 				} else {
-					echo '<th class="ui-state-default">0</th>';
+					$string.='<th class="ui-state-default">0</th>';
 				}
 			}
-			echo '<th class="ui-state-default" rowspan="2">P<sub>o</sub></th>';
-			echo '<th class="ui-state-default" rowspan="2">P<sub>o</sub>/a<sub>ij</sub></th>';
-			echo '</tr>';
-			echo '<tr><th class="ui-state-default">Baza</th>';
-			echo '<th class="ui-state-default">c</th>';
+			$string.='<th class="ui-state-default" rowspan="2">P<sub>o</sub></th>';
+			$string.='<th class="ui-state-default" rowspan="2">P<sub>o</sub>/a<sub>ij</sub></th>';
+			$string.='</tr>';
+			$string.='<tr><th class="ui-state-default">Baza</th>';
+			$string.='<th class="ui-state-default">c</th>';
 			for ($j = 0; $j < $this->N + $this->wrongsigns + $this->M - 2; $j++) {
 				if (isset($this->nonBasisVariable[$key][$j + 1])) {
-					echo '<th class="ui-state-default">' . $this->nonBasisVariable[$key][$j + 1] . '</th>';
+					$string.='<th class="ui-state-default">' . $this->nonBasisVariable[$key][$j + 1] . '</th>';
 				}
 			}
-			echo '</tr>';
+			$string.='</tr>';
 			for ($i = 0; $i < $value->getCols() - 1; $i++) {
-				echo '<tr>';
+				$string.='<tr>';
 				if (isset($this->basisVariable[$key][($i + 1)])) {
-					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
-					echo '<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
+					$string.='<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
+					$string.='<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
 				} else {
-					echo '<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
-					echo '<th class="ui-state-default"></th>';
+					$string.='<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
+					$string.='<th class="ui-state-default"></th>';
 				}
-				$this->printImages($value, $key, $i, $j);
-				echo $divisionArray[$i];
-				echo '</tr>';
+				$string.=$this->printImages($value, $key, $i, $j);
+				$string.=$divisionArray[$i];
+				$string.='</tr>';
 			}
 
 			for ($i = $value->getCols() - 1; $i < $value->getCols(); $i++) {
-				echo '<tr>';
+				$string.='<tr>';
 				if (isset($this->basisVariable[$key][($i + 1)])) {
-					echo '<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
-					echo '<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
+					$string.='<th class="ui-state-default">' . $this->basisVariable[$key][($i + 1)] . '</th>';
+					$string.='<td class="center">' . $this->cCoefficient[$key][$i] . '</td>';
 				} else {
-					echo '<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
-					echo '<th class="ui-state-default"></th>';
+					$string.='<th class="ui-state-default">z<sub>j</sub>-c<sub>j</sub></th>';
+					$string.='<th class="ui-state-default"></th>';
 				}
-				$this->printImages($value, $key, $i, $j);
-				echo '<td class="ui-state-default"></td>';
-				echo '</tr>';
+				$string.=$this->printImages($value, $key, $i, $j);
+				$string.='<td class="ui-state-default"></td>';
+				$string.='</tr>';
 			}
-			echo '</tbody>';
-			echo '</table>';
-			echo '<br/>';
+			$string.='</tbody>';
+			$string.='</table>';
+			$string.='<br/>';
 		}
+		return $string;
 	}
 
 	private function printImages($value, $key, $i, $j) {
+		$string = '';
 		for ($j = 0; $j < $value->getRows(); $j++) {
 			if ($key != 0 && !$value->isGomory()) {
 				//ALL PICTURES NEEDED
 				if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
 					if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
-						echo '<td class="mainelement" data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td class="mainelement" data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
-						echo '<td class="mainelement" data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td class="mainelement" data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
-						echo '<td class="mainelement" data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td class="mainelement" data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} else {
-						echo '<td class="mainelement" data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td class="mainelement" data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					}
 				} else {
 					if ($j == $this->matrixes[$key - 1]->getMainCol() && $i == $this->matrixes[$key - 1]->getMainRow()) {
-						echo '<td data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td data-dane="m,1,' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} elseif ($j == $this->matrixes[$key - 1]->getMainCol()) {
-						echo '<td data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td data-dane="c,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
-						echo '<td data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} else {
-						echo '<td data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+						$string.='<td data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					}
 				}
 			} else {
 				//NO PICTURES
 				if ($j == $this->matrixes[$key]->getMainCol() && $i == $this->matrixes[$key]->getMainRow()) {
-					echo '<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
+					$string.='<td class="mainelement">' . $value->getElement($j, $i) . '</td>';
 				} elseif ($j == $this->matrixes[$key]->getMainCol()) {
-					echo '<td>' . $value->getElement($j, $i) . '</td>';
+					$string.='<td>' . $value->getElement($j, $i) . '</td>';
 				} elseif ($i == $this->matrixes[$key]->getMainRow()) {
-					echo '<td>' . $value->getElement($j, $i) . '</td>';
+					$string.='<td>' . $value->getElement($j, $i) . '</td>';
 				} else {
-					echo '<td>' . $value->getElement($j, $i) . '</td>';
+					$string.='<td>' . $value->getElement($j, $i) . '</td>';
 				}
 			}
 		}
+		return $string;
 	}
 
 	public function testPrint() {
@@ -395,7 +399,7 @@ class Simplex {
 	}
 
 	public function printResult() {
-		echo 'W=' . $this->getResult();
+		return 'W=' . $this->getResult();
 	}
 
 	public static function errorMessage($message) {
@@ -443,7 +447,8 @@ class Simplex {
 	}
 
 	public function printProblem() {
-		echo $this->extreme ? 'max ' : 'min ';
+		$string = '';
+		$string.=$this->extreme ? 'max ' : 'min ';
 		ksort($this->targetfunction);
 		foreach ($this->targetfunction as $key => $value) {
 			$temp = clone $value;
@@ -452,44 +457,47 @@ class Simplex {
 			}
 			if (!Fraction::hasM($value)) {
 				$temp->minusFraction();
-			}else{
-				if(!$this->extreme){
+			} else {
+				if (!$this->extreme) {
 					$temp->minusFraction();
 				}
 			}
 			if ($key != 0) {
 				if (Fraction::isPositive($temp) || Fraction::equalsZero($temp)) {
-					echo '+';
+					$string.='+';
 				}
 			}
-			echo $temp . 'x<sub>' . ($key + 1) . '</sub>';
+			$string.=$temp . 'x<sub>' . ($key + 1) . '</sub>';
 		}
-		echo '<br/>';
+		$string.='<br/>';
 		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
 			for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
 				$element = clone $this->matrixes[0]->getElement($j, $i);
 				if (Fraction::isPositive($element) || Fraction::equalsZero($element)) {
-					echo $j != 0 ? '+' : '';
+					$string.=$j != 0 ? '+' : '';
 				}
-				echo $element . 'x<sub>' . ($j + 1) . '</sub>';
+				$string.=$element . 'x<sub>' . ($j + 1) . '</sub>';
 			}
-			echo $this->signs[$i];
-			echo $this->boundaries[$i];
-			echo '<br/>';
+			$string.=$this->signs[$i];
+			$string.=$this->boundaries[$i];
+			$string.='<br/>';
 		}
 		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
-			echo 'x<sub>' . ($i + 1) . '</sub>&ge;0<br/>';
+			$string.='x<sub>' . ($i + 1) . '</sub>&ge;0<br/>';
 		}
 		if ($this->gomory) {
-			echo '<u>in integers</u>';
+			$string.='<u>in integers</u>';
 		}
-		echo '<br/>';
+		$string.='<br/>';
+		return $string;
 	}
 
 	public function printValuePair() {
+		$string = '';
 		foreach ($this->getValuePair() as $key => $value) {
-			echo 'x<sub>' . $key . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
+			$string.='x<sub>' . $key . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
 		}
+		return $string;
 	}
 
 	public function getValuePair() {
@@ -565,15 +573,7 @@ class Simplex {
 					$t->divide($this->targetfunction[0]);
 					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
 				}
-				echo '<script>';
-				echo '$(document).ready(function(){';
-				echo '$.plot($("#placeholder1"),' . json_encode($json) . ');';
-				echo '});';
-				echo '</script>';
-				echo '<div style="width:480px;float:right;">';
-				echo '<div id="placeholder1" style="width: 480px; height: 360px;"></div>';
-				echo '</div>';
-				break;
+				return $json;
 			default:
 				$maxx = new Fraction(0);
 				$maxy = new Fraction(0);
@@ -615,47 +615,7 @@ class Simplex {
 						}
 					}
 				}
-				echo '<canvas id="canvas1" width="613" height="500"></canvas>';
-				echo '<script>';
-				echo '$(document).ready(function() {';
-				echo 'var vars = [];';
-				echo 'a =' . json_encode($json) . ';';
-				echo 'for (var i = 0; i < a.length; i++) {';
-				echo 'vars.push("Punkt" + (i + 1));';
-				echo '}';
-				echo 'var x = {
-                            "y": {
-                                "vars": vars,
-                                "smps": [
-                                    "X",
-                                    "Y",
-                                    "Z"
-                                ],
-                                "desc": [
-                                    "Simplex method"
-                                ],
-                                "data": a
-                            }
-                        };';
-				echo 'new CanvasXpress("canvas1", x, {';
-				echo '"graphType": "Scatter3D",';
-				echo '"useFlashIE": true,';
-				echo '"xAxis": [';
-				echo '"X"';
-				echo '],';
-				echo '"yAxis": [';
-				echo '"Y"';
-				echo '],';
-				echo '"zAxis": [';
-				echo '"Z"';
-				echo '],';
-				echo '"scatterType": false,';
-				echo '"setMinX": 0,';
-				echo '"setMinY": 0';
-				echo '});';
-				echo '});';
-				echo '</script>';
-				break;
+				return $json;
 		}
 	}
 
