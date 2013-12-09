@@ -1,5 +1,4 @@
 <?php
-
 include '../classes/TextareaProcesser.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/SimplexTableu.class.php';
