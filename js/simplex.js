@@ -95,6 +95,7 @@ $(document).ajaxStart(function() {
 						}
 					});
 					$('#resultdiv').slideDown('slow');
+					$('#resultdiv2').slideDown('slow');
 				}
 			});
 		}
