@@ -7,10 +7,13 @@ include '../classes/Signs.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/activity.class.php';
 include '../classes/DivisionCoefficient.class.php';
+include '../classes/RandomColor.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 $json = Array();
 if ($ss) {
-	//----------------------------------------------------------------------------
+	//header for correct json recognition
+	header('Content-Type: application/json');
+//----------------------------------------------------------------------------
 	$_POST['textarea'] = '2x1+5x2<=30
 2x1+3x2<=26
 0x1+3x2<=15';
@@ -35,10 +38,10 @@ if ($ss) {
 			$json[1] = $simplex->getJSON();
 			$json[2] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
 		} else {
-			//$json[0].=TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
+//$json[0].=TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
 		}
 	} catch (Exception $e) {
-		//$json[0].=TextareaProcesser::errormessage($e->getMessage());
+//$json[0].=TextareaProcesser::errormessage($e->getMessage());
 	}
 } else {
 //	$json[0].='<script>';

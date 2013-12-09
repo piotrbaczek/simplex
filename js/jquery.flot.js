@@ -180,7 +180,7 @@ var A={
         var series = [],
         options = {
             // the color theme used for graphs
-            colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
+            colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d"],
             legend: {
                 show: true,
                 noColumns: 1, // number of colums in legend table

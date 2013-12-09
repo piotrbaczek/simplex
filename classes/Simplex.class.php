@@ -286,6 +286,9 @@ class Simplex {
 			}
 			$string.='</tbody>';
 			$string.='</table>';
+			if (!$value->isGomory()) {
+				$string.='A<sub>' . ($key + 1) . '</sub>=' . $this->printCurrentPoint($key);
+			}
 			$string.='<br/>';
 		}
 		return $string;
@@ -500,15 +503,18 @@ class Simplex {
 		return $string;
 	}
 
-	public function getValuePair() {
+	public function getValuePair($indexarray = -1) {
+		if ($indexarray == -1) {
+			$indexarray = $this->index;
+		}
 		$x = Array();
 		for ($i = 1; $i < 2 + max(array_keys($this->targetfunction)); $i++) {
 			$x[$i] = new Fraction();
 		}
 		$index = 0;
-		foreach ($this->basisVariable[$this->index] as $value) {
+		foreach ($this->basisVariable[$indexarray] as $value) {
 			$temp = explode('<sub>', $value);
-			$x[(int) $temp['1']] = $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $index);
+			$x[(int) $temp['1']] = $this->matrixes[$indexarray]->getElement($this->matrixes[$indexarray]->getRows() - 1, $index);
 			$index++;
 		}
 		unset($index);
@@ -572,6 +578,10 @@ class Simplex {
 					$t->multiply($maxx);
 					$t->divide($this->targetfunction[0]);
 					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
+				}
+				foreach ($this->matrixes as $key => $value) {
+					$key1 = $this->getValuePair($key);
+					$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true), 'color' => RandomColor::getRandomColor());
 				}
 				return $json;
 			default:
@@ -645,6 +655,20 @@ class Simplex {
 			}
 		}
 		return true;
+	}
+
+	private function printCurrentPoint($indexarray = -1) {
+		if ($indexarray == -1) {
+			$indexarray = $this->index;
+		}
+		$x = $this->getValuePair($indexarray);
+		$string = '[';
+		foreach ($x as $value) {
+			$string.=$value->getRealValue() . ',';
+		}
+		$string = substr($string, 0, -1);
+		$string.=']';
+		return $string;
 	}
 
 }

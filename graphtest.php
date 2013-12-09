@@ -21,13 +21,14 @@ and open the template in the editor.
 					return color;
 				}
 				var data = [123,
-					[{"label": "S1", "data": [[0, 6], [15, 0]]},
-						{"label": "S2", "data": [[0, 8.6666666666667], [13, 0]]},
-						{"label": "S3", "data": [[0, 5], [15, 5]]},
-						{"label": "gradient", "data": [[0, 0], [3.75, 11.25]]},
-						{label: "A", data: [[2, 3]], points: {show: true}, color: get_random_color()}
+					[{"label": "S1", data: [[0, 6], [15, 0]]},
+						{label: "S2", data: [[0, 8.6666666666667], [13, 0]]},
+						{label: "S3", data: [[0, 5], [15, 5]]},
+						{label: "gradient", data: [[0, 0], [3.75, 11.25]]},
+						{label: "A", data: [[2.5, 5]], points: {show: true}, color: get_random_color()}
 					]];
-				$.plot($("#placeholder1"), data[1]);
+				var data2=[{"label":"S1","data":[[0,6],[15,0]]},{"label":"S2","data":[[0,8.6666666666667],[13,0]]},{"label":"S3","data":[[0,5],[15,5]]},{"label":"gradient","data":[[0,0],[3.75,11.25]]},{"label":"A1","data":[[0,0]],"points":{"show":true},"color":"#000"},{"label":"A2","data":[[0,5]],"points":{"show":true},"color":"#000"},{"label":"A3","data":[[2.5,5]],"points":{"show":true},"color":"#000"}];
+				$.plot($("#placeholder1"), data2);
 			});
 		</script>
 		<style>
