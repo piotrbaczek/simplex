@@ -1,9 +1,7 @@
 body {
 
 }
-div{
-	border: 1px solid red;
-}
+
 #content {
 	position: relative;
 	z-index: 1;
