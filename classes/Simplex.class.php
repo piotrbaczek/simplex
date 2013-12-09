@@ -581,7 +581,7 @@ class Simplex {
 				}
 				foreach ($this->matrixes as $key => $value) {
 					$key1 = $this->getValuePair($key);
-					$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true), 'color' => RandomColor::getRandomColor());
+					$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true));
 				}
 				return $json;
 			default:
