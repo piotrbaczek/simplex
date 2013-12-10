@@ -74,8 +74,10 @@ $(document).ajaxStart(function() {
 						};
 					} else if (data[0] === -1) {
 						//strona wyłączona
+						$('#rightdiv').empty().append(data[1]);
 					} else if (data[0] === -2) {
 						//error
+						alert(data[1]);
 					}
 					$('#resultdiv2').empty().append(data[1]);
 					$('table.result td[data-dane]').tooltip({
