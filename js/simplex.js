@@ -50,11 +50,11 @@ $(document).ajaxStart(function() {
 				success: function(data) {
 					if (data[0] === 2) {
 						//placeholder
-						$.plot($("#placeholder1"), data[1]);
-					} else if (data[0] === 3) {
+						$.plot($("#placeholder1"), data[2]);
+					} else if (data[0] >= 3) {
 						//canvas
 						var vars = [];
-						a = data[2];
+						a = data[3];
 						for (var i = 0; i < a.length; i++) {
 							vars.push("Punkt" + (i + 1));
 						}
@@ -74,10 +74,10 @@ $(document).ajaxStart(function() {
 						};
 					} else if (data[0] === -1) {
 						//strona wyłączona
-					} else {
+					} else if (data[0] === -2) {
 						//error
 					}
-					$('#resultdiv2').empty().append(data[2]);
+					$('#resultdiv2').empty().append(data[1]);
 					$('table.result td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,

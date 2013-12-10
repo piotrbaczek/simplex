@@ -521,112 +521,123 @@ class Simplex {
 		return $x;
 	}
 
-	public function getJSON() {
+	public function getPrimaryGraphJson() {
 		$a = 0;
+		$json = Array();
 		foreach ($this->targetfunction as $value) {
 			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
 				$a++;
 			}
 		}
-		$b = count($this->boundaries);
+		if ($a == 2) {
+			$b = count($this->boundaries);
+			$maxx = new Fraction(0);
+			$maxy = new Fraction(0);
+			for ($i = 0; $i < $b; $i++) {
+				if (Fraction::equalsZero($this->variables[$i][1])) {
+					continue;
+				}
+				$s = clone $this->boundaries[$i];
+				$s->divide($this->variables[$i][1]);
+				if ($s->compare($maxy)) {
+					$maxy = $s;
+				}
+				if (Fraction::equalsZero($this->variables[$i][0])) {
+					continue;
+				}
+				$s = clone $this->boundaries[$i];
+				$s->divide($this->variables[$i][0]);
+				if ($s->compare($maxx)) {
+					$maxx = $s;
+				}
+			}
+			for ($i = 0; $i < $b; $i++) {
+				$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
+				if (Fraction::equalsZero($this->variables[$i][1])) {
+					$s = clone $this->boundaries[$i];
+					$s->divide($this->variables[$i][0]);
+					$json[$i]['data'][] = Array($s->getValue(), $maxy->getValue());
+				} else {
+					$j = clone $this->boundaries[$i];
+					$j->divide($this->variables[$i][1]);
+					$json[$i]['data'][] = Array(0, $j->getValue());
+				}
+				if (Fraction::equalsZero($this->variables[$i][0])) {
+					$s = clone $this->boundaries[$i];
+					$s->divide($this->variables[$i][1]);
+					$json[$i]['data'][] = Array($maxx->getValue(), $s->getValue());
+				} else {
+					$j = clone $this->boundaries[$i];
+					$j->divide($this->variables[$i][0]);
+					$json[$i]['data'][] = Array($j->getValue(), 0);
+				}
+			}
+			if (!Fraction::equalsZero($this->targetfunction[0])) {
+				$t = clone $this->targetfunction[1];
+				$t->multiply($maxx);
+				$t->divide($this->targetfunction[0]);
+				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
+			}
+			foreach ($this->matrixes as $key => $value) {
+				$key1 = $this->getValuePair($key);
+				$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true));
+			}
+		}
+		return $json;
+	}
+
+	public function getSecondaryGraphJson() {
+		$a = 0;
 		$json = Array();
-		switch ($a) {
-			case 2:
-				$maxx = new Fraction(0);
-				$maxy = new Fraction(0);
-				for ($i = 0; $i < $b; $i++) {
-					if (Fraction::equalsZero($this->variables[$i][1])) {
-						continue;
-					}
-					$s = clone $this->boundaries[$i];
-					$s->divide($this->variables[$i][1]);
-					if ($s->compare($maxy)) {
-						$maxy = $s;
-					}
-					if (Fraction::equalsZero($this->variables[$i][0])) {
-						continue;
-					}
-					$s = clone $this->boundaries[$i];
-					$s->divide($this->variables[$i][0]);
-					if ($s->compare($maxx)) {
-						$maxx = $s;
-					}
+		foreach ($this->targetfunction as $value) {
+			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
+				$a++;
+			}
+		}
+		if ($a >= 3) {
+			$b = count($this->boundaries);
+			$maxx = new Fraction(0);
+			$maxy = new Fraction(0);
+			$maxz = new Fraction(0);
+			for ($i = 0; $i < $b; $i++) {
+				if (Fraction::equalsZero($this->variables[$i][1])) {
+					continue;
 				}
-				for ($i = 0; $i < $b; $i++) {
-					$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
-					if (Fraction::equalsZero($this->variables[$i][1])) {
-						$s = clone $this->boundaries[$i];
-						$s->divide($this->variables[$i][0]);
-						$json[$i]['data'][] = Array($s->getValue(), $maxy->getValue());
-					} else {
-						$j = clone $this->boundaries[$i];
-						$j->divide($this->variables[$i][1]);
-						$json[$i]['data'][] = Array(0, $j->getValue());
-					}
-					if (Fraction::equalsZero($this->variables[$i][0])) {
-						$s = clone $this->boundaries[$i];
-						$s->divide($this->variables[$i][1]);
-						$json[$i]['data'][] = Array($maxx->getValue(), $s->getValue());
-					} else {
-						$j = clone $this->boundaries[$i];
-						$j->divide($this->variables[$i][0]);
-						$json[$i]['data'][] = Array($j->getValue(), 0);
-					}
+				$s = clone $this->boundaries[$i];
+				$s->divide($this->variables[$i][1]);
+				if ($s->compare($maxy)) {
+					$maxy = $s;
 				}
-				if (!Fraction::equalsZero($this->targetfunction[0])) {
-					$t = clone $this->targetfunction[1];
-					$t->multiply($maxx);
-					$t->divide($this->targetfunction[0]);
-					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
-				}
-				foreach ($this->matrixes as $key => $value) {
-					$key1 = $this->getValuePair($key);
-					$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true));
-				}
-				return $json;
-			default:
-				$maxx = new Fraction(0);
-				$maxy = new Fraction(0);
-				$maxz = new Fraction(0);
-				for ($i = 0; $i < $b; $i++) {
-					if (Fraction::equalsZero($this->variables[$i][1])) {
-						continue;
-					}
-					$s = clone $this->boundaries[$i];
-					$s->divide($this->variables[$i][1]);
-					if ($s->compare($maxy)) {
-						$maxy = $s;
-					}
 
-					if (Fraction::equalsZero($this->variables[$i][0])) {
-						continue;
-					}
-					$s = clone $this->boundaries[$i];
-					$s->divide($this->variables[$i][0]);
-					if ($s->compare($maxx)) {
-						$maxx = $s;
-					}
-					if (Fraction::equalsZero($this->variables[$i][2])) {
-						continue;
-					}
-
-					$s = clone $this->boundaries[$i];
-					$s->divide($this->variables[$i][2]);
-					if ($s->compare($maxz)) {
-						$maxz = $s;
-					}
+				if (Fraction::equalsZero($this->variables[$i][0])) {
+					continue;
 				}
-				for ($i = 0; $i < $maxx->getValue(); $i += ($maxx->getValue() / 20)) {
-					for ($j = 0; $j < $maxy->getValue(); $j += ($maxy->getValue() / 20)) {
-						for ($k = 0; $k < $maxz->getValue(); $k += ($maxz->getValue() / 20)) {
-							if ($this->isValidPoint($i, $j, $k)) {
-								$json[] = Array($i, $j, $k);
-							}
+				$s = clone $this->boundaries[$i];
+				$s->divide($this->variables[$i][0]);
+				if ($s->compare($maxx)) {
+					$maxx = $s;
+				}
+				if (Fraction::equalsZero($this->variables[$i][2])) {
+					continue;
+				}
+
+				$s = clone $this->boundaries[$i];
+				$s->divide($this->variables[$i][2]);
+				if ($s->compare($maxz)) {
+					$maxz = $s;
+				}
+			}
+			for ($i = 0; $i < $maxx->getValue(); $i += ($maxx->getValue() / 20)) {
+				for ($j = 0; $j < $maxy->getValue(); $j += ($maxy->getValue() / 20)) {
+					for ($k = 0; $k < $maxz->getValue(); $k += ($maxz->getValue() / 20)) {
+						if ($this->isValidPoint($i, $j, $k)) {
+							$json[] = Array($i, $j, $k);
 						}
 					}
 				}
-				return $json;
+			}
 		}
+		return $json;
 	}
 
 	private function isValidPoint($x, $y, $z) {

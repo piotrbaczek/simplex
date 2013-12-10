@@ -28,9 +28,9 @@ class activity {
     	$isactivated=$doc->firstChild;
     	$is=$isactivated->nodeValue;
     	if($is=="true"){
-    		return 'true';
+    		return true;
     	}else{
-    		return 'false';
+    		return false;
     	}
     }
     
