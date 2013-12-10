@@ -99,9 +99,11 @@ class Simplex {
 
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
 			if (!isset($this->targetfunction[$i])) {
-				$this->targetfunction[$i] = new Fraction();
+				$this->targetfunction[$i] = new Fraction(0);
 			} elseif (isset($this->targetfunction[$i]) && !Fraction::hasM($this->targetfunction[$i])) {
-				$this->targetfunction[$i]->minusFraction();
+				if ($this->extreme) {
+					$this->targetfunction[$i]->minusFraction();
+				}
 			}
 			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $this->targetfunction[$i]);
 		}
@@ -145,6 +147,8 @@ class Simplex {
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$p = $this->matrixes[$this->index]->findBaseCol();
 			if ($p == -1) {
+				unset($this->matrixes[$this->index]);
+				$this->index--;
 				break;
 			} else {
 				$this->matrixes[$this->index - 1]->setMainCol($p);

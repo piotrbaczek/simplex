@@ -11,7 +11,7 @@ class TextareaProcesser {
 	private $isCorrect = false;
 
 	public function __construct($param = '', $param2 = '', $param3 = true, $param4 = false) {
-		if (is_null($param) or is_null($param2) or is_null($param3) or is_null($param4)) {
+		if (is_null($param) || is_null($param2) || is_null($param3) || is_null($param4)) {
 			$this->errormessage('Błąd przetwarzania - nie przekazano żadnego parametru');
 			return 0;
 		} else {
@@ -101,7 +101,7 @@ class TextareaProcesser {
 	}
 
 	public static function errormessage($message) {
-		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
+		return '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
 }
