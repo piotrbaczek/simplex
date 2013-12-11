@@ -191,26 +191,6 @@ table.result td.mainelement {
 	margin: 0;
 }
 
-/*#whatitcandomaindiv{
-	overflow: hidden;
-	widows: 1000px;
-	margin: 0 auto;
-}
-#whatitcandoleft{
-	position: fixed;
-	width:400px;
-	float:left;
-}
-#whatitcandoright{
-	width:50%;
-	float:left;
-	margin-left: 600px;
-	border:1px solid black;
-}
-#whatitcandoleftdiv,#whatitcandorightdiv{
-	padding: 15px;
-	margin: 15px;
-}*/
 tr.underlined td, tr.underlined th{
 	border-top: 3px solid black;
 }
@@ -220,4 +200,7 @@ tr.underlined td, tr.underlined th{
 	margin-top: 30px;
 	margin-bottom: 30px;
 	width: 90%;
+}
+#placeholder1{
+	margin-bottom: 30px;
 }

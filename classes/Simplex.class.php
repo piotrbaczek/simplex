@@ -518,7 +518,7 @@ class Simplex {
 		$index = 0;
 		foreach ($this->basisVariable[$indexarray] as $value) {
 			$temp = explode('<sub>', $value);
-			$x[(int) $temp['1']] = $this->matrixes[$indexarray]->getElement($this->matrixes[$indexarray]->getRows() - 1, $index);
+			$x[(int) $temp['1']] = clone $this->matrixes[$indexarray]->getElement($this->matrixes[$indexarray]->getRows() - 1, $index);
 			$index++;
 		}
 		unset($index);
@@ -593,16 +593,17 @@ class Simplex {
 	public function getSecondaryGraphJson() {
 		$a = 0;
 		$json = Array();
-		foreach ($this->targetfunction as $value) {
+		$nonZeroTargetFunction = Array();
+		foreach ($this->targetfunction as $key => $value) {
 			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
 				$a++;
+				$nonZeroTargetFunction[] = $key;
 			}
 		}
-		if ($a >= 3) {
+		if ($a == 2) {
 			$b = count($this->boundaries);
 			$maxx = new Fraction(0);
 			$maxy = new Fraction(0);
-			$maxz = new Fraction(0);
 			for ($i = 0; $i < $b; $i++) {
 				if (Fraction::equalsZero($this->variables[$i][1])) {
 					continue;
@@ -621,34 +622,72 @@ class Simplex {
 				if ($s->compare($maxx)) {
 					$maxx = $s;
 				}
-				if (Fraction::equalsZero($this->variables[$i][2])) {
-					continue;
-				}
-
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][2]);
-				if ($s->compare($maxz)) {
-					$maxz = $s;
-				}
 			}
-			for ($i = 0; $i < $maxx->getValue(); $i += ($maxx->getValue() / 20)) {
-				for ($j = 0; $j < $maxy->getValue(); $j += ($maxy->getValue() / 20)) {
-					for ($k = 0; $k < $maxz->getValue(); $k += ($maxz->getValue() / 20)) {
-						if ($this->isValidPoint($i, $j, $k)) {
-							$json[] = Array($i, $j, $k);
+			if ($this->extreme) {
+				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
+					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
+						if ($this->isValidPoint2D($i, $j)) {
+							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
 						}
 					}
 				}
+				foreach ($this->matrixes as $key => $value) {
+					$key1 = $this->getValuePair($key);
+					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
+				}
+			} else {
+				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
+					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
+						if ($this->isValidPoint2D($i, $j)) {
+							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
+						}
+					}
+				}
+				foreach ($this->matrixes as $key => $value) {
+					$key1 = $this->getValuePair($key);
+					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
+				}
 			}
+		}else{
+			//TODO
+			//dla graphów 3 i więcej
 		}
 		return $json;
 	}
 
-	private function isValidPoint($x, $y, $z) {
+	private function isValidPoint3D($x, $y, $z) {
 		$b = $this->N - 1;
 		for ($i = 0; $i < $b; $i++) {
-			$left = ($this->variables[$i][0]->getValue() * $x) + ($this->variables[$i][1]->getValue() * $y) + ($this->variables[$i][2]->getValue() * $z);
-			$right = $this->boundaries[$i]->getValue();
+			$left = ($this->variables[$i][0]->getRealValue() * $x) + ($this->variables[$i][1]->getRealValue() * $y) + ($this->variables[$i][2]->getRealValue() * $z);
+			$right = $this->boundaries[$i]->getRealValue();
+			switch ($this->signs[$i]) {
+				case enumSigns::_GEQ:
+					if ($left < $right) {
+						return FALSE;
+					}
+					break;
+				case enumSigns::_LEQ:
+					if ($left > $right) {
+						return FALSE;
+					}
+					break;
+				case enumSigns::_EQ:
+					if ($left != $right) {
+						return FALSE;
+					}
+					break;
+				default :
+					return FALSE;
+			}
+		}
+		return true;
+	}
+
+	private function isValidPoint2D($x, $y) {
+		$b = $this->N - 1;
+		for ($i = 0; $i < $b; $i++) {
+			$left = ($this->variables[$i][0]->getRealValue() * $x) + ($this->variables[$i][1]->getRealValue() * $y);
+			$right = $this->boundaries[$i]->getRealValue();
 			switch ($this->signs[$i]) {
 				case enumSigns::_GEQ:
 					if ($left < $right) {

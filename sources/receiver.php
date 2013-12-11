@@ -13,12 +13,12 @@ if ($ss) {
 	//header for correct json recognition
 	header('Content-Type: application/json');
 //----------------------------------------------------------------------------
-//	$_POST['textarea'] = '2x1+5x2<=30
-//2x1+3x2<=26
-//0x1+3x2<=15';
-//	$_POST['targetfunction'] = '2x1+6x2';
-//	$_POST['funct'] = 'false';
-//	$_POST['gomorryf'] = 'false';
+	$_POST['textarea'] = '2x1+5x2<=30
+2x1+3x2<=26
+0x1+3x2<=15';
+	$_POST['targetfunction'] = '2x1+6x2';
+	$_POST['funct'] = 'true';
+	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
 			!isset($_POST['textarea']) ? Array() : $_POST['textarea'], !isset($_POST['targetfunction']) ? Array() : $_POST['targetfunction'], !isset($_POST['funct']) ? Array() : $_POST['funct'], !isset($_POST['gomorryf']) ? Array() : $_POST['gomorryf']
 	);
@@ -37,6 +37,7 @@ if ($ss) {
 			$json[1] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
 			$json[2] = $simplex->getPrimaryGraphJson();
 			$json[3] = $simplex->getSecondaryGraphJson();
+			//print_r($simplex->getSecondaryGraphJson());
 		} else {
 			$json[0] = -2;
 			$json[1] = TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');

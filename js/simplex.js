@@ -51,7 +51,8 @@ $(document).ajaxStart(function() {
 					if (data[0] === 2) {
 						//placeholder
 						$.plot($("#placeholder1"), data[2]);
-					} else if (data[0] >= 3) {
+					}
+					if (data[0] >= 2) {
 						//canvas
 						var vars = [];
 						a = data[3];
@@ -72,6 +73,23 @@ $(document).ajaxStart(function() {
 								"data": a
 							}
 						};
+						new CanvasXpress("canvas1", x, {
+							graphType: "Scatter3D",
+							useFlashIE: true,
+							xAxis: [
+								"X"
+							],
+							yAxis: [
+								"Y"
+							],
+							zAxis: [
+								"Z"
+							],
+							scatterType: false,
+							setMinX: 0,
+							setMinY: 0,
+							setMinZ: 0
+						});
 					} else if (data[0] === -1) {
 						//strona wyłączona
 						$('#rightdiv').empty().append(data[1]);
