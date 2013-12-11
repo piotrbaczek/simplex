@@ -425,9 +425,9 @@ class Simplex {
 	}
 
 	private function simplexIteration() {
-		$previousBaseRow = clone $this->matrixes[$this->index - 1]->getMainRow();
-		$previousBaseCol = clone $this->matrixes[$this->index - 1]->getMainCol();
-		$previousMainElement = clone $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
+		$previousBaseRow = $this->matrixes[$this->index - 1]->getMainRow();
+		$previousBaseCol = $this->matrixes[$this->index - 1]->getMainCol();
+		$previousMainElement = $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
 		for ($i = 0; $i < $this->matrixes[$this->index]->getCols(); $i++) {
 			for ($j = 0; $j < $this->matrixes[$this->index]->getRows(); $j++) {
 				if ($i == $previousBaseRow && $j == $previousBaseCol) {
