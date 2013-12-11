@@ -73,7 +73,7 @@ $(document).ajaxStart(function() {
 								"data": a
 							}
 						};
-						new CanvasXpress("canvas1", x, {
+						var cx = new CanvasXpress("canvas1", x, {
 							graphType: "Scatter3D",
 							useFlashIE: true,
 							xAxis: [

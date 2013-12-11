@@ -170,7 +170,7 @@ class Simplex {
 			} else {
 				$this->cCoefficient[$this->index][$q] = new Fraction(0);
 			}
-			if($this->extreme){
+			if ($this->extreme) {
 				$this->cCoefficient[$this->index][$q]->minusFraction();
 			}
 			$this->swapBase();
@@ -464,13 +464,24 @@ class Simplex {
 			if (Fraction::equalsZero($temp)) {
 				continue;
 			}
-			if (!Fraction::hasM($value)) {
-				$temp->minusFraction();
-			} else {
-				if (!$this->extreme) {
+			if($this->extreme){
+				if(Fraction::hasM($temp)){
+					
+				}else{
+					$temp->minusFraction();
+				}
+			}else{
+				if(Fraction::hasM($temp)){
 					$temp->minusFraction();
 				}
 			}
+//			if (!Fraction::hasM($value)) {
+//				$temp->minusFraction();
+//			} else {
+//				if ($this->extreme) {
+//					$temp->minusFraction();
+//				}
+//			}
 			if ($key != 0) {
 				if (Fraction::isPositive($temp) || Fraction::equalsZero($temp)) {
 					$string.='+';
@@ -650,7 +661,7 @@ class Simplex {
 					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
 				}
 			}
-		}else{
+		} else {
 			//TODO
 			//dla graphów 3 i więcej
 		}
