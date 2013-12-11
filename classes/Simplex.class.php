@@ -206,6 +206,8 @@ class Simplex {
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$this->gomoryNewTableau($q);
 			$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
+			
+			//TODO Picking my lowest decrease in target function
 			$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
 			$this->signs[count($this->signs)] = '<=';
 			$this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction) + 1) . '</sub>';
@@ -423,9 +425,9 @@ class Simplex {
 	}
 
 	private function simplexIteration() {
-		$previousBaseRow = $this->matrixes[$this->index - 1]->getMainRow();
-		$previousBaseCol = $this->matrixes[$this->index - 1]->getMainCol();
-		$previousMainElement = $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
+		$previousBaseRow = clone $this->matrixes[$this->index - 1]->getMainRow();
+		$previousBaseCol = clone $this->matrixes[$this->index - 1]->getMainCol();
+		$previousMainElement = clone $this->matrixes[$this->index - 1]->getElement($this->matrixes[$this->index - 1]->getMainCol(), $this->matrixes[$this->index - 1]->getMainRow());
 		for ($i = 0; $i < $this->matrixes[$this->index]->getCols(); $i++) {
 			for ($j = 0; $j < $this->matrixes[$this->index]->getRows(); $j++) {
 				if ($i == $previousBaseRow && $j == $previousBaseCol) {
