@@ -170,7 +170,9 @@ class Simplex {
 			} else {
 				$this->cCoefficient[$this->index][$q] = new Fraction(0);
 			}
-			$this->cCoefficient[$this->index][$q]->minusFraction();
+			if($this->extreme){
+				$this->cCoefficient[$this->index][$q]->minusFraction();
+			}
 			$this->swapBase();
 
 			$this->simplexIteration();
