@@ -17,16 +17,12 @@
 		</style>
 		<script>
 			var Slider = function(slider, div) {
-				if (this.isArray(slider) && slider.length === 2) {
+				if (this.isArray(slider)) {
 					this.slider = slider;
 					this.div = div;
 					this.sliderlength = this.slider.length;
 					this.sliders = [];
 					this.appender();
-				} else if (this.isArray(slider) && slider.length > 2) {
-
-				} else {
-					console.log('Data not an array or incorrect data');
 				}
 			};
 			Slider.prototype.getSlider = function() {
