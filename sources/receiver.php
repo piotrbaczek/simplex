@@ -1,8 +1,3 @@
-<style>
-	.mainelement{
-		background-color: red;
-	}
-</style>
 <?php
 
 include '../classes/TextareaProcesser.class.php';
