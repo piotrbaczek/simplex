@@ -73,11 +73,12 @@ class SimplexTableu {
 		$startv = new Fraction(PHP_INT_MAX);
 		$starti = -1;
 		for ($i = 0; $i < $this->getRows() - 1; $i++) {
-			if (Fraction::equalsZero($this->getElement($i, $this->getCols() - 1))) {
+			$element = clone $this->getElement($i, $this->getCols() - 1);
+			if (Fraction::equalsZero($element)) {
 				continue;
-			} elseif ($startv->compare($this->getElement($i, $this->getCols() - 1)) && Fraction::isNegative($this->getElement($i, $this->getCols() - 1))) {
+			} elseif ($startv->compare($element) && Fraction::isNegative($element)) {
 				$starti = $i;
-				$startv = clone $this->getElement($i, $this->getCols() - 1);
+				$startv = $element;
 			}
 		}
 		return $starti;

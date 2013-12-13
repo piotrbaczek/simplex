@@ -190,6 +190,21 @@ class Simplex {
 		}
 	}
 
+	private function findGomorryColumn() {
+		$startv = new Fraction(PHP_INT_MAX);
+		$starti = -1;
+		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
+			$element= clone $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 2);
+			if(Fraction::equalsZero($element) || Fraction::isNegative($element)){
+				continue;
+			}elseif($startv->compare($element)){
+				$starti=$i;
+				$startv=clone $element;
+			}
+		}
+		return $starti;
+	}
+
 	private function gomorrySolve() {
 		//GOMORY'S CUTTING PLANE METHOD
 		while (true) {
@@ -206,9 +221,7 @@ class Simplex {
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
 			$this->gomoryNewTableau($q);
 			$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
-			
-			//TODO Picking my lowest decrease in target function
-			$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->getRows() - 2);
+			$this->matrixes[$this->index]->setMainCol($this->findGomorryColumn());
 			$this->signs[count($this->signs)] = '<=';
 			$this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction) + 1) . '</sub>';
 			$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
@@ -466,14 +479,14 @@ class Simplex {
 			if (Fraction::equalsZero($temp)) {
 				continue;
 			}
-			if($this->extreme){
-				if(Fraction::hasM($temp)){
+			if ($this->extreme) {
+				if (Fraction::hasM($temp)) {
 					
-				}else{
+				} else {
 					$temp->minusFraction();
 				}
-			}else{
-				if(Fraction::hasM($temp)){
+			} else {
+				if (Fraction::hasM($temp)) {
 					$temp->minusFraction();
 				}
 			}
