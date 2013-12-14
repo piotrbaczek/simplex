@@ -8,6 +8,7 @@
 		<script src="http://simplexpg.zz.mu/js/excanvas.js"></script>
 		<script src="http://simplexpg.zz.mu/js/jquery.flot.js"></script>
 		<script src="http://simplexpg.zz.mu/js/development-bundle/ui/jquery-ui-1.8.16.custom.js"></script>
+		<link rel="stylesheet" href="http://simplexpg.zz.mu/css/simplex.css"/>
 		<link rel="stylesheet" href="http://simplexpg.zz.mu/js/css/smoothness/jquery-ui-1.8.16.custom.css"/>
 		<style>
 			#sliders{
@@ -102,11 +103,11 @@
 			Grapher.prototype.prepare = function() {
 				if (this.count === 2) {
 					$.plot(this.div1, this.points2d);
-				} else {
+					this.plot3d();
+				} else if (this.count >= 3) {
 					this.div1.hide();
-					Slider.prototype.hideSlides();
+					this.plot3d();
 				}
-				this.plot3d();
 			};
 		</script>
 		<script>
