@@ -50,12 +50,12 @@ $(document).ajaxStart(function() {
 				success: function(data) {
 					if (data[0] === 2) {
 						//placeholder
-						$.plot($("#placeholder1"), data[2]);
+						$.plot($("#placeholder1"), data[3]);
 					}
 					if (data[0] >= 2) {
 						//canvas
 						var vars = [];
-						a = data[3];
+						a = data[4];
 						for (var i = 0; i < a.length; i++) {
 							vars.push("Punkt" + (i + 1));
 						}
@@ -97,7 +97,7 @@ $(document).ajaxStart(function() {
 						//error
 						alert(data[1]);
 					}
-					$('#resultdiv2').empty().append(data[1]);
+					$('#resultdiv2').empty().append(data[2]);
 					$('table.result td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,
