@@ -194,12 +194,12 @@ class Simplex {
 		$startv = new Fraction(PHP_INT_MAX);
 		$starti = -1;
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
-			$element= clone $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 2);
-			if(Fraction::equalsZero($element) || Fraction::isNegative($element)){
+			$element = clone $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 2);
+			if (Fraction::equalsZero($element) || Fraction::isNegative($element)) {
 				continue;
-			}elseif($startv->compare($element)){
-				$starti=$i;
-				$startv=clone $element;
+			} elseif ($startv->compare($element)) {
+				$starti = $i;
+				$startv = clone $element;
 			}
 		}
 		return $starti;
@@ -611,11 +611,25 @@ class Simplex {
 				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
 			}
 			foreach ($this->matrixes as $key => $value) {
-				$key1 = $this->getValuePair($key);
-				$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true));
+				if (!$value->isGomory()) {
+					$key1 = $this->getValuePair($key);
+					$json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true));
+				}
 			}
 		}
 		return $json;
+	}
+
+	public function getTargetFunction() {
+		$x = Array();
+		foreach ($this->targetfunction as $value) {
+			if (Fraction::equalsZero($value) || Fraction::hasM($value)) {
+				continue;
+			} else {
+				$x[] = $value;
+			}
+		}
+		return $x;
 	}
 
 	public function getSecondaryGraphJson() {

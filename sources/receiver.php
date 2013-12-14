@@ -33,7 +33,7 @@ if ($ss) {
 	try {
 		if ($tp->isCorrect()) {
 			$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
-			$json[0] = count($tp->getTargetfunction());
+			$json[0] = count($simplex->getTargetFunction());
 			$json[1] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
 			$json[2] = $simplex->getPrimaryGraphJson();
 			$json[3] = $simplex->getSecondaryGraphJson();
