@@ -34,20 +34,21 @@ if ($ss) {
 		if ($tp->isCorrect()) {
 			$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 			$json[0] = count($simplex->getTargetFunction());
-			$json[1] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
-			$json[2] = $simplex->getPrimaryGraphJson();
-			$json[3] = $simplex->getSecondaryGraphJson();
+			$json[1] = $simplex->getTargetFunction();
+			$json[2] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
+			$json[3] = $simplex->getPrimaryGraphJson();
+			$json[4] = $simplex->getSecondaryGraphJson();
 		} else {
 			$json[0] = -2;
-			$json[1] = TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
+			$json[2] = TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
 		}
 	} catch (Exception $e) {
 		$json[0] = -2;
-		$json[1] = TextareaProcesser::errormessage($e->getMessage());
+		$json[2] = TextareaProcesser::errormessage($e->getMessage());
 	}
 } else {
 	$json[0] = -1;
-	$json[1] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
+	$json[2] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 }
 echo json_encode($json);
 ?>

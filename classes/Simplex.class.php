@@ -521,7 +521,7 @@ class Simplex {
 			$string.='x<sub>' . ($i + 1) . '</sub>&ge;0<br/>';
 		}
 		if ($this->gomory) {
-			$string.='<u>in integers</u>';
+			$string.='<u>i całkowitoliczbowe</u>';
 		}
 		$string.='<br/>';
 		return $string;
@@ -622,11 +622,11 @@ class Simplex {
 
 	public function getTargetFunction() {
 		$x = Array();
-		foreach ($this->targetfunction as $value) {
+		foreach ($this->targetfunction as $key => $value) {
 			if (Fraction::equalsZero($value) || Fraction::hasM($value)) {
 				continue;
 			} else {
-				$x[] = $value;
+				$x[$key] = abs($value->getRealValue());
 			}
 		}
 		return $x;
