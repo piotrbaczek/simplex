@@ -1,5 +1,4 @@
 <?php
-
 include '../classes/CSVReader.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/SimplexTableu.class.php';
