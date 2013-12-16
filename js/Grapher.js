@@ -30,7 +30,6 @@ Grapher.prototype.__run = function() {
 			break;
 		default:
 			this.textdiv.empty().append(this.data[2]);
-			this.appender();
 			this.plot3d();
 			this.placeholder.hide();
 	}
