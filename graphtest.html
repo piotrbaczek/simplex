@@ -14,6 +14,7 @@
 			#sliders{
 				margin-top: 50px;
 				margin-bottom: 50px;
+				margin-right: 30px;
 			}
 			.sliderinput{
 				border:0;
@@ -24,29 +25,37 @@
 		</style>
 		<script>
 			var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv) {
-				if (this.isArray(data)) {
-					this.data = data;
-					this.backup = data;
-					this.slidersdiv = slidersdiv;
-					this.placeholder = placeholder;
-					this.canvas = canvas;
-					this.textdiv = textdiv;
-					this.sliders = [];
-					this.inputs = [];
-					this.vars = [];
-					this.__run();
-				}
+				this.data = data;
+				this.backup = data;
+				this.slidersdiv = slidersdiv;
+				this.placeholder = placeholder;
+				this.canvas = canvas;
+				this.textdiv = textdiv;
+				this.sliders = [];
+				this.inputs = [];
+				this.vars = [];
+				this.__run();
 			};
 			Grapher.prototype.__run = function() {
-				this.textdiv.append(this.data[2]);
-				this.appender();
-				if (this.data[0] === 2) {
-					this.plot2d();
+				switch (this.data[0]) {
+					case -1:
+						break;
+					case -2:
+						break;
+					case 2:
+						this.appender();
+						this.plot2d();
+						this.plot3d();
+						break;
+					default:
+						this.appender();
+						this.plot3d();
+						this.hideSlides();
 				}
-				this.plot3d();
+				this.textdiv.empty().append(this.data[2]);
 			};
-			Grapher.prototype.isArray = function(array) {
-				return Array.isArray(array);
+			Grapher.prototype.hideSlides = function() {
+				this.slidersdiv.hide();
 			};
 			Grapher.prototype.appender = function() {
 				for (var i = 0; i < this.data[1].length; i++) {
@@ -60,7 +69,7 @@
 							max: 10 * $this.data[1][i],
 							value: $this.data[1][i],
 							step: 1,
-							slide: function(event, ui) {
+							stop: function(event, ui) {
 								$this.inputs[i].val(ui.value);
 								$this.redraw();
 							}
@@ -108,24 +117,18 @@
 				$.plot(this.placeholder, this.data[3]);
 			};
 			Grapher.prototype.redraw = function() {
-				var max = -100;
-				for (var i = 0; i < this.data[3].length; i++) {
-					if (this.data[3][i]["label"].substring(0, 1) === "A") {
-						this.data[3].splice(i, 1);
-						continue;
-					}
-					if (this.data[3][i]["label"].substring(0, 1) === "S" && this.data[3][i]["data"][1][0] > max) {
-						max = this.data[3][i]["data"][1][0];
-					}
-				}
 				if (this.data[0] === 2) {
 					for (var i = 0; i < this.data[3].length; i++) {
+						if (this.data[3][i]["label"].substring(0, 1) === "A") {
+							this.data[3].splice(i, 1);
+							continue;
+						}
+					}
+					for (var i = 0; i < this.data[3].length; i++) {
 						if (this.data[3][i]["label"] === "gradient") {
-							this.data[3][i]["data"][1][0] = max * 0.66;
 							this.data[3][i]["data"][1][1] = this.data[3][i]["data"][1][0] * (parseInt(this.sliders[1].slider("value")) / parseInt(this.sliders[0].slider("value")));
 						}
 					}
-					console.log(this.sliders[1].slider("value") + " " + this.sliders[0].slider("value"))
 					this.plot2d();
 				}
 			};
@@ -162,7 +165,7 @@ x<sub>5<\/sub><\/th><\/tr><tr><th class=\"ui-state-default\">x<sub>3<\/sub><\/th
 		<div id="leftdiv" style="float: left;width: 50%;"></div>
 		<div id="rightdiv" style="float:right;width: 50%;">
 			<div id="placeholder1" style="width: 480px; height: 360px;"></div>
-			<div id="sliders" style="margin-right: 30px;"></div>
+			<div id="sliders"></div>
 			<canvas id="canvas1" width="613" height="500"></canvas>
 		</div>
 	</body>
