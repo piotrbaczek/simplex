@@ -11,6 +11,7 @@ $(document).ajaxStart(function() {
 }).ajaxError(function() {
 	$.unblockUI();
 }).ready(function() {
+	var grapher;
 	$.validator.addMethod("regex", function(value, element) {
 		return this.optional(element) || /(([0-9]*x[0-9]*[+]?)+|([0-9]\/[1-9][0-9]*x[0-9]*)[+]?)(<=|>=|=)[0-9]+/g.test(value);
 	}, "Wprowadzona tre\u015bć zadania jest nieprawidłowa - Tylko forma Axa+BxB+...<=C (>=C lub =C)jest dopuszczalna.");
@@ -48,65 +49,16 @@ $(document).ajaxStart(function() {
 				data: s,
 				dataType: "json",
 				success: function(data) {
-					if (data[0] === 2) {
-						//placeholder
-						$.plot($("#placeholder1"), data[3]);
-					}
-					if (data[0] >= 2) {
-						//canvas
-						var vars = [];
-						a = data[4];
-						for (var i = 0; i < a.length; i++) {
-							vars.push("Punkt" + (i + 1));
-						}
-						var x = {
-							"y": {
-								"vars": vars,
-								"smps": [
-									"X",
-									"Y",
-									"Z"
-								],
-								"desc": [
-									"Simplex method"
-								],
-								"data": a
-							}
-						};
-						var cx = new CanvasXpress("canvas1", x, {
-							graphType: "Scatter3D",
-							useFlashIE: true,
-							xAxis: [
-								"X"
-							],
-							yAxis: [
-								"Y"
-							],
-							zAxis: [
-								"Z"
-							],
-							scatterType: false,
-							setMinX: 0,
-							setMinY: 0,
-							setMinZ: 0
-						});
-					} else if (data[0] === -1) {
-						//strona wyłączona
-						$('#rightdiv').empty().append(data[1]);
-					} else if (data[0] === -2) {
-						//error
-						alert(data[1]);
-					}
-					$('#resultdiv2').empty().append(data[2]);
+					grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'));
 					$('table.result td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,
 						fixPNG: true,
 						track: true,
 						bodyHandler: function() {
-							attr = $(this).attr('data-dane');
+							var attr = $(this).attr('data-dane');
 							if (typeof attr !== 'undefined' && attr !== false) {
-								temp = attr.split(",");
+								var temp = attr.split(",");
 								return $("<img/>").attr("src", './sources/Picture.php?a=' + temp[0] + '&b=' + temp[1] + '&c=' + temp[2] + '&d=' + temp[3] + '&e=' + temp[4]).css({
 									'background-color': 'transparent',
 									'text-align': 'center'
@@ -149,52 +101,60 @@ $(document).ajaxStart(function() {
 			secondary: "ui-icon-transferthick-e-w"
 		}
 	}).click(function() {
-//		if ($('form[name=form]').valid()) {
-//			$.ajaxFileUpload({
-//				url: 'sources/doajaxfileupload.php',
-//				secureuri: false,
-//				fileElementId: 'fileToUpload',
-//				dataType: 'json',
-//				data: {
-//					name: 'logan',
-//					id: 'id'
-//				},
-//				success: function(data, status) {
-//					if (typeof (data.error) !== 'undefined') {
-//						if (data.error !== '') {
-//							alert(data.error);
-//						} else {
-//							$('#result2').load("sources/fileProcesser.php", {
-//								'filename': data.msg
-//							}, function() {
-//								$('#fileloader').slideUp('fast');
-//								$('#result').slideDown('slow');
-//								$('table.result:gt(0) td').tooltip({
-//									delay: 0,
-//									showURL: false,
-//									fixPNG: true,
-//									track: true,
-//									bodyHandler: function() {
-//										ss = $(this).attr('data-dane');
-//										temp = ss.split(",");
-//										return $("<img/>").attr("src", './sources/Picture.php?a=' + temp[0] + '&b=' + temp[1] + '&c=' + temp[2] + '&d=' + temp[3] + '&e=' + temp[4]).css({
-//											'background-color': 'transparent',
-//											'text-align': 'center'
-//										});
-//									}
-//
-//								});
-//							});
-//						}
-//					}
-//
-//				},
-//				error: function(data, status, e) {
-//					alert(e);
-//				}
-//			});
-//		}
-//		return false;
+		if ($('form[name=form]').valid()) {
+			$.ajaxFileUpload({
+				url: 'sources/doajaxfileupload.php',
+				secureuri: false,
+				fileElementId: 'fileToUpload',
+				dataType: 'json',
+				data: {
+					name: 'logan',
+					id: 'id'
+				},
+				success: function(data1) {
+					if (typeof (data1.error) !== 'undefined') {
+						if (data1.error !== '') {
+							alert(data1.error);
+						} else {
+							$('#rightdiv').slideUp();
+							$('#header_leftlogo').hide();
+							$.ajax({
+								type: "POST",
+								url: "sources/fileProcesser.php",
+								data: {'filename': data1.msg},
+								dataType: "json",
+								success: function(data) {
+									grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'));
+									$('table.result td[data-dane]').tooltip({
+										delay: 0,
+										showURL: false,
+										fixPNG: true,
+										track: true,
+										bodyHandler: function() {
+											var attr = $(this).attr('data-dane');
+											if (typeof attr !== 'undefined' && attr !== false) {
+												var temp = attr.split(",");
+												return $("<img/>").attr("src", './sources/Picture.php?a=' + temp[0] + '&b=' + temp[1] + '&c=' + temp[2] + '&d=' + temp[3] + '&e=' + temp[4]).css({
+													'background-color': 'transparent',
+													'text-align': 'center'
+												});
+											}
+										}
+									});
+									$('#resultdiv').slideDown('slow');
+									$('#resultdiv2').slideDown('slow');
+								}
+							});
+						}
+					}
+
+				},
+				error: function(data, status, e) {
+					alert(e);
+				}
+			});
+		}
+		return false;
 	});
 	$('input.fake').click(function() {
 		$('input[name=fileToUpload]').click();

@@ -34,6 +34,7 @@ Grapher.prototype.hideSlides = function() {
 	this.slidersdiv.hide();
 };
 Grapher.prototype.appender = function() {
+	this.slidersdiv.empty();
 	for (var i = 0; i < this.data[1].length; i++) {
 		(function(i, $this) {
 			$this.slidersdiv.append('<label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + $this.data[1][i] + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>');

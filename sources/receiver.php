@@ -9,6 +9,8 @@ include '../classes/activity.class.php';
 include '../classes/DivisionCoefficient.class.php';
 $ss = activity::isactivated2('../activity/active.xml') ? true : false;
 $json = Array();
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 header('Content-Type: application/json');
 if ($ss) {
 //	$_POST['textarea'] = '1x1+0x2+0x3<=1000

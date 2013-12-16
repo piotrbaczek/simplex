@@ -204,3 +204,14 @@ tr.underlined td, tr.underlined th{
 #placeholder1{
 	margin-bottom: 30px;
 }
+#sliders{
+	margin-top: 50px;
+	margin-bottom: 50px;
+	margin-right: 30px;
+}
+.sliderinput{
+	border:0;
+	color:#f6931f;
+	font-weight:bold;
+	width: 30px;
+}

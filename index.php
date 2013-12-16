@@ -26,8 +26,10 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
         <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.blockui.js"></script>
         <script src="js/ajaxfileupload.js"></script>
+		<script src="js/CanvasXpress.min.js"></script>
+		<script src="js/Grapher.js"></script>
         <script src="js/simplex.js"></script>
-        <script src="js/CanvasXpress.min.js"></script>
+
     </head>
     <body>
         <img id="bg" alt="Background image" src="images/back.jpg" />
@@ -95,20 +97,21 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 						<div id="resultdiv2" style="float: left;width: 45%;"></div>
 						<div id="resultdiv3" style="width: 45%;float: right;">
 							<div id="placeholder1" style="width: 480px; height: 360px;"></div>
+							<div id="sliders"></div>
 							<canvas id="canvas1" width="613" height="500"></canvas>
 						</div>
 						<div style="clear: both;"></div>
 					</div>
 				</div>
 				<div style="clear: both;"></div>
-				<?php
+			<?php
 			} else {
 				echo activity::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 			}
 			?>
 			<div style="clear: both;"></div>
             <div id="footer">
-                <a href="mailto:pgolasz@gmail.com">Piotr Gołasz</a> dla <a href="http://pg.gda.pl/">Politechnika Gdańska</a> &copy; 2013 <a
+                <a href="mailto:pgolasz@gmail.com">Piotr Gołasz</a> dla <a href="http://pg.gda.pl/">Politechnika Gdańska</a> &copy; 2014 <a
                     href="admin/index.php">Panel Administratora</a>
             </div>
         </div>
