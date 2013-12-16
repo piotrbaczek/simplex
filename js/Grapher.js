@@ -1,10 +1,11 @@
-var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv) {
+var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdiv) {
 	this.data = data;
 	this.backup = data;
 	this.slidersdiv = slidersdiv;
 	this.placeholder = placeholder;
 	this.canvas = canvas;
 	this.textdiv = textdiv;
+	this.defaultdiv = defaultdiv;
 	this.cx = "";
 	this.sliders = [];
 	this.inputs = [];
@@ -14,27 +15,35 @@ var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv) {
 Grapher.prototype.__run = function() {
 	switch (this.data[0]) {
 		case -1:
+			//Forbidden
+			this.defaultdiv.empty().append(this.data[2]);
 			break;
 		case -2:
+			//Exception
+			this.defaultdiv.empty().append(this.data[2]);
 			break;
 		case 2:
+			this.textdiv.empty().append(this.data[2]);
 			this.appender();
 			this.plot2d();
 			this.plot3d();
 			break;
 		default:
+			this.textdiv.empty().append(this.data[2]);
 			this.appender();
 			this.plot3d();
 			this.placeholder.hide();
-
 	}
-	this.textdiv.empty().append(this.data[2]);
 };
 Grapher.prototype.hideSlides = function() {
 	this.slidersdiv.hide();
 };
+Grapher.prototype.showSlides = function() {
+	this.slidersdiv.show();
+};
 Grapher.prototype.appender = function() {
 	this.slidersdiv.empty();
+	this.showSlides();
 	for (var i = 0; i < this.data[1].length; i++) {
 		(function(i, $this) {
 			$this.slidersdiv.append('<label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + $this.data[1][i] + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>');

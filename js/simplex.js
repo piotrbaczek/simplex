@@ -49,7 +49,7 @@ $(document).ajaxStart(function() {
 				data: s,
 				dataType: "json",
 				success: function(data) {
-					grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'));
+					grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
 					$('table.result td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,
@@ -124,7 +124,7 @@ $(document).ajaxStart(function() {
 								data: {'filename': data1.msg},
 								dataType: "json",
 								success: function(data) {
-									grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'));
+									grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
 									$('table.result td[data-dane]').tooltip({
 										delay: 0,
 										showURL: false,
