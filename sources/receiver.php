@@ -13,10 +13,11 @@ if ($ss) {
 	//header for correct json recognition
 	header('Content-Type: application/json');
 //----------------------------------------------------------------------------
-//	$_POST['textarea'] = '2x1+5x2<=30
-//2x1+3x2<=26
-//0x1+3x2<=15';
-//	$_POST['targetfunction'] = '2x1+6x2';
+//	$_POST['textarea'] = '1x1+0x2+0x3<=1000
+//0x1+1x2+0x3<=500
+//0x1+0x2+1x3<=1500
+//3x1+6x2+2x3<=6750';
+//	$_POST['targetfunction'] = '4x1+12x2+3x3';
 //	$_POST['funct'] = 'true';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
