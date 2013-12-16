@@ -132,12 +132,10 @@
 					}
 					this.plot2d();
 				}
-				for (var i = 0; i < this.cx.data.y.data.length; i++) {
-					this.cx.data.y.data[i][2] = (parseInt(this.sliders[0].slider("value")) * this.cx.data.y.data[i][0]) + (parseInt(this.sliders[1].slider("value")) * this.cx.data.y.data[i][1]);
+				for (var i = 0; i < this.data[4].length; i++) {
+					this.data[4][i][2] = (parseInt(this.sliders[0].slider("value")) * this.data[4][i][0]) + (parseInt(this.sliders[1].slider("value")) * this.data[4][i][1]);
 				}
-				//this.plot3d();
-				//console.log(this.cx.data.y.data);
-				//this.plot3d();
+				this.plot3d();
 			};
 			$(document).ready(function() {
 				data = [2, [2, 6],
