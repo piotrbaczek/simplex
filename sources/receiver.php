@@ -9,10 +9,8 @@ include '../classes/activity.class.php';
 include '../classes/DivisionCoefficient.class.php';
 $ss = activity::isactivated2('../activity/active.xml') ? true : false;
 $json = Array();
+header('Content-Type: application/json');
 if ($ss) {
-	//header for correct json recognition
-	header('Content-Type: application/json');
-//----------------------------------------------------------------------------
 //	$_POST['textarea'] = '1x1+0x2+0x3<=1000
 //0x1+1x2+0x3<=500
 //0x1+0x2+1x3<=1500

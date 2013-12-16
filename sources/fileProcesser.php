@@ -9,6 +9,8 @@ include '../classes/activity.class.php';
 include '../classes/Signs.class.php';
 include '../classes/DivisionCoefficient.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
+$json = Array();
+header('Content-Type: application/json');
 if ($ss) {
 	//----------------------------------------------------------------------------
 	$adres = '../download/' . $_POST['filename'] . '.csv';
@@ -16,26 +18,18 @@ if ($ss) {
 	unlink($adres);
 	try {
 		$simplex = new Simplex($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
-		echo '<div style="width:700px;height:100%;float:left;">';
-		$simplex->printProblem();
-		$simplex->printSolution();
-		$simplex->printValuePair();
-		$simplex->printResult();
-
-		echo '</div>';
-		echo '<div style="width:500px;float:right;">';
-		$simplex->getJSON();
-		echo '</div><div style="width:1000px;clear:both;">';
-		echo '</div>';
+		$json[0] = count($simplex->getTargetFunction());
+		$json[1] = $simplex->getTargetFunction();
+		$json[2] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
+		$json[3] = $simplex->getPrimaryGraphJson();
+		$json[4] = $simplex->getSecondaryGraphJson();
 	} catch (Exception $e) {
-		echo $e->getMessage();
+		$json[0] = -2;
+		$json[2] = TextareaProcesser::errormessage($e->getMessage());
 	}
 } else {
-	echo '<script>';
-	echo '$(document).ready(function(){';
-	echo '$(\'#tabs\').remove();';
-	echo '$(\'#header\').after(\'' . TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!') . '\');';
-	echo '});';
-	echo '</script>';
+	$json[0] = -1;
+	$json[2] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 }
+echo \json_encode($json);
 ?>
