@@ -137,11 +137,14 @@ class Simplex {
 		}
 	}
 
-	private function Solve() {
+	private function Solve($recurring=false) {
 		while (true) {
 			$this->index++;
 			$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
 			$this->matrixes[$this->index]->setIndex($this->index);
+			if($recurring){
+				$this->matrixes[$this->index]->swapGomory();
+			}
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
@@ -221,7 +224,7 @@ class Simplex {
 			$this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction[$this->index]) - 1) . '</sub>';
 			$this->nonBasisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction[$this->index]) - 1) . '</sub>';
 			$this->nonBasisVariable[$this->index][] = 'x<sub>' . count($this->targetfunction[$this->index]) . '</sub>';
-			$this->Solve();
+			$this->Solve(true);
 			//-------------------------------------------
 			if ($this->checkTargetIntegerFunction() && $this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
@@ -531,7 +534,7 @@ class Simplex {
 			$indexarray = $this->index;
 		}
 		$x = Array();
-		for ($i = 1; $i < 2 + max(array_keys($this->targetfunction[$this->index])); $i++) {
+		for ($i = 1; $i < 2 + max(array_keys($this->targetfunction[$indexarray])); $i++) {
 			$x[$i] = new Fraction();
 		}
 		$index = 0;
