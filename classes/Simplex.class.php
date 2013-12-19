@@ -25,17 +25,17 @@ class Simplex {
 		$this->gomory = (boolean) $gomory;
 		$this->extreme = (boolean) $max;
 		$this->variables = $variables;
-		$this->targetfunction = $targetfunction;
+		$this->targetfunction[$this->index] = $targetfunction;
 		$this->boundaries = $boundaries;
 		$this->signs = $signs;
 		$this->M = count($variables[0]) + 1; //3
 		$this->N = count($boundaries) + 1; //4
-		$this->O = count($targetfunction);
+		$this->O = count($targetfunction[$this->index]);
 		$this->cCoefficient[$this->index] = Array();
 		$this->basisVariable = Array();
 		$this->nonBasisVariable = Array();
 
-		if (empty($variables) || empty($boundaries) || empty($signs) || empty($targetfunction)) {
+		if (empty($variables) || empty($boundaries) || empty($signs) || empty($targetfunction[$this->index])) {
 			throw new Exception('Input array is empty!.');
 		}
 
@@ -52,10 +52,6 @@ class Simplex {
 			} elseif ($value == enumSigns::_EQ) {
 				$this->cCoefficient[$this->index][$key] = new Fraction(0, 1, -1, 1);
 			}
-		}
-
-		for ($i = 1; $i < $this->O + $this->N + $this->wrongsigns; $i++) {
-			$this->nonBasisVariable[$this->index][$i] = 'x<sub>' . $i . '</sub>';
 		}
 
 		$this->matrixes[$this->index] = new SimplexTableu($this->N, $this->N + $this->M - 1 + $this->wrongsigns);
@@ -79,13 +75,13 @@ class Simplex {
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $this->N - 1 + $ax, $key, new Fraction(1));
 					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
 
-					$this->targetfunction[$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
+					$this->targetfunction[$this->index][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
 					break;
 				case enumSigns::_EQ:
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(1));
 					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
-					$this->targetfunction[$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
+					$this->targetfunction[$this->index][$this->M - 1 + $key] = new Fraction(0, 1, -1, 1);
 					break;
 				default:
 					//case LEQ
@@ -96,17 +92,21 @@ class Simplex {
 		}
 		unset($ax);
 
-
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
-			if (!isset($this->targetfunction[$i])) {
-				$this->targetfunction[$i] = new Fraction(0);
-			} elseif (isset($this->targetfunction[$i]) && !Fraction::hasM($this->targetfunction[$i])) {
+			if (!isset($this->targetfunction[$this->index][$i])) {
+				$this->targetfunction[$this->index][$i] = new Fraction(0);
+			} elseif (isset($this->targetfunction[$this->index][$i]) && !Fraction::hasM($this->targetfunction[$this->index][$i])) {
 				if ($this->extreme) {
-					$this->targetfunction[$i]->minusFraction();
+					$this->targetfunction[$this->index][$i]->minusFraction();
 				}
 			}
-			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $this->targetfunction[$i]);
+			$this->matrixes[$this->index]->setValue($i, $this->N - 1, clone $this->targetfunction[$this->index][$i]);
 		}
+
+		for ($i = 0; $i < count($this->targetfunction[$this->index]) + 1; $i++) {
+			$this->nonBasisVariable[$this->index][$i] = 'x<sub>' . $i . '</sub>';
+		}
+
 		$this->partialAdding();
 		//--------------------------------------------
 		$this->Solve();
@@ -120,7 +120,7 @@ class Simplex {
 		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
 			$temp = new Fraction(0);
 			for ($j = 0; $j < $this->matrixes[$this->index]->getCols() - 1; $j++) {
-				if (isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i])) {
+				if (isset($this->targetfunction[$this->index][$i]) && Fraction::hasM($this->targetfunction[$this->index][$i])) {
 					continue;
 				}
 				if (Fraction::hasM($this->cCoefficient[$this->index][$j])) {
@@ -130,7 +130,7 @@ class Simplex {
 					$temp->add($temp2);
 				}
 			}
-			if (isset($this->targetfunction[$i]) && Fraction::hasM($this->targetfunction[$i]) && !Fraction::hasM($temp) && !$hasM) {
+			if (isset($this->targetfunction[$this->index][$i]) && Fraction::hasM($this->targetfunction[$this->index][$i]) && !Fraction::hasM($temp) && !$hasM) {
 				$temp->add(new Fraction(0, 1, 1, 1));
 			}
 			$this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 1)->add($temp);
@@ -145,6 +145,7 @@ class Simplex {
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+			$this->targetfunction[$this->index] = $this->targetfunction[$this->index - 1];
 			$p = $this->matrixes[$this->index]->findBaseCol();
 			if ($p == -1) {
 				unset($this->matrixes[$this->index]);
@@ -165,8 +166,8 @@ class Simplex {
 				$this->matrixes[$this->index]->setMainRow($q);
 			}
 
-			if (isset($this->targetfunction[$p])) {
-				$this->cCoefficient[$this->index][$q] = clone $this->targetfunction[$p];
+			if (isset($this->targetfunction[$this->index][$p])) {
+				$this->cCoefficient[$this->index][$q] = clone $this->targetfunction[$this->index][$p];
 			} else {
 				$this->cCoefficient[$this->index][$q] = new Fraction(0);
 			}
@@ -176,7 +177,7 @@ class Simplex {
 			$this->swapBase();
 
 			$this->simplexIteration();
-			$this->partialAdding($q);
+			$this->partialAdding();
 			//-------------------------------
 			if ($this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
@@ -190,21 +191,6 @@ class Simplex {
 		}
 	}
 
-	private function findGomorryColumn() {
-		$startv = new Fraction(PHP_INT_MAX);
-		$starti = -1;
-		for ($i = 0; $i < $this->matrixes[$this->index]->getRows() - 1; $i++) {
-			$element = clone $this->matrixes[$this->index]->getElement($i, $this->matrixes[$this->index]->getCols() - 2);
-			if (Fraction::equalsZero($element) || Fraction::isNegative($element)) {
-				continue;
-			} elseif ($startv->compare($element)) {
-				$starti = $i;
-				$startv = clone $element;
-			}
-		}
-		return $starti;
-	}
-
 	private function gomorrySolve() {
 		//GOMORY'S CUTTING PLANE METHOD
 		while (true) {
@@ -213,30 +199,31 @@ class Simplex {
 				break;
 			}
 			$this->index++;
-			$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows());
+			$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows() + 2);
 			$this->matrixes[$this->index]->swapGomory();
 			$this->matrixes[$this->index]->setIndex($this->index);
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
 			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
 			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
+			$this->targetfunction[$this->index] = $this->targetfunction[$this->index - 1];
 			$this->gomoryNewTableau($q);
+			if ($this->extreme) {
+				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = new Fraction(0, 1, -1, 1);
+			} else {
+				$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = new Fraction(0, 1, 1, 1);
+			}
+			$this->signs[] = enumSigns::_GEQ;
+			$this->targetfunction[$this->index][] = new Fraction(0);
+			$this->targetfunction[$this->index][] = new Fraction(0, 1, -1, 1);
+			$this->partialAdding();
 			$this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
-			$this->matrixes[$this->index]->setMainCol($this->findGomorryColumn());
-			$this->signs[count($this->signs)] = '<=';
-			$this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction) + 1) . '</sub>';
-			$this->cCoefficient[$this->index][count($this->cCoefficient[$this->index])] = 0;
+			$this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->findBaseCol());
+			$this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction[$this->index]) - 1) . '</sub>';
+			$this->nonBasisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction[$this->index]) - 1) . '</sub>';
+			$this->nonBasisVariable[$this->index][] = 'x<sub>' . count($this->targetfunction[$this->index]) . '</sub>';
+			$this->Solve();
 			//-------------------------------------------
-			$this->index++;
-			$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
-			$this->matrixes[$this->index]->swapGomory();
-			$this->matrixes[$this->index]->setIndex($this->index);
-			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
-			$this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
-			$this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
-			$this->swapBase();
-			$this->simplexIteration();
-			//-------------------------------------------
-			if ($this->checkTargetIntegerFunction()) {
+			if ($this->checkTargetIntegerFunction() && $this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
 				$this->matrixes[$this->index]->setMainRow(-1);
 				break;
@@ -260,9 +247,9 @@ class Simplex {
 			$string.='<tr>';
 			$string.='<th class="ui-state-default">(' . $value->getIndex() . ')</th>';
 			$string.='<th class="ui-state-default"></th>';
-			for ($j = 0; $j < $this->N + $this->M - 2 + $this->wrongsigns; $j++) {
-				if (isset($this->targetfunction[$j])) {
-					$string.='<th class="ui-state-default">' . $this->targetfunction[$j] . '</th>';
+			for ($j = 0; $j < count($this->targetfunction[$key]); $j++) {
+				if (isset($this->targetfunction[$key][$j])) {
+					$string.='<th class="ui-state-default">' . $this->targetfunction[$key][$j] . '</th>';
 				} else {
 					$string.='<th class="ui-state-default">0</th>';
 				}
@@ -272,7 +259,7 @@ class Simplex {
 			$string.='</tr>';
 			$string.='<tr><th class="ui-state-default">Baza</th>';
 			$string.='<th class="ui-state-default">c</th>';
-			for ($j = 0; $j < $this->N + $this->wrongsigns + $this->M - 2; $j++) {
+			for ($j = 0; $j < count($this->targetfunction[$key]); $j++) {
 				if (isset($this->nonBasisVariable[$key][$j + 1])) {
 					$string.='<th class="ui-state-default">' . $this->nonBasisVariable[$key][$j + 1] . '</th>';
 				}
@@ -385,17 +372,28 @@ class Simplex {
 	}
 
 	private function gomoryNewTableau($k) {
-		for ($i = 0; $i < $this->matrixes[$this->index - 1]->getCols() - 1; $i++) {
+		for ($i = 0; $i < $this->matrixes[$this->index - 1]->getCols(); $i++) {
 			for ($j = 0; $j < $this->matrixes[$this->index - 1]->getRows(); $j++) {
-				$this->matrixes[$this->index]->setValue($j, $i, $this->matrixes[$this->index - 1]->getElement($j, $i));
+				if ($i == $this->matrixes[$this->index - 1]->getCols() - 1 || $j == $this->matrixes[$this->index - 1]->getRows() - 1) {
+					if ($i == $this->matrixes[$this->index - 1]->getCols() - 1 && $j == $this->matrixes[$this->index - 1]->getRows() - 1) {
+						$this->matrixes[$this->index]->setValue($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1, clone $this->matrixes[$this->index - 1]->getElement($j, $i));
+					} elseif ($i == $this->matrixes[$this->index - 1]->getCols() - 1) {
+						$this->matrixes[$this->index]->setValue($j, $i + 1, clone $this->matrixes[$this->index - 1]->getElement($j, $i));
+					} elseif ($j == $this->matrixes[$this->index - 1]->getRows() - 1) {
+						$this->matrixes[$this->index]->setValue($j + 2, $i, clone $this->matrixes[$this->index - 1]->getElement($j, $i));
+					}
+				} else {
+					$this->matrixes[$this->index]->setValue($j, $i, clone $this->matrixes[$this->index - 1]->getElement($j, $i));
+				}
 			}
 		}
-		for ($j = 0; $j < $this->matrixes[$this->index - 1]->getRows(); $j++) {
-			$this->matrixes[$this->index]->setValue($j, $this->matrixes[$this->index]->getCols() - 1, $this->matrixes[$this->index - 1]->getElement($j, $this->matrixes[$this->index - 1]->getCols() - 1));
-			$s = clone $this->matrixes[$this->index - 1]->getElement($j, $k);
-			$s->getImproperPart();
-			$this->matrixes[$this->index]->setValue($j, $this->matrixes[$this->index]->getCols() - 2, $s);
+		for ($i = 0; $i < $this->matrixes[$this->index]->getRows(); $i++) {
+			$temp = clone $this->matrixes[$this->index]->getElement($i, $k);
+			$temp->getImproperPart();
+			$this->matrixes[$this->index]->setValue($i, $this->matrixes[$this->index]->getCols() - 2, $temp);
 		}
+		$this->matrixes[$this->index]->setValue($this->matrixes[$this->index]->getRows() - 2, $this->matrixes[$this->index]->getCols() - 2, new Fraction(1));
+		$this->matrixes[$this->index]->setValue($this->matrixes[$this->index]->getRows() - 3, $this->matrixes[$this->index]->getCols() - 2, new Fraction(-1));
 	}
 
 	private function checkTargetFunction() {
@@ -473,8 +471,8 @@ class Simplex {
 	public function printProblem() {
 		$string = '';
 		$string.=$this->extreme ? 'max ' : 'min ';
-		ksort($this->targetfunction);
-		foreach ($this->targetfunction as $key => $value) {
+		ksort($this->targetfunction[$this->index]);
+		foreach ($this->targetfunction[$this->index] as $key => $value) {
 			$temp = clone $value;
 			if (Fraction::equalsZero($temp)) {
 				continue;
@@ -490,13 +488,6 @@ class Simplex {
 					$temp->minusFraction();
 				}
 			}
-//			if (!Fraction::hasM($value)) {
-//				$temp->minusFraction();
-//			} else {
-//				if ($this->extreme) {
-//					$temp->minusFraction();
-//				}
-//			}
 			if ($key != 0) {
 				if (Fraction::isPositive($temp) || Fraction::equalsZero($temp)) {
 					$string.='+';
@@ -540,7 +531,7 @@ class Simplex {
 			$indexarray = $this->index;
 		}
 		$x = Array();
-		for ($i = 1; $i < 2 + max(array_keys($this->targetfunction)); $i++) {
+		for ($i = 1; $i < 2 + max(array_keys($this->targetfunction[$this->index])); $i++) {
 			$x[$i] = new Fraction();
 		}
 		$index = 0;
@@ -556,7 +547,7 @@ class Simplex {
 	public function getPrimaryGraphJson() {
 		$a = 0;
 		$json = Array();
-		foreach ($this->targetfunction as $value) {
+		foreach ($this->targetfunction[$this->index] as $value) {
 			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
 				$a++;
 			}
@@ -604,10 +595,10 @@ class Simplex {
 					$json[$i]['data'][] = Array($j->getValue(), 0);
 				}
 			}
-			if (!Fraction::equalsZero($this->targetfunction[0])) {
-				$t = clone $this->targetfunction[1];
+			if (!Fraction::equalsZero($this->targetfunction[$this->index][0])) {
+				$t = clone $this->targetfunction[$this->index][1];
 				$t->multiply($maxx);
-				$t->divide($this->targetfunction[0]);
+				$t->divide($this->targetfunction[$this->index][0]);
 				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
 			}
 			foreach ($this->matrixes as $key => $value) {
@@ -622,7 +613,7 @@ class Simplex {
 
 	public function getTargetFunction() {
 		$x = Array();
-		foreach ($this->targetfunction as $key => $value) {
+		foreach ($this->targetfunction[$this->index] as $key => $value) {
 			if (Fraction::equalsZero($value) || Fraction::hasM($value)) {
 				continue;
 			} else {
@@ -636,10 +627,10 @@ class Simplex {
 		$a = 0;
 		$json = Array();
 		$nonZeroTargetFunction = Array();
-		foreach ($this->targetfunction as $key => $value) {
+		foreach ($this->targetfunction[$this->index] as $key => $value) {
 			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
 				$a++;
-				$nonZeroTargetFunction[] = $key;
+				$nonZeroTargetFunction[$this->index][] = $key;
 			}
 		}
 		if ($a == 2) {
@@ -669,25 +660,25 @@ class Simplex {
 				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
 					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
 						if ($this->isValidPoint2D($i, $j)) {
-							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
+							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
 						}
 					}
 				}
 				foreach ($this->matrixes as $key => $value) {
 					$key1 = $this->getValuePair($key);
-					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
+					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
 				}
 			} else {
 				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
 					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
 						if ($this->isValidPoint2D($i, $j)) {
-							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
+							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
 						}
 					}
 				}
 				foreach ($this->matrixes as $key => $value) {
 					$key1 = $this->getValuePair($key);
-					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
+					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
 				}
 			}
 		} else {
