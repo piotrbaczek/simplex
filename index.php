@@ -13,8 +13,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
         <meta name="robots" content="noindex,nofollow"/>
         <title>Simplex &copy; 2013</title>
         <link rel="icon" type="image/x-icon" href="images/icon32.png" />
-        <link rel="stylesheet"
-              href="js/development-bundle/themes/smoothness/jquery-ui-1.8.16.custom.css" />
+        <link rel="stylesheet" href="js/development-bundle/themes/smoothness/jquery-ui-1.8.16.custom.css" />
         <link rel="stylesheet" href="css/simplex.css" />
         <script src="js/excanvas.js"></script>
         <script src="js/jquery.js"></script>
@@ -29,7 +28,6 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 		<script src="js/CanvasXpress.min.js"></script>
 		<script src="js/Grapher.js"></script>
         <script src="js/simplex.js"></script>
-
     </head>
     <body>
         <img id="bg" alt="Background image" src="images/back.jpg" />
