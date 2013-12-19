@@ -474,8 +474,8 @@ class Simplex {
 	public function printProblem() {
 		$string = '';
 		$string.=$this->extreme ? 'max ' : 'min ';
-		ksort($this->targetfunction[$this->index]);
-		foreach ($this->targetfunction[$this->index] as $key => $value) {
+		ksort($this->targetfunction[0]);
+		foreach ($this->targetfunction[0] as $key => $value) {
 			$temp = clone $value;
 			if (Fraction::equalsZero($temp)) {
 				continue;
