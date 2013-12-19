@@ -630,7 +630,7 @@ class Simplex {
 		foreach ($this->targetfunction[$this->index] as $key => $value) {
 			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
 				$a++;
-				$nonZeroTargetFunction[$this->index][] = $key;
+				$nonZeroTargetFunction[] = $key;
 			}
 		}
 		if ($a == 2) {
