@@ -24,7 +24,7 @@ Grapher.prototype.__run = function() {
 			break;
 		case 2:
 			this.textdiv.empty().append(this.data[2]);
-			this.appender();
+			//this.appender();
 			this.plot2d();
 			this.plot3d();
 			break;

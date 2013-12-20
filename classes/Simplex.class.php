@@ -720,7 +720,7 @@ class Simplex {
 				for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
 					for ($k = 0; $k < $maxz->getRealValue(); $k+=($maxz->getRealValue() / 20)) {
 						if ($this->isValidPoint3D($i, $j, $k)) {
-							$json[] = Array($i, $j, $k);
+							$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
 						}
 					}
 				}
@@ -819,7 +819,7 @@ class Simplex {
 			}
 		}
 		foreach ($x as $key => $value) {
-			$x[$key] = $value->getRealValue();
+			$x[$key] = round($value->getRealValue(), 2);
 		}
 		return $x;
 	}
