@@ -71,10 +71,8 @@ class Simplex {
 			switch ($value) {
 				case enumSigns::_GEQ:
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $key, $key, new Fraction(-1));
-
 					$this->matrixes[$this->index]->setValue($this->M - 1 + $this->N - 1 + $ax, $key, new Fraction(1));
-					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $key) . '</sub>';
-
+					$this->basisVariable[$this->index][$key + 1] = 'x<sub>' . ($this->M + $this->N - 1 + $ax) . '</sub>';
 					$this->targetfunction[$this->index][$this->M - 1 + $this->N - 1 + $ax] = new Fraction(0, 1, -1, 1);
 					$ax++;
 					break;
