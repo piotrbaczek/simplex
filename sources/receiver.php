@@ -42,7 +42,7 @@ if ($ss) {
 		if ($tp->isCorrect()) {
 			$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 			$json[0] = count($simplex->getTargetFunction());
-			$json[1] = $simplex->getTargetFunction();
+			$json[1] = $simplex->getMaxRangeArray();
 			$json[2] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
 			$json[3] = $simplex->getPrimaryGraphJson();
 			$json[4] = $simplex->getSecondaryGraphJson();
