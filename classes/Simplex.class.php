@@ -137,12 +137,12 @@ class Simplex {
 		}
 	}
 
-	private function Solve($recurring=false) {
+	private function Solve($recurring = false) {
 		while (true) {
 			$this->index++;
 			$this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
 			$this->matrixes[$this->index]->setIndex($this->index);
-			if($recurring){
+			if ($recurring) {
 				$this->matrixes[$this->index]->swapGomory();
 			}
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
@@ -797,6 +797,31 @@ class Simplex {
 		$string = substr($string, 0, -1);
 		$string.=']';
 		return $string;
+	}
+
+	public function getMaxRangeArray() {
+		$x = Array();
+		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
+			$x[] = new Fraction();
+		}
+		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
+			for ($j = 0; $j < $this->matrixes[0]->getCols() - 1; $j++) {
+				$b = clone $this->matrixes[0]->getElement($this->matrixes[0]->getRows() - 1, $j);
+				$temp = clone $this->matrixes[0]->getElement($i, $j);
+				if (Fraction::equalsZero($temp) || Fraction::isNegative($temp)) {
+					continue;
+				} else {
+					$b->divide($temp);
+					if ($b->compare($x[$i])) {
+						$x[$i] = $b;
+					}
+				}
+			}
+		}
+		foreach ($x as $key => $value) {
+			$x[$key] = $value->getRealValue();
+		}
+		return $x;
 	}
 
 }
