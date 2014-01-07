@@ -1,6 +1,6 @@
 <?php
 
-//header('Content-Type: application/json');
+header('Content-Type: application/json');
 $dataarray = [15, 26 / 3, 15, 13, 15];
 $scopeArray = Array(1, 2, 4);
 
