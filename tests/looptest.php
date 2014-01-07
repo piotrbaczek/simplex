@@ -1,13 +1,13 @@
 <?php
 
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 $dataarray = [15, 26 / 3, 15, 13, 15];
 $scopeArray = Array(1, 2, 4);
 
-function getSecondaryGraphJson(Array $dataArray, Array $scopeArray) {
+function getRedrawJson(Array $dataArray = [1, 1, 1], Array $scopeArray = [0, 1, 2]) {
 	$divider = 20;
-	if (count($scopeArray) != 3) {
-		throw new Exception('Scope array must be 3 dimensional.');
+	if (count($scopeArray) != 3 || count($dataArray) != 3) {
+		throw new Exception('Input arrays must be at least 3 dimensional.');
 	}
 	foreach ($scopeArray as $value) {
 		if ($value > count($dataArray)) {
@@ -25,4 +25,19 @@ function getSecondaryGraphJson(Array $dataArray, Array $scopeArray) {
 	return $json;
 }
 
-echo json_encode(getSecondaryGraphJson($dataarray, $scopeArray));
+//echo json_encode(getSecondaryGraphJson($dataarray, $scopeArray));
+include '../classes/Simplex.class.php';
+include '../classes/SimplexTableu.class.php';
+include '../classes/Fraction.class.php';
+include '../classes/DivisionCoefficient.class.php';
+include '../classes/Signs.class.php';
+$dimensions = Array();
+foreach ($_POST['dimensions'] as $value) {
+	$dimensions[] = $value;
+}
+if (isset($_POST['object']) && !empty($_POST['object'])) {
+	$simplex = unserialize($_POST['object']);
+	echo $simplex->printValuePair();
+	echo '<br/>';
+	print_r($dimensions);
+}
