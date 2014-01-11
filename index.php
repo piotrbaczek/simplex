@@ -26,7 +26,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
         <script src="js/jquery.blockui.js"></script>
         <script src="js/ajaxfileupload.js"></script>
 		<script src="js/CanvasXpress.min.js"></script>
-		<script src="js/Grapher.js"></script>
+		<script src="js/Grapher.js?time=<?php echo microtime(); ?>"></script>
         <script src="js/simplex.js"></script>
     </head>
     <body>
@@ -62,8 +62,8 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 								</select> <br /> <input type="text" name="targetfunction"
 														id="targetfunction" value="2x1+6x2"><br />
 								<textarea rows="10" name="textarea" id="textarea" style="width: 95%;resize: none;">2x1+5x2<=30
-2x1+3x2<=26
-0x1+3x2<=15</textarea>
+	2x1+3x2<=26
+	0x1+3x2<=15</textarea>
 								<button id="solvethis">Rozwiąż!</button>
 							</form>
 						</div>
@@ -102,7 +102,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 					</div>
 				</div>
 				<div style="clear: both;"></div>
-			<?php
+				<?php
 			} else {
 				echo activity::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 			}
