@@ -6,6 +6,7 @@ var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdi
 	this.canvas = canvas;
 	this.textdiv = textdiv;
 	this.defaultdiv = defaultdiv;
+	this.x = {};
 	this.cx = "";
 	this.sliders = [];
 	this.inputs = [];
@@ -109,7 +110,6 @@ Grapher.prototype.getSliderValues = function() {
 	var values = [];
 	for (var i = 0; i < this.sliders.length; i++) {
 		if (this.checkboxes[i].is(':checked') && i >= this.data[0]) {
-			console.log("values[" + i + "]=" + this.sliders[i].slider("value"));
 			values[i] = this.sliders[i].slider("value");
 		}
 	}
@@ -164,6 +164,8 @@ Grapher.prototype.redraw = function() {
 				success: function(data) {
 					$this.data[4] = data;
 					$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
+					this.x = {};
+					this.vars = [];
 					$this.plot3d();
 				}
 			});
