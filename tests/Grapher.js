@@ -11,6 +11,7 @@ var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdi
 	this.inputs = [];
 	this.checkboxes = [];
 	this.vars = [];
+	this.variables = ["x1", "x2", "x3"];
 	this.__run();
 };
 Grapher.prototype.__run = function() {
@@ -41,18 +42,20 @@ Grapher.prototype.hideSlides = function() {
 Grapher.prototype.showSlides = function() {
 	this.slidersdiv.show();
 };
-Grapher.prototype.plot3d = function() {
+Grapher.prototype.setVars = function() {
 	this.vars = [];
 	for (var i = 0; i < this.data[4].length; i++) {
 		this.vars[i] = ("Punkt" + (i + 1));
 	}
+};
+Grapher.prototype.setX = function() {
 	this.x = {
 		"y": {
 			"vars": this.vars,
 			"smps": [
-				"X",
-				"Y",
-				"Z"
+				this.variables[0],
+				this.variables[1],
+				this.variables[2]
 			],
 			"desc": [
 				"Simplex method"
@@ -60,17 +63,21 @@ Grapher.prototype.plot3d = function() {
 			"data": this.data[4]
 		}
 	};
+};
+Grapher.prototype.plot3d = function() {
+	this.setVars();
+	this.setX();
 	this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
 		graphType: "Scatter3D",
 		useFlashIE: true,
 		xAxis: [
-			"X"
+			this.variables[0]
 		],
 		yAxis: [
-			"Y"
+			this.variables[1]
 		],
 		zAxis: [
-			"Z"
+			this.variables[2]
 		],
 		scatterType: false,
 		setMinX: 0,
@@ -78,6 +85,7 @@ Grapher.prototype.plot3d = function() {
 		setMinZ: 0
 	});
 };
+
 Grapher.prototype.plot2d = function() {
 	$.plot(this.placeholder, this.data[3]);
 };
@@ -139,15 +147,14 @@ Grapher.prototype.appender = function() {
 		})(i, this);//hack by krzysiek-94
 	}
 
-	(function(i, $this) {
+	(function($this) {
 		$('input[type=checkbox].slider').click(function() {
 			$this.redraw();
 		});
-	})(i, this);//hack by krzysiek-94
+	})(this);
 };
 Grapher.prototype.redraw = function() {
 	if (this.are3CheckboxesChecked()) {
-		//alert('redraw()');
 		(function($this) {
 			$.ajax({
 				url: "looptest.php",
@@ -155,11 +162,12 @@ Grapher.prototype.redraw = function() {
 				type: "POST",
 				data: {'object': $this.data[5], "dimensions": $this.getDimensions(), "values": $this.getSliderValues()},
 				success: function(data) {
-
+					$this.data[4] = data;
+					$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
+					$this.plot3d();
 				}
 			});
 		})(this);
 	}
 //	this.cx.initGraph();
-
 };

@@ -822,6 +822,49 @@ class Simplex {
 		return $x;
 	}
 
+	public function getRedrawData(Array $dimensions = [], Array $values = []) {
+		$json = Array();
+		$maxRange = $this->getMaxRangeArray();
+		$singles = 0;
+		foreach ($values as $key => $value) {
+			if ($value == 'undefined') {
+				unset($values[$key]);
+			} else {
+				$singles++;
+			}
+		}
+		switch ($singles) {
+			case 1:
+				$maxX = $maxRange[$dimensions[array_keys($dimensions)[0]]];
+				$addX = round($maxX / 20, 2);
+				$maxY = $maxRange[$dimensions[array_keys($dimensions)[1]]];
+				$addY = round($maxY / 20, 2);
+				for ($i = 0; $i <= $maxX; $i+=$addX) {
+					for ($j = 0; $j <= $maxY; $j+=$addY) {
+						//if($this->isValidPoint2D($i, $j)){
+						$json[] = Array($i, $j, (float) $values[array_keys($values)[0]]);
+						//}
+					}
+				}
+				break;
+			case 2:
+				$maxX = $maxRange[$dimensions[array_keys($dimensions)[0]]];
+				$addX = round($maxX / 20, 2);
+				for ($i = 0; $i <= $maxX; $i+=$addX) {
+					$json[] = Array($i, (float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]]);
+				}
+				break;
+			case 3:
+				$json[] = Array((float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]], (float) $values[array_keys($values)[2]]);
+				break;
+
+			default:
+				$json = $this->getSecondaryGraphJson();
+				break;
+		}
+		return json_encode($json);
+	}
+
 }
 
 ?>
