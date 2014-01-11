@@ -62,8 +62,8 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 								</select> <br /> <input type="text" name="targetfunction"
 														id="targetfunction" value="2x1+6x2"><br />
 								<textarea rows="10" name="textarea" id="textarea" style="width: 95%;resize: none;">2x1+5x2<=30
-	2x1+3x2<=26
-	0x1+3x2<=15</textarea>
+2x1+3x2<=26
+0x1+3x2<=15</textarea>
 								<button id="solvethis">Rozwiąż!</button>
 							</form>
 						</div>
