@@ -51,6 +51,7 @@ Grapher.prototype.setVars = function() {
 	}
 };
 Grapher.prototype.setX = function() {
+	this.x = {};
 	this.x = {
 		"y": {
 			"vars": this.vars,
@@ -165,8 +166,6 @@ Grapher.prototype.redraw = function() {
 				success: function(data) {
 					$this.data[4] = data;
 					$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
-					this.x = {};
-					this.vars = [];
 					$this.plot3d();
 				}
 			});
