@@ -7,6 +7,7 @@ include '../classes/Signs.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/activity.class.php';
 include '../classes/DivisionCoefficient.class.php';
+include '../classes/Point.class.php';
 $ss = activity::isactivated2('../activity/active.xml') ? true : false;
 $json = Array();
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1

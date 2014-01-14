@@ -625,6 +625,7 @@ class Simplex {
 	}
 
 	public function getSecondaryGraphJson() {
+		$point = new Point(count($this->getMaxRangeArray()));
 		$a = 0;
 		$json = Array();
 		$nonZeroTargetFunction = Array();
@@ -660,7 +661,10 @@ class Simplex {
 			if ($this->extreme) {
 				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
 					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
-						if ($this->isValidPoint2D($i, $j)) {
+						$point->resetPoint();
+						$point->setPointDimension(0, $i);
+						$point->setPointDimension(1, $j);
+						if ($this->isValidPoint($point)) {
 							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
 						}
 					}
@@ -672,7 +676,10 @@ class Simplex {
 			} else {
 				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
 					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
-						if ($this->isValidPoint2D($i, $j)) {
+						$point->resetPoint();
+						$point->setPointDimension(0, $i);
+						$point->setPointDimension(1, $j);
+						if ($this->isValidPoint($point)) {
 							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
 						}
 					}
@@ -717,7 +724,11 @@ class Simplex {
 			for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
 				for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
 					for ($k = 0; $k < $maxz->getRealValue(); $k+=($maxz->getRealValue() / 20)) {
-						if ($this->isValidPoint3D($i, $j, $k)) {
+						$point->resetPoint();
+						$point->setPointDimension(0, $i);
+						$point->setPointDimension(1, $j);
+						$point->setPointDimension(2, $k);
+						if ($this->isValidPoint($point)) {
 							$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
 						}
 					}
@@ -727,11 +738,15 @@ class Simplex {
 		return $json;
 	}
 
-	private function isValidPoint3D($x, $y, $z) {
-		$b = $this->N - 1;
-		for ($i = 0; $i < $b; $i++) {
-			$left = ($this->variables[$i][0]->getRealValue() * $x) + ($this->variables[$i][1]->getRealValue() * $y) + ($this->variables[$i][2]->getRealValue() * $z);
-			$right = $this->boundaries[$i]->getRealValue();
+	public function isValidPoint(Point $p) {
+		$currentRow = new Point($p->getPointDimensionAmount());
+		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
+			$currentRow->resetPoint();
+			for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
+				$currentRow->setPointDimension($j, $this->matrixes[0]->getElement($j, $i)->getRealValue());
+			}
+			$left = $currentRow->multiplyBy($p);
+			$right = $right = $this->boundaries[$i]->getRealValue();
 			switch ($this->signs[$i]) {
 				case enumSigns::_GEQ:
 					if ($left < $right) {
@@ -752,35 +767,7 @@ class Simplex {
 					return FALSE;
 			}
 		}
-		return true;
-	}
-
-	private function isValidPoint2D($x, $y) {
-		$b = $this->N - 1;
-		for ($i = 0; $i < $b; $i++) {
-			$left = ($this->variables[$i][0]->getRealValue() * $x) + ($this->variables[$i][1]->getRealValue() * $y);
-			$right = $this->boundaries[$i]->getRealValue();
-			switch ($this->signs[$i]) {
-				case enumSigns::_GEQ:
-					if ($left < $right) {
-						return FALSE;
-					}
-					break;
-				case enumSigns::_LEQ:
-					if ($left > $right) {
-						return FALSE;
-					}
-					break;
-				case enumSigns::_EQ:
-					if ($left != $right) {
-						return FALSE;
-					}
-					break;
-				default :
-					return FALSE;
-			}
-		}
-		return true;
+		return TRUE;
 	}
 
 	private function printCurrentPoint($indexarray = -1) {
