@@ -33,7 +33,7 @@ class Point {
 	}
 
 	public function setPointDimension($key, $value) {
-		if ($key > $this->getPointDimensionAmount()) {
+		if ($key >= $this->getPointDimensionAmount()) {
 			throw new Exception(__FUNCTION__ . ' array exceeded. (' . $key . ':' . $this->getPointDimensionAmount() . ')');
 		} else {
 			$this->array[$key] = $value;
