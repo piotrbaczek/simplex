@@ -813,6 +813,7 @@ class Simplex {
 		$json = Array();
 		$maxRange = $this->getMaxRangeArray();
 		$singles = 0;
+		$point = new Point(count($maxRange));
 		foreach ($values as $key => $value) {
 			if ($value == 'undefined') {
 				unset($values[$key]);
@@ -828,9 +829,13 @@ class Simplex {
 				$addY = round($maxY / 20, 2);
 				for ($i = 0; $i <= $maxX; $i+=$addX) {
 					for ($j = 0; $j <= $maxY; $j+=$addY) {
-						//if($this->isValidPoint2D($i, $j)){
-						$json[] = Array($i, $j, (float) $values[array_keys($values)[0]]);
-						//}
+						$point->resetPoint();
+						$point->setPointDimension(array_keys($dimensions)[0], $i);
+						$point->setPointDimension(array_keys($dimensions)[1], $j);
+						$point->setPointDimension(array_keys($dimensions)[2], (float) $values[array_keys($values)[0]]);
+						if ($this->isValidPoint($point)) {
+							$json[] = Array($i, $j, (float) $values[array_keys($values)[0]]);
+						}
 					}
 				}
 				break;
@@ -838,11 +843,23 @@ class Simplex {
 				$maxX = $maxRange[$dimensions[array_keys($dimensions)[0]]];
 				$addX = round($maxX / 20, 2);
 				for ($i = 0; $i <= $maxX; $i+=$addX) {
-					$json[] = Array($i, (float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]]);
+					$point->resetPoint();
+					$point->setPointDimension(array_keys($dimensions)[0], $i);
+					$point->setPointDimension(array_keys($dimensions)[1], (float) $values[array_keys($values)[0]]);
+					$point->setPointDimension(array_keys($dimensions)[2], (float) $values[array_keys($values)[1]]);
+					if ($this->isValidPoint($point)) {
+						$json[] = Array($i, (float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]]);
+					}
 				}
 				break;
 			case 3:
-				$json[] = Array((float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]], (float) $values[array_keys($values)[2]]);
+				$point->resetPoint();
+				$point->setPointDimension(array_keys($dimensions)[0], (float) $values[array_keys($values)[0]]);
+				$point->setPointDimension(array_keys($dimensions)[1], (float) $values[array_keys($values)[1]]);
+				$point->setPointDimension(array_keys($dimensions)[2], (float) $values[array_keys($values)[2]]);
+				if ($this->isValidPoint($point)) {
+					$json[] = Array((float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]], (float) $values[array_keys($values)[2]]);
+				}
 				break;
 
 			default:

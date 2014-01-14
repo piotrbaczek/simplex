@@ -25,10 +25,11 @@ if ($tp->isCorrect()) {
 	$point1->setPointDimension(1, 26);
 	$point1->setPointDimension(2, 16);
 	//print_r($point1->toArray());
-	if ($simplex->isValidPoint($point1)) {
-		echo 'jest';
-	} else {
-		echo 'nie jest';
-	}
+//	if ($simplex->isValidPoint($point1)) {
+//		echo 'jest';
+//	} else {
+//		echo 'nie jest';
+//	}
+	//echo $simplex->getRedrawData([1, 2, 4], [3234]);
 }
 
