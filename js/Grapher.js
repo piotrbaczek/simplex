@@ -68,6 +68,7 @@ Grapher.prototype.setX = function() {
 	};
 };
 Grapher.prototype.plot3d = function() {
+	this.cx=null;
 	this.setVars();
 	this.setX();
 	this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
