@@ -68,7 +68,6 @@ Grapher.prototype.setX = function() {
 	};
 };
 Grapher.prototype.plot3d = function() {
-	this.cx=null;
 	this.setVars();
 	this.setX();
 	this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
@@ -165,9 +164,13 @@ Grapher.prototype.redraw = function() {
 				type: "POST",
 				data: {'object': $this.data[5], "dimensions": $this.getDimensions(), "values": $this.getSliderValues()},
 				success: function(data) {
-					$this.data[4] = data;
-					$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
-					$this.plot3d();
+					if (data.length !== 0) {
+						$this.data[4] = data;
+						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
+						$this.plot3d();
+					} else {
+						alert('Ten zbiór wartości jest pusty.');
+					}
 				}
 			});
 		})(this);
