@@ -777,7 +777,7 @@ class Simplex {
 		$x = $this->getValuePair($indexarray);
 		$string = '[';
 		foreach ($x as $value) {
-			$string.=$value->getRealValue() . ',';
+			$string.=round($value->getRealValue(), 2) . ';';
 		}
 		$string = substr($string, 0, -1);
 		$string.=']';
@@ -875,14 +875,14 @@ class Simplex {
 		}
 
 		$maxRange = $this->getMaxRangeArray();
-		$minRange = $this->getMinRangeArray();
+		//$minRange = $this->getMinRangeArray();
 		$point = new Point(count($maxRange));
 		//MAXES
 		$maxX = (float) $values[array_keys($values)[0]][1];
 		$addX = round($maxX / 20, 2);
 		$maxY = (float) $values[array_keys($values)[1]][1];
 		$addY = round($maxY / 20, 2);
-		$maxZ = (float) $values[array_keys($values)[1]][1];
+		$maxZ = (float) $values[array_keys($values)[2]][1];
 		$addZ = round($maxZ / 20, 2);
 		//MINS
 		$minX = (float) $values[array_keys($values)[0]][0];

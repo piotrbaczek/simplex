@@ -1,6 +1,6 @@
 var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdiv) {
 	this.data = data;
-	this.redrawURL = '../sources/redraw.php';
+	this.redrawURL = 'sources/redraw.php';
 	this.backup = data;
 	this.slidersdiv = slidersdiv;
 	this.placeholder = placeholder;
@@ -102,6 +102,9 @@ Grapher.prototype.are3CheckboxesChecked = function() {
 Grapher.prototype.getDimensions = function() {
 	var dimensions = new Array();
 	for (var i = 0; i < this.checkboxes.length; i++) {
+		if (this.checkboxes[i] === undefined) {
+			continue;
+		}
 		if (this.checkboxes[i].is(':checked')) {
 			dimensions.push(this.checkboxes[i].data('index'));
 		}
@@ -111,6 +114,9 @@ Grapher.prototype.getDimensions = function() {
 Grapher.prototype.getSliderValues = function() {
 	var values = new Array();
 	for (var i = 0; i < this.sliders.length; i++) {
+		if (this.checkboxes[i] === undefined) {
+			continue;
+		}
 		if (this.checkboxes[i].is(':checked')) {
 			values[i] = new Array();
 			values[i][0] = this.sliders[i].slider("values", 0);
@@ -120,36 +126,38 @@ Grapher.prototype.getSliderValues = function() {
 	return values;
 };
 Grapher.prototype.appender = function() {
-	console.log(this.data[1].toString());
 	this.slidersdiv.empty();
 	this.showSlides();
 	for (var i = 0; i < this.data[1].length; i++) {
-		(function(i, $this) {
-			var string = '<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '" ';
-			if (i < 3) {
-				string += 'checked';
-			}
-			string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + ($this.data[2][i] + " - " + $this.data[1][i]) + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
-			$this.slidersdiv.append(string);
-			$this.sliders[i] = $('#slider_' + i);
-			$this.inputs[i] = $('#slider_' + i + '_input');
-			$this.checkboxes[i] = $('#checkbox_' + i);
-			$this.checkboxes[i].data('index', i);
-			$this.sliders[i].slider({
-				range: true,
-				min: $this.data[2][i],
-				max: $this.data[1][i],
-				values: [$this.data[2][i], $this.data[1][i]],
-				step: $this.data[1][i] / 10,
-				stop: function(event, ui) {
-					alert(ui.values[0] + " - " + ui.values[1]);
-					$this.inputs[i].val(ui.values[0] + '-' + ui.values[1]);
-					if ($this.checkboxes[i].is(':checked')) {
-						$this.redraw();
-					}
+		if (this.data[1][i] === 0) {
+			this.checkboxes[i] = undefined;
+		} else {
+			(function(i, $this) {
+				var string = '<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '" ';
+				if (i < 3) {
+					string += 'checked';
 				}
-			});
-		})(i, this);//hack by krzysiek-94
+				string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + ($this.data[2][i] + " - " + $this.data[1][i]) + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
+				$this.slidersdiv.append(string);
+				$this.sliders[i] = $('#slider_' + i);
+				$this.inputs[i] = $('#slider_' + i + '_input');
+				$this.checkboxes[i] = $('#checkbox_' + i);
+				$this.checkboxes[i].data('index', i);
+				$this.sliders[i].slider({
+					range: true,
+					min: $this.data[2][i],
+					max: $this.data[1][i],
+					values: [$this.data[2][i], $this.data[1][i]],
+					step: $this.data[1][i] / 10,
+					stop: function(event, ui) {
+						$this.inputs[i].val(ui.values[0] + '-' + ui.values[1]);
+						if ($this.checkboxes[i].is(':checked')) {
+							$this.redraw();
+						}
+					}
+				});
+			})(i, this);//hack by krzysiek-94	
+		}
 	}
 
 	(function($this) {
