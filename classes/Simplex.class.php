@@ -866,62 +866,40 @@ class Simplex {
 		return $x;
 	}
 
-	public function getRedrawData(Array $dimensions = [], Array $values = []) {
+	public function getRedrawData(Array $dimensions, Array $values) {
 		$json = Array();
-		$maxRange = $this->getMaxRangeArray();
-		$singles = 0;
-		$point = new Point(count($maxRange));
 		foreach ($values as $key => $value) {
 			if ($value == 'undefined') {
 				unset($values[$key]);
-			} else {
-				$singles++;
 			}
 		}
-		switch ($singles) {
-			case 1:
-				$maxX = $maxRange[$dimensions[array_keys($dimensions)[0]]];
-				$addX = round($maxX / 20, 2);
-				$maxY = $maxRange[$dimensions[array_keys($dimensions)[1]]];
-				$addY = round($maxY / 20, 2);
-				for ($i = 0; $i <= $maxX; $i+=$addX) {
-					for ($j = 0; $j <= $maxY; $j+=$addY) {
-						$point->resetPoint();
-						$point->setPointDimension(array_keys($dimensions)[0], $i);
-						$point->setPointDimension(array_keys($dimensions)[1], $j);
-						$point->setPointDimension(array_keys($dimensions)[2], (float) $values[array_keys($values)[0]]);
-						if ($this->isValidPoint($point)) {
-							$json[] = Array($i, $j, (float) $values[array_keys($values)[0]]);
-						}
-					}
-				}
-				break;
-			case 2:
-				$maxX = $maxRange[$dimensions[array_keys($dimensions)[0]]];
-				$addX = round($maxX / 20, 2);
-				for ($i = 0; $i <= $maxX; $i+=$addX) {
+
+		$maxRange = $this->getMaxRangeArray();
+		$minRange = $this->getMinRangeArray();
+		$point = new Point(count($maxRange));
+		//MAXES
+		$maxX = (float) $values[array_keys($values)[0]][1];
+		$addX = round($maxX / 20, 2);
+		$maxY = (float) $values[array_keys($values)[1]][1];
+		$addY = round($maxY / 20, 2);
+		$maxZ = (float) $values[array_keys($values)[1]][1];
+		$addZ = round($maxZ / 20, 2);
+		//MINS
+		$minX = (float) $values[array_keys($values)[0]][0];
+		$minY = (float) $values[array_keys($values)[1]][0];
+		$minZ = (float) $values[array_keys($values)[2]][0];
+		for ($i = $minX; $i <= $maxX; $i+=$addX) {
+			for ($j = $minY; $j <= $maxY; $j+=$addY) {
+				for ($k = $minZ; $k <= $maxZ; $k+=$addZ) {
 					$point->resetPoint();
 					$point->setPointDimension(array_keys($dimensions)[0], $i);
-					$point->setPointDimension(array_keys($dimensions)[1], (float) $values[array_keys($values)[0]]);
-					$point->setPointDimension(array_keys($dimensions)[2], (float) $values[array_keys($values)[1]]);
+					$point->setPointDimension(array_keys($dimensions)[1], $j);
+					$point->setPointDimension(array_keys($dimensions)[2], $k);
 					if ($this->isValidPoint($point)) {
-						$json[] = Array($i, (float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]]);
+						$json[] = Array($i, $j, $k);
 					}
 				}
-				break;
-			case 3:
-				$point->resetPoint();
-				$point->setPointDimension(array_keys($dimensions)[0], (float) $values[array_keys($values)[0]]);
-				$point->setPointDimension(array_keys($dimensions)[1], (float) $values[array_keys($values)[1]]);
-				$point->setPointDimension(array_keys($dimensions)[2], (float) $values[array_keys($values)[2]]);
-				if ($this->isValidPoint($point)) {
-					$json[] = Array((float) $values[array_keys($values)[0]], (float) $values[array_keys($values)[1]], (float) $values[array_keys($values)[2]]);
-				}
-				break;
-
-			default:
-				$json = $this->getSecondaryGraphJson();
-				break;
+			}
 		}
 		return json_encode($json);
 	}
