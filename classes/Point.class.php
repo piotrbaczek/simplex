@@ -61,4 +61,15 @@ class Point {
 		}
 	}
 
+	public function __toString() {
+		$x = $this->toArray();
+		$string = '[';
+		foreach ($x as $value) {
+			$string.=round($value, 2) . ';';
+		}
+		$string = substr($string, 0, -1);
+		$string.=']';
+		return $string;
+	}
+
 }
