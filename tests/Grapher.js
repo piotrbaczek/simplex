@@ -118,24 +118,25 @@ Grapher.prototype.getSliderValues = function() {
 Grapher.prototype.appender = function() {
 	this.slidersdiv.empty();
 	this.showSlides();
-	for (var i = 0; i < this.data[0]; i++) {
-		this.slidersdiv.append('<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '" checked/><br/>');
-		this.checkboxes[i] = $('#checkbox_' + i);
-		this.checkboxes[i].data('index', i);
-	}
-	for (var i = this.data[0]; i < this.data[1].length; i++) {
+	var stringUnchecked = '<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '"/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + min + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
+	var stringChecked = '<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '" checked/><br/>'
+	for (var i = 0; i < this.data[1].length; i++) {
 		(function(i, $this) {
 			var min = $this.data[1][i] / 10;
-			$this.slidersdiv.append('<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '"/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + min + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>');
+			if (i < 3) {
+				$this.slidersdiv.append(stringChecked);
+			} else {
+				$this.slidersdiv.append(stringUnchecked);
+			}
 			$this.sliders[i] = $('#slider_' + i);
 			$this.inputs[i] = $('#slider_' + i + '_input');
 			$this.checkboxes[i] = $('#checkbox_' + i);
 			$this.checkboxes[i].data('index', i);
 			$this.sliders[i].slider({
 				range: "max",
-				min: min,
+				min: 0,
 				max: $this.data[1][i],
-				value: min,
+				value: $this.data[1][i],
 				step: min,
 				stop: function(event, ui) {
 					$this.inputs[i].val(ui.value);

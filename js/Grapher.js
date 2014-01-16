@@ -118,26 +118,27 @@ Grapher.prototype.getSliderValues = function() {
 	return values;
 };
 Grapher.prototype.appender = function() {
+	console.log(this.data[1].toString());
 	this.slidersdiv.empty();
 	this.showSlides();
-	for (var i = 0; i < this.data[0]; i++) {
-		this.slidersdiv.append('<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '" checked/><br/>');
-		this.checkboxes[i] = $('#checkbox_' + i);
-		this.checkboxes[i].data('index', i);
-	}
-	for (var i = this.data[0]; i < this.data[1].length; i++) {
+	for (var i = 0; i < this.data[1].length; i++) {
 		(function(i, $this) {
 			var min = $this.data[1][i] / 10;
-			$this.slidersdiv.append('<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '"/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + min + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>');
+			var string = '<label for="checkbox_' + i + '">x<sub>' + (i + 1) + '</sub></label><input type="checkbox" class="slider" id="checkbox_' + i + '" ';
+			if (i < 3) {
+				string += 'checked';
+			}
+			string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + min + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
+			$this.slidersdiv.append(string);
 			$this.sliders[i] = $('#slider_' + i);
 			$this.inputs[i] = $('#slider_' + i + '_input');
 			$this.checkboxes[i] = $('#checkbox_' + i);
 			$this.checkboxes[i].data('index', i);
 			$this.sliders[i].slider({
 				range: "max",
-				min: min,
+				min: 0,
 				max: $this.data[1][i],
-				value: min,
+				value: $this.data[1][i],
 				step: min,
 				stop: function(event, ui) {
 					$this.inputs[i].val(ui.value);
