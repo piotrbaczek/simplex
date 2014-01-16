@@ -787,7 +787,7 @@ class Simplex {
 	public function getMaxRangeArray() {
 		$x = Array();
 		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
-			$x[] = new Fraction();
+			$x[] = new Fraction(PHP_INT_MAX);
 		}
 		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
 			for ($j = 0; $j < $this->matrixes[0]->getCols() - 1; $j++) {
@@ -797,7 +797,7 @@ class Simplex {
 					continue;
 				} else {
 					$b->divide($temp);
-					if ($b->compare($x[$i])) {
+					if (!$b->compare($x[$i])) {
 						$x[$i] = $b;
 					}
 				}
