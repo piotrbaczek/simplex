@@ -22,10 +22,10 @@ if ($ss) {
 //	$_POST['funct'] = 'true';
 //	$_POST['gomorryf'] = 'false';
 //--------------------------------
-//	$_POST['textarea'] = '2x1+5x2<=30
-//2x1+3x2<=26
-//0x1+3x2<=15';
-//	$_POST['targetfunction'] = '2x1+6x2';
+//	$_POST['textarea'] = '2x1+5x2+14x3<=30
+//2x1+3x2+12x3<=26
+//0x1+3x2+2x3<=15';
+//	$_POST['targetfunction'] = '4x1+12x2+3x3';
 //	$_POST['funct'] = 'true';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
@@ -44,21 +44,22 @@ if ($ss) {
 			$simplex = new Simplex($tp->getVariables(), $tp->getBoundaries(), $tp->getSigns(), $tp->getTargetfunction(), $tp->getMaxMin(), $tp->getGomorry());
 			$json[0] = count($simplex->getTargetFunction());
 			$json[1] = $simplex->getMaxRangeArray();
-			$json[2] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
-			$json[3] = $simplex->getPrimaryGraphJson();
-			$json[4] = $simplex->getSecondaryGraphJson();
-			$json[5] = serialize($simplex);
+			$json[2] = $simplex->getMinRangeArray();
+			$json[3] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
+			$json[4] = $simplex->getPrimaryGraphJson();
+			$json[5] = $simplex->getSecondaryGraphJson();
+			$json[6] = serialize($simplex);
 		} else {
 			$json[0] = -2;
-			$json[2] = TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
+			$json[3] = TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');
 		}
 	} catch (Exception $e) {
 		$json[0] = -2;
-		$json[2] = TextareaProcesser::errormessage($e->getMessage());
+		$json[3] = TextareaProcesser::errormessage($e->getMessage());
 	}
 } else {
 	$json[0] = -1;
-	$json[2] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
+	$json[3] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 }
 echo json_encode($json);
 ?>
