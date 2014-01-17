@@ -27,7 +27,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
         <script src="js/ajaxfileupload.js"></script>
 		<script src="js/CanvasXpress.min.js"></script>
 		<script src="js/Grapher.js?time=<?php echo microtime(); ?>"></script>
-        <script src="js/simplex.js"></script>
+        <script src="js/simplex.js?time=<?php echo microtime(); ?>"></script>
     </head>
     <body>
         <img id="bg" alt="Background image" src="images/back.jpg" />
