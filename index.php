@@ -91,6 +91,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
 					</div>
 					<div id="resultdiv" class="hidden">
 						<button id="backbutton">Cofnij</button>
+						<button id="generatecsv">Generuj plik csv</button>
 						<div style="clear: both;"></div>
 						<div id="resultdiv2" style="float: left;width: 45%;"></div>
 						<div id="resultdiv3" style="width: 45%;float: right;">

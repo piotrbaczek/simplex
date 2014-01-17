@@ -82,6 +82,13 @@ $(document).ajaxStart(function() {
 		$('#header_leftlogo').show();
 		$('#rightdiv').slideDown('slow');
 	});
+	$('#generatecsv').button({
+		icons: {
+			primary: "ui-icon-arrowstop-1-s"
+		}
+	}).click(function() {
+		window.location = './sources/generateCSV.php?' + encodeURI(s);
+	});
 	$('form[name=form]').validate({
 		rules: {
 			fileToUpload: {
