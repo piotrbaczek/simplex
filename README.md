@@ -1,6 +1,6 @@
 simplex
 =======
 
-My Master's degree - Dantzig's Simplex and Gommory Alogrithm
+My Master's thesis - Dantzig's Simplex and Gommory's Cutting Plane Algorithm
 Piotr Golasz
-Politechnika Gdanska 2013
+Gdansk University of Technology
