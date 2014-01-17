@@ -830,38 +830,7 @@ class Simplex {
 	public function getMinRangeArray() {
 		$x = Array();
 		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
-			$x[] = new Fraction(PHP_INT_MAX);
-		}
-		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
-			$flag = FALSE;
-			for ($j = 0; $j < $this->matrixes[0]->getCols() - 1; $j++) {
-				$b = clone $this->matrixes[0]->getElement($this->matrixes[0]->getRows() - 1, $j);
-				$temp = clone $this->matrixes[0]->getElement($i, $j);
-				if (Fraction::equalsZero($temp) || Fraction::isNegative($temp)) {
-					continue;
-				} else {
-					$b->divide($temp);
-					if (!$b->compare($x[$i]) && !$flag) {
-						if ($this->signs[$j] == enumSigns::_GEQ) {
-							$flag = TRUE;
-							$x[$i] = $b;
-						}
-					} else {
-						if ($this->signs[$j] == enumSigns::_GEQ) {
-							if (!$b->compare($x[$i])) {
-								$x[$i] = $b;
-							}
-						}
-					}
-				}
-			}
-		}
-		foreach ($x as $key => $value) {
-			if ($x[$key]->getRealValue() == PHP_INT_MAX) {
-				$x[$key] = 0;
-				continue;
-			}
-			$x[$key] = round($value->getRealValue(), 2);
+			$x[] = 0;
 		}
 		return $x;
 	}
