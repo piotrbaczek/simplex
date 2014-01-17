@@ -87,7 +87,7 @@ $(document).ajaxStart(function() {
 			primary: "ui-icon-arrowstop-1-s"
 		}
 	}).click(function() {
-		window.location = './sources/generateCSV.php?' + encodeURI(s);
+		window.open('./sources/generateCSV.php?' + encodeURI(s));
 	});
 	$('form[name=form]').validate({
 		rules: {
