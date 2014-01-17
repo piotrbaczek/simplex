@@ -35,6 +35,7 @@ class CSVGenerator {
 		$ArrayIndex = 2;
 		for ($i = 0; $i < count($tf); $i+=2) {
 			$array[0][$ArrayIndex] = $tf[$i];
+			$ArrayIndex++;
 		}
 		$rows = explode("%0D%0A", $this->textarea);
 		foreach ($rows as $key => $value) {
