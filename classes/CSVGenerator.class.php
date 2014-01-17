@@ -46,6 +46,13 @@ class CSVGenerator {
 			for ($i = 0; $i < count($left); $i+=2) {
 				$string.=$left[$i] . ';';
 			}
+			if (strpos($value, '<=') !== false) {
+				$string.='<=;';
+			} elseif (strpos($value, '>=') !== false) {
+				$string.='>=;';
+			} else {
+				$string.='=;';
+			}
 			$string.=$row[1] . ';';
 			$string.="\n";
 		}
