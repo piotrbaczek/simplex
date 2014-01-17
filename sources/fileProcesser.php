@@ -1,4 +1,5 @@
 <?php
+
 include '../classes/CSVReader.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/SimplexTableu.class.php';
@@ -21,17 +22,19 @@ if ($ss) {
 	try {
 		$simplex = new Simplex($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
 		$json[0] = count($simplex->getTargetFunction());
-		$json[1] = $simplex->getTargetFunction();
-		$json[2] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
-		$json[3] = $simplex->getPrimaryGraphJson();
-		$json[4] = $simplex->getSecondaryGraphJson();
+		$json[1] = $simplex->getMaxRangeArray();
+		$json[2] = $simplex->getMinRangeArray();
+		$json[3] = $simplex->printProblem() . $simplex->printSolution() . $simplex->printValuePair() . $simplex->printResult();
+		$json[4] = $simplex->getPrimaryGraphJson();
+		$json[5] = $simplex->getSecondaryGraphJson();
+		$json[6] = serialize($simplex);
 	} catch (Exception $e) {
 		$json[0] = -2;
-		$json[2] = TextareaProcesser::errormessage($e->getMessage());
+		$json[3] = TextareaProcesser::errormessage($e->getMessage());
 	}
 } else {
 	$json[0] = -1;
-	$json[2] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
+	$json[3] = TextareaProcesser::errormessage('Strona została wyłączona przez administratora.<br/>Prosimy spróbować później.<br/>Powodzenia na egzaminie!');
 }
-echo \json_encode($json);
+echo json_encode($json);
 ?>
