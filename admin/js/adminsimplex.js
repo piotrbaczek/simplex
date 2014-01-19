@@ -19,7 +19,7 @@ $(document).ajaxStart(function() {
 		url: "adminsources/checkactivity.php",
 		method: "POST",
 		success: function(data) {
-			if (data === 'true') {
+			if (data === 1) {
 				$('#standby').button({
 					icons: {
 						primary: "ui-icon-stop"
