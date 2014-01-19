@@ -49,6 +49,7 @@ if ($ss) {
 			$json[4] = $simplex->getPrimaryGraphJson();
 			$json[5] = $simplex->getSecondaryGraphJson();
 			$json[6] = serialize($simplex);
+			$json[7] = Array();
 		} else {
 			$json[0] = -2;
 			$json[3] = TextareaProcesser::errormessage('Puste dane lub złe dane. Proszę poprawić treść wpisanego zadania.');

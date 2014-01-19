@@ -16,11 +16,11 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 header('Content-Type: application/json');
 if ($ss) {
 	//----------------------------------------------------------------------------
-	$adres = '../download/' . $_POST['filename'] . '.csv';
-	$plik = new Processer($adres);
-	unlink($adres);
+	$adres = '../download/' . mysql_escape_string($_POST['filename']) . '.csv';
 	try {
-		$simplex = new Simplex($plik->getVariables(), $plik->getBoundaries(), $plik->getSigns(), $plik->getTargetfunction(), $plik->getMinMax(), $plik->getGomorry());
+		$processer = new Processer($adres);
+		unlink($adres);
+		$simplex = new Simplex($processer->getVariables(), $processer->getBoundaries(), $processer->getSigns(), $processer->getTargetfunction(), $processer->getMinMax(), $processer->getGomorry());
 		$json[0] = count($simplex->getTargetFunction());
 		$json[1] = $simplex->getMaxRangeArray();
 		$json[2] = $simplex->getMinRangeArray();
@@ -28,6 +28,7 @@ if ($ss) {
 		$json[4] = $simplex->getPrimaryGraphJson();
 		$json[5] = $simplex->getSecondaryGraphJson();
 		$json[6] = serialize($simplex);
+		$json[7] = $processer->getTextareaData();
 	} catch (Exception $e) {
 		$json[0] = -2;
 		$json[3] = TextareaProcesser::errormessage($e->getMessage());

@@ -112,9 +112,9 @@ class Processer extends Csv_Reader {
 					}
 				}
 			}
-			$string.=$this->getSigns()[$key] . $this->getBoundaries()[$key] . ';';
+			$string.=$this->getSigns()[$key] . $this->getBoundaries()[$key] . '&#13;&#10;';
 		}
-		$array[3] = substr($string, 0, -1);
+		$array[3] = substr($string, 0, -10);
 		unset($string);
 		return $array;
 	}
