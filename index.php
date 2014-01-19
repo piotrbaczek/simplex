@@ -11,7 +11,7 @@ $ss = activity::isactivated2('activity/active.xml') == 'true' ? true : false;
     <head>
         <meta charset="UTF-8">
         <meta name="robots" content="noindex,nofollow"/>
-        <title>Simplex &copy; 2013</title>
+        <title>Simplex &copy; 2014</title>
         <link rel="icon" type="image/x-icon" href="images/icon32.png" />
         <link rel="stylesheet" href="js/development-bundle/themes/smoothness/jquery-ui-1.8.16.custom.css" />
         <link rel="stylesheet" href="css/simplex.css" />
