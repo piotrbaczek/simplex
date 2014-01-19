@@ -89,7 +89,7 @@ class Processer extends Csv_Reader {
 			if ($key == 0) {
 				$string.=$a . 'x' . ($key + 1);
 			} else {
-				if (Fraction::isPositive($a)) {
+				if (Fraction::isPositive($a) || Fraction::equalsZero($a)) {
 					$string.='+' . $a . 'x' . ($key + 1);
 				} else {
 					$string.='-' . $a . 'x' . ($key + 1);
@@ -105,7 +105,7 @@ class Processer extends Csv_Reader {
 				if ($key2 == 0) {
 					$string.=$value2->getRealValue() . 'x' . ($key2 + 1);
 				} else {
-					if (Fraction::isPositive($value2)) {
+					if (Fraction::isPositive($value2) || Fraction::equalsZero($value2)) {
 						$string.='+' . $value2->getRealValue() . 'x' . ($key2 + 1);
 					} else {
 						$string.='-' . $value2->getRealValue() . 'x' . ($key2 + 1);

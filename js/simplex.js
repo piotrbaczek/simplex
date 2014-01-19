@@ -148,6 +148,20 @@ $(document).ajaxStart(function() {
 											}
 										}
 									});
+									if (data[7].length > 0) {
+										if (data[7][0] === 'max') {
+											$('#funct option:eq(0)').select();
+										} else {
+											$('#funct option:eq(1)').select();
+										}
+										if (data[7][1] === 'false') {
+											$('#gomorryf option:eq(0)').select();
+										} else {
+											$('#gomorryf option:eq(1)').select();
+										}
+										$('#targetfunction').empty().val(data[7][2]);
+										$('#textarea').empty().html(data[7][3]);
+									}
 									$('#resultdiv').slideDown('slow');
 									$('#resultdiv2').slideDown('slow');
 								}
