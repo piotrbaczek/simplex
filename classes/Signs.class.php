@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of Signs
+ * Class storing possible inequalities or equalities of LP problem
  *
  * @author PETTER
  */
@@ -13,6 +13,11 @@ class enumSigns {
 
 }
 
+/**
+ * Wrap up class of enumSigns
+ * @see enumSign
+ * @author Piotr Gołasz <pgolasz@gmail.com>
+ */
 class Signs {
 
 	private $sign;

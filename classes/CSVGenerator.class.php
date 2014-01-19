@@ -1,15 +1,33 @@
 <?php
 
 /**
- * Description of CSVGenerator
- *
+ * @example ../sources/generateCSV.php generating csv from input data
  * @author PETTER
  */
 class CSVGenerator {
 
+	/**
+	 * True/False corresponding to maximization function
+	 * @var String 
+	 */
 	private $function;
+
+	/**
+	 * 'true'/'false' corresponding to use of Gomory algorithm
+	 * @var String
+	 */
 	private $gomorryFunction;
+
+	/**
+	 * Target function on Linear problem URI encoded
+	 * @var String
+	 */
 	private $targetFunction;
+
+	/**
+	 * Multidimensional array with coefficients if Linear problem
+	 * @var String
+	 */
 	private $textarea;
 
 	public function __construct($function, $gomorry, $targetFunction, $textarea) {
@@ -19,6 +37,10 @@ class CSVGenerator {
 		$this->textarea = $textarea;
 	}
 
+	/**
+	 * Creates Array to be outputed as CSV from input data
+	 * @return Array
+	 */
 	public function toArray() {
 		$array = Array();
 		if ($this->function == true) {
@@ -59,6 +81,12 @@ class CSVGenerator {
 		return $array;
 	}
 
+	/**
+	 * Puts data into PHP's fputcsv() outputing as CSV
+	 * @param array $data
+	 * @static
+	 * @description 
+	 */
 	public static function outputCSV(Array $data) {
 		$output = fopen("php://output", "w");
 		foreach ($data as $row) {

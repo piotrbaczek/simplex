@@ -1,10 +1,40 @@
 <?php
 
+/**
+ * Class storing numbers in Numerator/Denominator form,
+ * which is for learning purposes more human-like and
+ * provides greater understanding of Simplex method.
+ * <p>
+ * Fraction contains of two numerators and two denominators
+ * which give numer like 1+1M
+ * which is numerator/denominator (if mnumerator !=0) + mnumerator/mdenominator
+ * @author Piotr Gołasz <pgolasz@gmail.com>
+ * @version 1.0
+ */
 class Fraction {
 
+	/**
+	 * Numerator of the Fraction
+	 * @var Integer 
+	 */
 	private $numerator;
+
+	/**
+	 * Denominator of the Fraction
+	 * @var Integer
+	 */
 	private $denominator;
+
+	/**
+	 * M - Numerator of the Fraction
+	 * @var Integer
+	 */
 	private $mnumerator;
+
+	/**
+	 * M - Denominator of the Fraction
+	 * @var Integer
+	 */
 	private $mdenominator;
 
 	public function __construct($numerator = 0, $denominator = 1, $mnumerator = 0, $mdenominator = 1) {
@@ -23,18 +53,34 @@ class Fraction {
 		$this->reduction();
 	}
 
+	/**
+	 * Getter for Numerator
+	 * @return Integer
+	 */
 	public function getNumerator() {
 		return $this->numerator;
 	}
 
+	/**
+	 * Getter for Denominator
+	 * @return Integer
+	 */
 	public function getDenominator() {
 		return $this->denominator;
 	}
 
+	/**
+	 * Getter for M-Numerator
+	 * @return Integer
+	 */
 	public function getMNumerator() {
 		return $this->mnumerator;
 	}
 
+	/**
+	 * Getter for M-Denominator
+	 * @return Integer
+	 */
 	public function getMDenominator() {
 		return $this->mdenominator;
 	}
@@ -79,48 +125,89 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Expands the Fraction (just the regular part)
+	 * $num * Fraction
+	 * @param Integer $num
+	 */
 	public function expansion($num) {
 		$this->numerator *= $num;
 		$this->denominator *= $num;
 	}
 
+	/**
+	 * Expands the M-Part of the Fraction
+	 * @param Integer $num
+	 */
 	public function mexpansion($num) {
 		$this->mnumerator *= $num;
 		$this->mdenominator *= $num;
 	}
 
+	/**
+	 * Contracts Fraction
+	 * Fraction/$num
+	 * @param Integer $num
+	 */
 	public function contraction($num) {
 		$this->numerator /= $num;
 		$this->denominator /= $num;
 	}
 
+	/**
+	 * Returns float of M-Part
+	 * @return float
+	 */
 	public function getRealM() {
 		return (int) $this->mnumerator / $this->mdenominator;
 	}
 
+	/**
+	 * Returns float of Real value of Fraction
+	 * @return float
+	 */
 	public function getRealValue() {
 		return (int) $this->numerator / $this->denominator;
 	}
 
+	/**
+	 * Compares two Fraction objects
+	 * Returns true if Fraction is bigger than $param
+	 * Returns false if $param is bigger than Fraction
+	 * Does not return a value if both objects are equal
+	 * @param Fraction or Integer $param
+	 * @return boolean
+	 */
 	public function compare($param) {
 		if ($param instanceof Fraction) {
 			if ($this->getRealM() > $param->getRealM()) {
 				return TRUE;
-			}elseif($this->getRealM() < $param->getRealM()){
+			} elseif ($this->getRealM() < $param->getRealM()) {
 				return FALSE;
-			}else{
-				if($this->getRealValue()>$param->getRealValue()){
+			} else {
+				if ($this->getRealValue() > $param->getRealValue()) {
 					return TRUE;
-				}else{
+				} else {
 					return FALSE;
 				}
 			}
 		} elseif (is_numeric($param)) {
-			$param=new Fraction($param);
+			$param = new Fraction($param);
 			$this->compare($param);
 		}
 	}
 
+	/**
+	 * Positivity test of the Fraction
+	 * Takes into consideration M values as Infinity
+	 * Returns true if positive
+	 * Returns false if negative
+	 * Does not return value if Fraction equals zero
+	 * @see equalsZero()
+	 * @see isNegative()
+	 * @param Fraction or Integer $param
+	 * @return boolean
+	 */
 	public static function isPositive($param) {
 		if ($param instanceof Fraction) {
 			if ($param->numerator > 0) {
@@ -141,6 +228,14 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Test for negativity of a Fraction
+	 * Returns true if fraction is negative
+	 * Returns false if fraction is positive
+	 * @see isPositive()
+	 * @param Fraction $param
+	 * @return boolean
+	 */
 	public static function isNegative($param) {
 		if ($param instanceof Fraction) {
 			if ($param->numerator < 0) {
@@ -161,14 +256,27 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Tests if Fraction is equal zero (Numerator and M-Numerator are both zeros).
+	 * @param Fraction $param
+	 * @return boolean
+	 */
 	public static function equalsZero($param) {
 		return $param->numerator == 0 && $param->mnumerator == 0 ? true : false;
 	}
 
+	/**
+	 * Tests if Fraction is an Integer
+	 * @param Fraction $param
+	 * @return boolean
+	 */
 	public static function isFraction($param) {
 		return $param->denominator != 1 ? true : false;
 	}
 
+	/**
+	 * Reverses a Fraction N/D into D/N
+	 */
 	public function reverse() {
 		$sign = 1;
 		$numerator = $this->numerator;
@@ -185,6 +293,11 @@ class Fraction {
 		$this->reduction();
 	}
 
+	/**
+	 * Saves number as Scientific notation
+	 * @param Float $number
+	 * @return Array
+	 */
 	public function realToFraction($number) {
 		$endOfNumber = $number - (int) $number;
 		if ($endOfNumber != 0) {
@@ -195,6 +308,11 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * outputs Fraction as Integer if Integer
+	 * and string n/d+mn/md if fraction
+	 * @return String
+	 */
 	public function __toString() {
 		$string = '';
 		$equalszero = false;
@@ -225,8 +343,14 @@ class Fraction {
 		return $string;
 	}
 
+	/**
+	 * Finds hcd (Highest Common Division) of two Integers
+	 * @static
+	 * @param Integer $a
+	 * @param Integer $b
+	 * @return Integer
+	 */
 	public static function highestCommonDivisor($a, $b) {
-//echo 'hcd('.$a.','.$b.')';
 		$a = abs($a);
 		while ($a != $b) {
 			if ($a > $b) {
@@ -238,6 +362,12 @@ class Fraction {
 		return $a;
 	}
 
+	/**
+	 * Test for equality of two Fractions
+	 * @see compare();
+	 * @param Fraction $param
+	 * @return type
+	 */
 	public function isEqual($param) {
 		if ($param instanceof Fraction) {
 			return ($param->getNumerator() == $this->numerator && $param->getDenominator() == $this->denominator) ? true : false;
@@ -246,6 +376,15 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Returns Positive side of a Fraction
+	 * used in generating cuts in Gomory's Cutting Plane Method
+	 * 
+	 * @example
+	 * ImproperPart(1/8)=1/8
+	 * ImproperPart(-1/8)=7/8
+	 * ImproperPart(1)=0
+	 */
 	public function getImproperPart() {
 		if (Fraction::isPositive(new Fraction($this->getNumerator(), $this->getDenominator()))) {
 			while ($this->numerator >= $this->denominator) {
@@ -259,6 +398,10 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * 
+	 * @param Fraction $fraction
+	 */
 	public function commonDenominator(&$fraction) {
 		$lcm = $this->leastCommonMultiple($this->denominator, $fraction->denominator);
 		$this->numerator = $this->numerator * ( $lcm / $this->denominator );
@@ -270,6 +413,11 @@ class Fraction {
 		return ( $a * $b ) / $this->highestCommonDivisor($a, $b);
 	}
 
+	/**
+	 * Returns Integer representing value of the fraction
+	 * Returns + or - PHP_INT_MAX if M-Part present
+	 * @return Integer
+	 */
 	public function getValue() {
 		return ($this->mnumerator != 0 ? ($this->mnumerator > 0 ? PHP_INT_MAX : -PHP_INT_MAX) : $this->numerator / $this->denominator);
 	}
@@ -278,11 +426,18 @@ class Fraction {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
+	/**
+	 * Multiplying Fraction by -1
+	 */
 	public function minusFraction() {
 		$this->numerator = -$this->numerator;
 		$this->mnumerator = -$this->mnumerator;
 	}
 
+	/**
+	 * Simple adding
+	 * @param Fraction or Integer $param
+	 */
 	public function add($param) {
 		if (is_numeric($param)) {
 			$s = new Fraction($param);
@@ -300,6 +455,10 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Simple substraction
+	 * @param Fraction or Integer $param
+	 */
 	public function substract($param) {
 		if (is_numeric($param)) {
 			$s = new Fraction($param);
@@ -317,6 +476,10 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Simple multiplication
+	 * @param Fraction or Integer $param
+	 */
 	public function multiply($param) {
 		if (is_numeric($param)) {
 			$s = new Fraction($param);
@@ -330,6 +493,10 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Simple division
+	 * @param Fraction or Integer $param
+	 */
 	public function divide($param) {
 		if (is_numeric($param)) {
 			$s = new Fraction($param);
@@ -345,19 +512,35 @@ class Fraction {
 		}
 	}
 
+	/**
+	 * Removes M-Part
+	 * @param Fraction $param
+	 */
 	public static function removeM($param) {
 		$param->mnumerator = 0;
 		$param->mdenominator = 1;
 	}
 
+	/**
+	 * Incrementation by 1
+	 */
 	public function increment() {
 		$this->add(new Fraction(1));
 	}
 
+	/**
+	 * Test for M-Part 
+	 * @param Fraction $param
+	 * @return boolean
+	 */
 	public static function hasM($param) {
 		return $param->getMNumerator() == 0 ? false : true;
 	}
 
+	/**
+	 * Tests if Fraction is an integer
+	 * @return boolean
+	 */
 	public function isInteger() {
 		return is_integer($this->numerator / $this->denominator);
 	}

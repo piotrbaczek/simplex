@@ -1,9 +1,22 @@
 <?php
 
+/** Outputs Picture with Gauss-Jordan transformation of current SimpleMatrix element
+ * @author Piotr Gołasz <pgolasz@gmail.com>
+ * @version 1.0
+ * @see DivisionCoefficient
+ */
 class Picture {
 
 	private $dimension = Array();
 
+	/**
+	 * 
+	 * @param String $a
+	 * @param Integer $b
+	 * @param Integer $c
+	 * @param Integer $d
+	 * @param Integer $e
+	 */
 	public function __construct($a = 'r', $b = 2, $c = 3, $d = 4, $e = 5) {
 		header("Content-type: image/png");
 		$this->countsize($a, $b, $c, $d, $e);

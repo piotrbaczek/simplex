@@ -1,9 +1,14 @@
 <?php
 
 /**
- * Description of Simplex2
- *
- * @author PETTER
+ * Dantzig's Simplex Method and Gomory's Cutting Plane Method
+ * Master thesis for Gdańsk University of Technology
+ * 
+ * GNU Licence 2014 For public use
+ * @author Piotr Gołasz <pgolasz@gmail.com>
+ * @see sources/receiver.php
+ * @example
+ * 
  */
 class Simplex {
 
@@ -21,6 +26,16 @@ class Simplex {
 	private $basisVariable;
 	private $nonBasisVariable;
 
+	/**
+	 * Construct with PL problem data
+	 * @param array $variables
+	 * @param array $boundaries
+	 * @param array $signs
+	 * @param array $targetfunction
+	 * @param type $max
+	 * @param type $gomory
+	 * @throws Exception
+	 */
 	public function __construct(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomory = false) {
 		$this->gomory = (boolean) $gomory;
 		$this->extreme = (boolean) $max;
@@ -54,7 +69,7 @@ class Simplex {
 			}
 		}
 
-		$this->matrixes[$this->index] = new SimplexTableu($this->N, $this->N + $this->M - 1 + $this->wrongsigns);
+		$this->matrixes[$this->index] = new SimplexTableau($this->N, $this->N + $this->M - 1 + $this->wrongsigns);
 
 		for ($i = 0; $i < $this->N - 1; $i++) {
 			for ($j = 0; $j < $this->M - 1; $j++) {
@@ -106,7 +121,6 @@ class Simplex {
 		}
 
 		$this->partialAdding();
-		//--------------------------------------------
 		$this->Solve();
 	}
 
@@ -179,7 +193,7 @@ class Simplex {
 
 			$this->simplexIteration();
 			$this->partialAdding();
-			//-------------------------------
+
 			if ($this->checkTargetFunction()) {
 				$this->matrixes[$this->index]->setMainCol(-1);
 				$this->matrixes[$this->index]->setMainRow(-1);
@@ -200,7 +214,7 @@ class Simplex {
 				break;
 			}
 			$this->index++;
-			$this->matrixes[$this->index] = new SimplexTableu($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows() + 2);
+			$this->matrixes[$this->index] = new SimplexTableau($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows() + 2);
 			$this->matrixes[$this->index]->swapGomory();
 			$this->matrixes[$this->index]->setIndex($this->index);
 			$this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
@@ -232,6 +246,10 @@ class Simplex {
 		}
 	}
 
+	/**
+	 * Prints solution (All Tableau's) of LP problem solved
+	 * @return string
+	 */
 	public function printSolution() {
 		$string = '';
 		foreach ($this->matrixes as $key => $value) {
@@ -345,24 +363,6 @@ class Simplex {
 		return $string;
 	}
 
-	public function testPrint() {
-		foreach ($this->matrixes as $value) {
-			echo 'Index:' . $value->getIndex() . '<br/>';
-			echo 'Col: ' . $value->getMainCol() . '<br/>';
-			echo 'Row: ' . $value->getMainRow() . '<br/>';
-			echo 'Gomory: ' . $value->isGomory() . '<br/>';
-			echo '<table border="1">';
-			for ($i = 0; $i < $value->getCols(); $i++) {
-				echo '<tr>';
-				for ($j = 0; $j < $value->getRows(); $j++) {
-					echo '<td>' . $value->getElement($j, $i) . '</td>';
-				}
-				echo '</tr>';
-			}
-			echo '</table><br/>';
-		}
-	}
-
 	private function gomoryRow() {
 		foreach ($this->getValuePair() as $key => $value) {
 			if (!$value->isInteger()) {
@@ -417,14 +417,27 @@ class Simplex {
 		return true;
 	}
 
+	/*
+	 * Returns value of Function on Maximized / Minimized point of PL cube
+	 */
+
 	public function getResult() {
 		return $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1);
 	}
 
+	/**
+	 * Prints result as 'W=35'
+	 * @return String
+	 */
 	public function printResult() {
 		return 'W=' . $this->getResult();
 	}
 
+	/**
+	 * Prints Error Message in jQuery UI format
+	 * @static
+	 * @param type $message
+	 */
 	public static function errorMessage($message) {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
@@ -469,6 +482,10 @@ class Simplex {
 		}
 	}
 
+	/**
+	 * Prints problem read by class from input data
+	 * @return string
+	 */
 	public function printProblem() {
 		$string = '';
 		$string.=$this->extreme ? 'max ' : 'min ';
@@ -527,6 +544,11 @@ class Simplex {
 		return $string;
 	}
 
+	/**
+	 * Returns Array of current Point
+	 * @param Integer $indexarray
+	 * @return array
+	 */
 	public function getValuePair($indexarray = -1) {
 		if ($indexarray == -1) {
 			$indexarray = $this->index;
@@ -545,6 +567,10 @@ class Simplex {
 		return $x;
 	}
 
+	/**
+	 * Returns data for jQuery.flot graph
+	 * @return array
+	 */
 	public function getPrimaryGraphJson() {
 		$a = 0;
 		$json = Array();
@@ -612,6 +638,11 @@ class Simplex {
 		return $json;
 	}
 
+	/**
+	 * Returns Target Function Coefficients as Array
+	 * Only non-M non-zero elements included
+	 * @return array
+	 */
 	public function getTargetFunction() {
 		$x = Array();
 		foreach ($this->targetfunction[$this->index] as $key => $value) {
@@ -624,6 +655,10 @@ class Simplex {
 		return $x;
 	}
 
+	/**
+	 * Returns data for XpressCanvas graph
+	 * @return String
+	 */
 	public function getSecondaryGraphJson() {
 		$point = new Point(count($this->getMaxRangeArray()));
 		$a = 0;
@@ -738,6 +773,11 @@ class Simplex {
 		return $json;
 	}
 
+	/**
+	 * Checks if Point $p is part of Simplex feasible solution
+	 * @param Point $p
+	 * @return boolean
+	 */
 	public function isValidPoint(Point $p) {
 		$currentRow = new Point($p->getPointDimensionAmount());
 		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
@@ -770,6 +810,11 @@ class Simplex {
 		return TRUE;
 	}
 
+	/**
+	 * Prints current point of multidimensional cube
+	 * @param type $indexarray
+	 * @return string
+	 */
 	private function printCurrentPoint($indexarray = -1) {
 		if ($indexarray == -1) {
 			$indexarray = $this->index;
@@ -784,6 +829,10 @@ class Simplex {
 		return $string;
 	}
 
+	/**
+	 * Returns array of Maximal value of each dimension's range
+	 * @return array
+	 */
 	public function getMaxRangeArray() {
 		$x = Array();
 		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
@@ -827,6 +876,10 @@ class Simplex {
 		return $x;
 	}
 
+	/**
+	 * Returns Array of Zero's
+	 * @return Array
+	 */
 	public function getMinRangeArray() {
 		$x = Array();
 		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
@@ -835,6 +888,12 @@ class Simplex {
 		return $x;
 	}
 
+	/**
+	 * Returns array of points where slider parameters present
+	 * @param array $dimensions
+	 * @param array $values
+	 * @return type
+	 */
 	public function getRedrawData(Array $dimensions, Array $values) {
 		$json = Array();
 		foreach ($values as $key => $value) {

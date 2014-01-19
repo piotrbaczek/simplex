@@ -2,7 +2,7 @@
 
 include '../classes/CSVReader.class.php';
 include '../classes/Simplex.class.php';
-include '../classes/SimplexTableu.class.php';
+include '../classes/SimplexTableau.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/Processer.class.php';
 include '../classes/activity.class.php';

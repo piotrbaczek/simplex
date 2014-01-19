@@ -1,76 +1,78 @@
 ﻿<?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- * Description of Processer
+ * Forms CSV input into arrays
+ * that can be imported into Simplex class
+ * @see Simplex
  *
  * @author PETTER
  */
 class Processer extends Csv_Reader {
 
-	public $tabela;
-	private $a = array();
-	private $b = array();
-	private $c = array();
-	private $d = array();
-	private $funkcja;
+	private $table;
+	private $targetfunction = array();
+	private $variables = array();
+	private $signs = array();
+	private $boundaries = array();
+	private $function;
 	private $gomorry;
 	private $znaki = array("<=", ">=", "=");
 
+	/**
+	 * Construct with *.csv file
+	 * @param File $plik
+	 */
 	public function __construct($plik) {
 		parent::__construct($plik);
-		$this->tabela = parent::get();
-		if ($this->tabela['0']['0'] != "max" && $this->tabela['0']['0'] != "min") {
+		$this->table = parent::get();
+		if ($this->table['0']['0'] != "max" && $this->table['0']['0'] != "min") {
 			$this->errormessage('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.');
 		} else {
-			$this->funkcja = $this->tabela['0']['0'];
+			$this->function = $this->table['0']['0'];
 		}
-		if ($this->tabela['0']['1'] != 'false' && $this->tabela['0']['1'] != 'true') {
+		if ($this->table['0']['1'] != 'false' && $this->table['0']['1'] != 'true') {
 			$this->errormessage('Nierozpoznane zastosowanie algorytmu Gomorry\'ego. Drugie pole powinno zawierać \'true\' lub \'false\'.');
 		} else {
-			$this->gomorry = ($this->tabela['0']['1'] == 'true' ? true : false);
+			$this->gomorry = ($this->table['0']['1'] == 'true' ? true : false);
 		}
-		$bb = count($this->tabela['1']);
+		$bb = count($this->table['1']);
 		for ($i = 1; $i < $bb; $i++) {
-			if ($bb != count($this->tabela[$i])) {
-				$this->errormessage('Równania są różnej długości. Ilość zmiennych równania powinna wynosić ' . $bb . ', a w równaniu ' . $i . ' jest ich ' . count($this->tabela[$i]));
+			if ($bb != count($this->table[$i])) {
+				$this->errormessage('Równania są różnej długości. Ilość zmiennych równania powinna wynosić ' . $bb . ', a w równaniu ' . $i . ' jest ich ' . count($this->table[$i]));
 				break;
 			}
 		}
-		foreach ($this->tabela[0] as $key => $value) {
+		foreach ($this->table[0] as $key => $value) {
 			if (is_numeric(trim($value))) {
 				if (strpos($value, '/')) {
 					$temp = explode('/', value);
-					$this->a[] = new Fraction($temp[0], $temp[1]);
+					$this->targetfunction[] = new Fraction($temp[0], $temp[1]);
 				} else {
-					$this->a[] = new Fraction(trim($value));
+					$this->targetfunction[] = new Fraction(trim($value));
 				}
 			}
 		}
 
-		$aa = count($this->tabela);
+		$aa = count($this->table);
 		$k = 0;
 		for ($i = 1; $i < $aa; $i++) {
 			for ($j = 0; $j < $bb; $j++) {
-				if (in_array($this->tabela[$i][$j], $this->znaki)) {
-					$this->c[] = $this->tabela[$i][$j];
-					$a = trim($this->tabela[$i][++$j]);
+				if (in_array($this->table[$i][$j], $this->znaki)) {
+					$this->signs[] = $this->table[$i][$j];
+					$a = trim($this->table[$i][++$j]);
 					if (strpos($a, '/')) {
 						$temp = explode('/', $a);
-						$this->d[] = new Fraction($temp[0], $temp[1]);
+						$this->boundaries[] = new Fraction($temp[0], $temp[1]);
 					} else {
-						$this->d[] = new Fraction($a);
+						$this->boundaries[] = new Fraction($a);
 					}
 				} else {
-					$value = trim($this->tabela[$i][$j]);
+					$value = trim($this->table[$i][$j]);
 					if (strpos($value, '/')) {
 						$temp = explode('/', $value);
-						$this->b[$k][$j] = new Fraction($temp[0], $temp[1]);
+						$this->variables[$k][$j] = new Fraction($temp[0], $temp[1]);
 					} else {
-						$this->b[$k][$j] = new Fraction($value);
+						$this->variables[$k][$j] = new Fraction($value);
 					}
 				}
 			}
@@ -78,6 +80,10 @@ class Processer extends Csv_Reader {
 		}
 	}
 
+	/**
+	 * Returns array of inputs
+	 * @return Array
+	 */
 	public function getTextareaData() {
 		$array = Array();
 		$array[0] = $this->getMinMax();
@@ -119,32 +125,61 @@ class Processer extends Csv_Reader {
 		return $array;
 	}
 
+	/**
+	 * Output Error Message in jQuery UI format
+	 * @param string $message
+	 * @static
+	 */
 	public static function errormessage($message) {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
+	/**
+	 * Return array of elements from target function
+	 * @return array
+	 */
 	public function getTargetFunction() {
-		return $this->a;
+		return $this->targetfunction;
 	}
 
+	/**
+	 * Returns array of LP coefficients
+	 * @return array
+	 */
 	public function getVariables() {
-		return $this->b;
+		return $this->variables;
 	}
 
+	/**
+	 * Returns array of enumSign objects - signs from [<=,>=,=]
+	 * @return array
+	 */
 	public function getSigns() {
-		return $this->c;
+		return $this->signs;
 	}
 
+	/**
+	 * Returns boundaries of each LP equation
+	 * @return array
+	 */
 	public function getBoundaries() {
-		return $this->d;
+		return $this->boundaries;
 	}
 
+	/**
+	 * Returns true/false if Gomory's Cutting Plane Algorithm should be used
+	 * @return boolean
+	 */
 	public function getGomorry() {
 		return $this->gomorry;
 	}
 
+	/**
+	 * Returns true if max, false if min
+	 * @return boolean
+	 */
 	public function getMinMax() {
-		return $this->funkcja;
+		return $this->function;
 	}
 
 }

@@ -1,20 +1,30 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Point
+ * Generates array of $size-dimensional point coefficients
+ * @example
+ * A=[0,1,2,3,4,5]
+ * $a=new Point();
+ * $a->setPointDimension(0,0);
+ * * $a->setPointDimension(1,1);
+ * * $a->setPointDimension(2,2);
+ * * $a->setPointDimension(3,3);
+ * * $a->setPointDimension(4,4);
+ * * $a->setPointDimension(5,5);
+ * echo $a;
  *
  * @author PETTER
+ * @version 1.0
  */
 class Point {
 
 	private $array;
 
+	/**
+	 * Construct array of size $size
+	 * @param Integer $size
+	 * @throws Exception
+	 */
 	public function __construct($size = 0) {
 		if ($size == 0) {
 			throw new Exception('Unspecified size of array in ' . __FUNCTION__);
@@ -26,12 +36,22 @@ class Point {
 		}
 	}
 
+	/**
+	 * Resets point
+	 * (Setting point to [0,0,.......]
+	 */
 	public function resetPoint() {
 		for ($i = 0; $i < count($this->array); $i++) {
 			$this->array[$i] = 0;
 		}
 	}
 
+	/**
+	 * Setting $key-th dimension to $value
+	 * @param Integer $key
+	 * @param Integer $value
+	 * @throws Exception
+	 */
 	public function setPointDimension($key, $value) {
 		if ($key >= $this->getPointDimensionAmount()) {
 			throw new Exception(__FUNCTION__ . ' array exceeded. (' . $key . ':' . $this->getPointDimensionAmount() . ')');
@@ -40,14 +60,30 @@ class Point {
 		}
 	}
 
+	/**
+	 * Returns point as array
+	 * @return Array
+	 */
 	public function toArray() {
 		return $this->array;
 	}
 
+	/**
+	 * Returns number of point's dimensions (array's count)
+	 * @return Integer
+	 */
 	public function getPointDimensionAmount() {
 		return count($this->array);
 	}
 
+	/**
+	 * Multiply's two points by themselfes
+	 * Returns Sum of multiplications
+	 * x1*x2+y1*y2+z1*z1+....=$sum
+	 * @param Point $p
+	 * @return Integer
+	 * @throws Exception
+	 */
 	public function multiplyBy(Point $p) {
 		if ($this->getPointDimensionAmount() == $p->getPointDimensionAmount()) {
 			$sum = 0;
@@ -61,6 +97,10 @@ class Point {
 		}
 	}
 
+	/**
+	 * Outputs string in format [x,y,z,a,b,c,....]
+	 * @return string
+	 */
 	public function __toString() {
 		$x = $this->toArray();
 		$string = '[';
