@@ -49,13 +49,15 @@
 					showAnimation: true,
 					remoteService: 'source.php',
 					remoteParams: {'a': $('#select1 option:selected').val()},
-					remoteUpdate: true
+					remoteUpdate: true,
+					remoteDirection: "next"
 				});
 				//-----------------------
 				//TRY REMOTE
 				$('#button1').click(function() {
-					//jak zainicjować remote call?
-					
+					//HOW TO UPDATE?
+					//console.log(cx);
+					cx.updateRemoteData(cx);
 				});
 			});
 		</script>

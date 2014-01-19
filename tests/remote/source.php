@@ -3,10 +3,10 @@
 $json = array();
 if (isset($_GET['a'])) {
 	switch ($_GET['a']) {
-		case 1:
+		case 'a':
 			$json[] = Array(1, 1, 1);
 			break;
-		case 2:
+		case 'b':
 			$json[] = Array(2, 2, 2);
 			break;
 		default :
