@@ -78,6 +78,47 @@ class Processer extends Csv_Reader {
 		}
 	}
 
+	public function getTextareaData() {
+		$array = Array();
+		$array[0] = $this->getMinMax();
+		$array[1] = $this->gomorry ? 'true' : 'false';
+		$string = '';
+		foreach ($this->getTargetFunction() as $key => $value) {
+			$a = clone $value;
+			$a->minusFraction();
+			if ($key == 0) {
+				$string.=$a . 'x' . ($key + 1);
+			} else {
+				if (Fraction::isPositive($a)) {
+					$string.='+' . $a . 'x' . ($key + 1);
+				} else {
+					$string.='-' . $a . 'x' . ($key + 1);
+				}
+			}
+		}
+		$array[2] = $string;
+		unset($string);
+		$string = '';
+
+		foreach ($this->getVariables() as $key => $value) {
+			foreach ($value as $key2 => $value2) {
+				if ($key2 == 0) {
+					$string.=$value2->getRealValue() . 'x' . ($key2 + 1);
+				} else {
+					if (Fraction::isPositive($value2)) {
+						$string.='+' . $value2->getRealValue() . 'x' . ($key2 + 1);
+					} else {
+						$string.='-' . $value2->getRealValue() . 'x' . ($key2 + 1);
+					}
+				}
+			}
+			$string.=$this->getSigns()[$key] . $this->getBoundaries()[$key] . ';';
+		}
+		$array[3] = substr($string, 0, -1);
+		unset($string);
+		return $array;
+	}
+
 	public static function errormessage($message) {
 		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
