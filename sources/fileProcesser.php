@@ -16,7 +16,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 header('Content-Type: application/json');
 if ($ss) {
 	//----------------------------------------------------------------------------
-	$adres = '../download/' . mysql_escape_string($_POST['filename']) . '.csv';
+	$adres = '../download/' . mysql_real_escape_string($_POST['filename']) . '.csv';
 	try {
 		$processer = new Processer($adres);
 		unlink($adres);
