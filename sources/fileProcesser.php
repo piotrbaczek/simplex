@@ -9,6 +9,7 @@ include '../classes/activity.class.php';
 include '../classes/Signs.class.php';
 include '../classes/DivisionCoefficient.class.php';
 include '../classes/Point.class.php';
+include '../classes/TextareaProcesser.class.php';
 $ss = activity::isactivated2('../activity/active.xml') == 'true' ? true : false;
 $json = Array();
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -16,8 +17,11 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 header('Content-Type: application/json');
 if ($ss) {
 	//----------------------------------------------------------------------------
-	$adres = '../download/' . mysql_real_escape_string($_POST['filename']) . '.csv';
 	try {
+		if (!isset($_POST['filename'])) {
+			throw new Exception('Name of the file cannot be empty!');
+		}
+		$adres = '../download/' . mysql_real_escape_string($_POST['filename']) . '.csv';
 		$processer = new Processer($adres);
 		unlink($adres);
 		$simplex = new Simplex($processer->getVariables(), $processer->getBoundaries(), $processer->getSigns(), $processer->getTargetfunction(), $processer->getMinMax(), $processer->getGomorry());
