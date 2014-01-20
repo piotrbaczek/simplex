@@ -319,7 +319,9 @@ class Simplex {
 			}
 			$string.='<br/>';
 		}
-		$string.=Simplex::errorMessage($this->eMessage);
+		if (strlen($this->eMessage) != 0) {
+			$string.=Simplex::errorMessage($this->eMessage);
+		}
 		return $string;
 	}
 
