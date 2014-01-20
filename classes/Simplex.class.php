@@ -25,6 +25,7 @@ class Simplex {
 	private $cCoefficient;
 	private $basisVariable;
 	private $nonBasisVariable;
+	private $eMessage = '';
 
 	/**
 	 * Construct with PL problem data
@@ -172,7 +173,7 @@ class Simplex {
 			}
 			$q = $this->matrixes[$this->index]->findBaseRow($p);
 			if ($q == -1) {
-				$this->errorMessage("Linear problem is unbounded");
+				$this->eMessage.='Linear problem is unbounded';
 				unset($this->matrixes[$this->index]);
 				$this->index--;
 				break;
@@ -318,6 +319,7 @@ class Simplex {
 			}
 			$string.='<br/>';
 		}
+		$string.=Simplex::errorMessage($this->eMessage);
 		return $string;
 	}
 
@@ -436,10 +438,10 @@ class Simplex {
 	/**
 	 * Prints Error Message in jQuery UI format
 	 * @static
-	 * @param type $message
+	 * @param String $message
 	 */
 	public static function errorMessage($message) {
-		echo '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
+		return '<div class="ui-widget"><div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Alert:</strong>' . $message . '</p></div>';
 	}
 
 	private function swapBase() {
@@ -641,7 +643,7 @@ class Simplex {
 	/**
 	 * Returns Target Function Coefficients as Array
 	 * Only non-M non-zero elements included
-	 * @return array
+	 * @return Array
 	 */
 	public function getTargetFunction() {
 		$x = Array();
@@ -831,7 +833,7 @@ class Simplex {
 
 	/**
 	 * Returns array of Maximal value of each dimension's range
-	 * @return array
+	 * @return Array
 	 */
 	public function getMaxRangeArray() {
 		$x = Array();
