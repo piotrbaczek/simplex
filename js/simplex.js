@@ -11,7 +11,7 @@ $(document).ajaxStart(function() {
 }).ajaxError(function() {
 	$.unblockUI();
 }).ready(function() {
-	var grapher;
+	var grapher = new Grapher();
 	$.validator.addMethod("regex", function(value, element) {
 		return this.optional(element) || /(([0-9]*x[0-9]*[+]?)+|([0-9]\/[1-9][0-9]*x[0-9]*)[+]?)(<=|>=|=)[0-9]+/g.test(value);
 	}, "Wprowadzona tre\u015bć zadania jest nieprawidłowa - Tylko forma Axa+BxB+...<=C (>=C lub =C)jest dopuszczalna.");
@@ -49,7 +49,7 @@ $(document).ajaxStart(function() {
 				data: s,
 				dataType: "json",
 				success: function(data) {
-					grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
+					grapher.__run(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
 					$('table.result td[data-dane]').tooltip({
 						delay: 0,
 						showURL: false,
@@ -131,7 +131,7 @@ $(document).ajaxStart(function() {
 								data: {'filename': data1.msg},
 								dataType: "json",
 								success: function(data) {
-									grapher = new Grapher(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
+									grapher.__run(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
 									$('table.result td[data-dane]').tooltip({
 										delay: 0,
 										showURL: false,

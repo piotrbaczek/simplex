@@ -1,12 +1,5 @@
 var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdiv) {
-	this.data = data;
 	this.redrawURL = 'sources/redraw.php';
-	this.backup = data;
-	this.slidersdiv = slidersdiv;
-	this.placeholder = placeholder;
-	this.canvas = canvas;
-	this.textdiv = textdiv;
-	this.defaultdiv = defaultdiv;
 	this.x = {};
 	this.cx = "";
 	this.sliders = [];
@@ -14,29 +7,45 @@ var Grapher = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdi
 	this.checkboxes = [];
 	this.vars = [];
 	this.variables = ["x1", "x2", "x3"];
-	this.__run();
 };
-Grapher.prototype.__run = function() {
-	switch (this.data[0]) {
-		case -1:
-			//Forbidden
-			this.defaultdiv.empty().append(this.data[3]);
-			break;
-		case -2:
-			//Exception
-			this.defaultdiv.empty().append(this.data[3]);
-			break;
-		case 2:
-			this.textdiv.empty().append(this.data[3]);
-			this.plot2d();
-			this.plot3d();
-			break;
-		default:
-			this.textdiv.empty().append(this.data[3]);
-			this.appender();
-			this.plot3d();
-			this.placeholder.hide();
+Grapher.prototype.__run = function(data, slidersdiv, placeholder, canvas, textdiv, defaultdiv) {
+	this.data = data;
+	this.backup = data;
+	this.slidersdiv = slidersdiv;
+	this.placeholder = placeholder;
+	this.canvas = canvas;
+	this.textdiv = textdiv;
+	this.defaultdiv = defaultdiv;
+	if (this.data.length === 0 || this.data[0].length === 0) {
+		alert('Otrzymano pustą tablicę. Error!');
+	} else {
+		switch (this.data[0]) {
+			case -1:
+				//Forbidden
+				this.defaultdiv.empty().append(this.data[3]);
+				break;
+			case -2:
+				//Exception
+				this.defaultdiv.empty().append(this.data[3]);
+				break;
+			case 2:
+				this.textdiv.empty().append(this.data[3]);
+				this.plot2d();
+				this.plot3d();
+				break;
+			case 3:
+				this.textdiv.empty().append(this.data[3]);
+				this.plot3d();
+				this.placeholder.hide();
+				break;
+			default:
+				this.textdiv.empty().append(this.data[3]);
+				this.appender();
+				this.plot3d();
+				this.placeholder.hide();
+		}
 	}
+
 };
 Grapher.prototype.hideSlides = function() {
 	this.slidersdiv.hide();
@@ -68,25 +77,31 @@ Grapher.prototype.setX = function() {
 	};
 };
 Grapher.prototype.plot3d = function() {
-	this.setVars();
-	this.setX();
-	this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
-		graphType: "Scatter3D",
-		useFlashIE: true,
-		xAxis: [
-			this.variables[0]
-		],
-		yAxis: [
-			this.variables[1]
-		],
-		zAxis: [
-			this.variables[2]
-		],
-		scatterType: false,
-		setMinX: 0,
-		setMinY: 0,
-		setMinZ: 0
-	});
+	if (this.cx instanceof CanvasXpress) {
+		this.setVars();
+		this.setX();
+		this.cx.updateData(this.x);
+	} else {
+		this.setVars();
+		this.setX();
+		this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
+			graphType: "Scatter3D",
+			useFlashIE: true,
+			xAxis: [
+				this.variables[0]
+			],
+			yAxis: [
+				this.variables[1]
+			],
+			zAxis: [
+				this.variables[2]
+			],
+			scatterType: false,
+			setMinX: 0,
+			setMinY: 0,
+			setMinZ: 0
+		});
+	}
 };
 
 Grapher.prototype.plot2d = function() {
@@ -117,10 +132,8 @@ Grapher.prototype.getSliderValues = function() {
 		if (this.checkboxes[i] === undefined) {
 			continue;
 		}
-		if (this.checkboxes[i].is(':checked')) {
-			values[i] = new Array();
-			values[i][0] = this.sliders[i].slider("values", 0);
-			values[i][1] = this.sliders[i].slider("values", 1);
+		if (!this.checkboxes[i].is(':checked')) {
+			values[i] = this.sliders[i].slider("value");
 		}
 	}
 	return values;
@@ -128,7 +141,7 @@ Grapher.prototype.getSliderValues = function() {
 Grapher.prototype.appender = function() {
 	this.slidersdiv.empty();
 	this.showSlides();
-	for (var i = 0; i < this.data[1].length; i++) {
+	for (var i = 0; i < this.data[0]; i++) {
 		if (this.data[1][i] === 0) {
 			this.checkboxes[i] = undefined;
 		} else {
@@ -137,21 +150,21 @@ Grapher.prototype.appender = function() {
 				if (i < 3) {
 					string += 'checked';
 				}
-				string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + ($this.data[2][i] + " - " + $this.data[1][i]) + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
+				string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + ($this.data[1][i]) + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
 				$this.slidersdiv.append(string);
 				$this.sliders[i] = $('#slider_' + i);
 				$this.inputs[i] = $('#slider_' + i + '_input');
 				$this.checkboxes[i] = $('#checkbox_' + i);
 				$this.checkboxes[i].data('index', i);
 				$this.sliders[i].slider({
-					range: true,
+					range: "max",
 					min: $this.data[2][i],
 					max: $this.data[1][i],
-					values: [$this.data[2][i], $this.data[1][i]],
+					value: $this.data[2][i],
 					step: $this.data[1][i] / 10,
 					stop: function(event, ui) {
-						$this.inputs[i].val(ui.values[0] + '-' + ui.values[1]);
-						if ($this.checkboxes[i].is(':checked')) {
+						$this.inputs[i].val(ui.value);
+						if (!$this.checkboxes[i].is(':checked')) {
 							$this.redraw();
 						}
 					}
@@ -174,14 +187,21 @@ Grapher.prototype.redraw = function() {
 				dataType: "json",
 				type: "POST",
 				data: {'object': $this.data[6], "dimensions": $this.getDimensions(), "values": $this.getSliderValues()},
-				success: function(data) {
-					if (data.length !== 0) {
-						$this.data[5] = data;
-						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
-						$this.plot3d();
+				success: function(ajaxData) {
+					if (ajaxData.length !== 0) {
+//						$this.data[5] = ajaxData;
+//						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
+//						$this.setVars();
+//						$this.setX();
+//						$this.cx.updateData($this.x);
+						alert(JSON.stringify(ajaxData));
 					} else {
 						alert('Ten zbiór wartości jest pusty.');
 					}
+				},
+				error: function(ajaxData) {
+					$.unblockUI();
+					alert(JSON.stringify(ajaxData));
 				}
 			});
 		})(this);
