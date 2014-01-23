@@ -1,7 +1,7 @@
 <?php
 
 include '../classes/Simplex.class.php';
-include '../classes/SimplexTableu.class.php';
+include '../classes/SimplexTableau.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/DivisionCoefficient.class.php';
 include '../classes/Signs.class.php';
