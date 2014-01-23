@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<title>Points testing</title>
+		<script src="http://simplexpg.zz.mu/js/jquery.js"></script>
+		<script src="http://simplexpg.zz.mu/js/CanvasXpress.min.js"></script>
+		<script src="http://simplexpg.zz.mu/js/excanvas.js"></script>
+		<script>
+			$(document).ready(function() {
+				vars = new Array();
+				data = [[0, 0, 0]];
+				variables = ["x1", "x2", "x3"];
+				x = {};
+
+				function generateData(data) {
+					vars = new Array();
+					for (var i = 0; i < data.length; i++) {
+						vars[i] = ("Punkt" + (i + 1));
+					}
+					x = {
+						"y": {
+							"vars": vars,
+							"smps": [
+								variables[0],
+								variables[1],
+								variables[2]
+							],
+							"desc": [
+								"Simplex method"
+							],
+							"data": data
+						}
+					};
+					return x;
+				}
+
+				//--------------------------
+
+				x = generateData(data);
+				cx = new CanvasXpress('canvas1', x, {
+					graphType: "Scatter3D",
+					useFlashIE: true,
+					xAxis: [
+						variables[0]
+					],
+					yAxis: [
+						variables[1]
+					],
+					zAxis: [
+						variables[2]
+					],
+					scatterType: false,
+					setMinX: 0,
+					setMinY: 0,
+					setMinZ: 0,
+					showAnimation: true,
+				});
+				//-----------------------
+				//TRY REMOTE
+				$('#button1').click(function() {
+					//I AJAX AND GET
+					$.ajax({
+						url: "source.php",
+						dataType: "json",
+						type: "GET",
+						data: {'a': $('#select1 option:selected').val()},
+						success: function(ajaxData) {
+							if (Array.isArray(ajaxData) && ajaxData.length > 0) {
+								cx.updateData(generateData(ajaxData));
+							}
+						},
+						error: function(ajaxData) {
+							alert(ajaxData);
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas1" width="613" height="500"></canvas>
+		<select id="select1">
+			<option value="a">a</option>
+			<option value="b">b</option>
+		</select>
+		<input type="button" id="button1" value="Send"/>
+	</body>
+</html>
