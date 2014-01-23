@@ -8,28 +8,36 @@
 		<script src="http://simplexpg.zz.mu/js/excanvas.js"></script>
 		<script>
 			$(document).ready(function() {
-				var vars = [];
-				var data = [[0, 0, 0]];
-				var variables = ["x1", "x2", "x3"];
+				vars = new Array();
+				data = [[0, 0, 0]];
+				variables = ["x1", "x2", "x3"];
 				x = {};
-				//--------------------------
-				for (var i = 0; i < data.length; i++) {
-					vars[i] = ("Punkt" + (i + 1));
-				}
-				x = {
-					"y": {
-						"vars": vars,
-						"smps": [
-							variables[0],
-							variables[1],
-							variables[2]
-						],
-						"desc": [
-							"Simplex method"
-						],
-						"data": data
+
+				function generateData(data) {
+					vars = new Array();
+					for (var i = 0; i < data.length; i++) {
+						vars[i] = ("Punkt" + (i + 1));
 					}
-				};
+					x = {
+						"y": {
+							"vars": vars,
+							"smps": [
+								variables[0],
+								variables[1],
+								variables[2]
+							],
+							"desc": [
+								"Simplex method"
+							],
+							"data": data
+						}
+					};
+					return x;
+				}
+
+				//--------------------------
+
+				x = generateData(data);
 				cx = new CanvasXpress('canvas1', x, {
 					graphType: "Scatter3D",
 					useFlashIE: true,
@@ -47,17 +55,25 @@
 					setMinY: 0,
 					setMinZ: 0,
 					showAnimation: true,
-					remoteService: 'source.php',
-					remoteParams: {'a': $('#select1 option:selected').val()},
-					remoteUpdate: true,
-					remoteDirection: "next"
 				});
 				//-----------------------
 				//TRY REMOTE
 				$('#button1').click(function() {
-					//HOW TO UPDATE?
-					//console.log(cx);
-					cx.updateRemoteData(cx);
+					//I AJAX AND GET
+					$.ajax({
+						url: "source.php",
+						dataType: "json",
+						type: "GET",
+						data: {'a': $('#select1 option:selected').val()},
+						success: function(ajaxData) {
+							if (Array.isArray(ajaxData) && ajaxData.length > 0) {
+								cx.updateData(generateData(ajaxData));
+							}
+						},
+						error: function(ajaxData) {
+							alert(ajaxData);
+						}
+					});
 				});
 			});
 		</script>
