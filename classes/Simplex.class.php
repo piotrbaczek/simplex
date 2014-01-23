@@ -698,8 +698,8 @@ class Simplex {
 				}
 			}
 			if ($this->extreme) {
-				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
-					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
+				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 10)) {
+					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 10)) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
@@ -893,7 +893,7 @@ class Simplex {
 					$point->setPointDimension(1, $j);
 					$point->setPointDimension(2, $k);
 					if ($this->isValidPoint($point, $decreaser)) {
-						$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
+						$json[] = Array((float) round($i, 2), (float) round($j, 2), (float) round($k, 2));
 					}
 				}
 			}
