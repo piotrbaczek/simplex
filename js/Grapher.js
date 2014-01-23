@@ -189,12 +189,11 @@ Grapher.prototype.redraw = function() {
 				data: {'object': $this.data[6], "dimensions": $this.getDimensions(), "values": $this.getSliderValues()},
 				success: function(ajaxData) {
 					if (ajaxData.length !== 0) {
-//						$this.data[5] = ajaxData;
-//						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
-//						$this.setVars();
-//						$this.setX();
-//						$this.cx.updateData($this.x);
-						alert(JSON.stringify(ajaxData));
+						$this.data[5] = ajaxData;
+						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
+						$this.setVars();
+						$this.setX();
+						$this.cx.updateData($this.x);
 					} else {
 						alert('Ten zbiór wartości jest pusty.');
 					}
