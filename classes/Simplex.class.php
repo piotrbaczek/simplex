@@ -573,7 +573,7 @@ class Simplex {
 
 	/**
 	 * Returns data for jQuery.flot graph
-	 * @return array
+	 * @return Array
 	 */
 	public function getPrimaryGraphJson() {
 		$a = 0;
@@ -731,9 +731,9 @@ class Simplex {
 		} else {
 			$maxRange = $this->getMaxRangeArray();
 			$minRange = $this->getMinRangeArray();
-			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 20)) {
-				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 20)) {
-					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 20)) {
+			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
+				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
+					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 10)) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
@@ -751,9 +751,10 @@ class Simplex {
 	/**
 	 * Checks if Point $p is part of Simplex feasible solution
 	 * @param Point $p
+	 * @param Integer $decreaser Decrease value of boundary by $decreaser
 	 * @return boolean
 	 */
-	public function isValidPoint(Point $p) {
+	public function isValidPoint(Point $p, $decreaser = 0) {
 		$currentRow = new Point($p->getPointDimensionAmount());
 		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
 			$currentRow->resetPoint();
@@ -761,7 +762,10 @@ class Simplex {
 				$currentRow->setPointDimension($j, $this->matrixes[0]->getElement($j, $i)->getRealValue());
 			}
 			$left = $currentRow->multiplyBy($p);
-			$right = $right = $this->boundaries[$i]->getRealValue();
+			$right = $this->boundaries[$i]->getRealValue();
+			if ($decreaser != 0) {
+				$right-=$decreaser;
+			}
 			switch ($this->signs[$i]) {
 				case enumSigns::_GEQ:
 					if ($left < $right) {
@@ -787,7 +791,7 @@ class Simplex {
 
 	/**
 	 * Prints current point of multidimensional cube
-	 * @param type $indexarray
+	 * @param Integer $indexarray
 	 * @return string
 	 */
 	private function printCurrentPoint($indexarray = -1) {
@@ -867,39 +871,29 @@ class Simplex {
 	 * Returns array of points where slider parameters present
 	 * @param array $dimensions
 	 * @param array $values
-	 * @return type
+	 * @return Array
 	 */
 	public function getRedrawData(Array $dimensions, Array $values) {
 		$json = Array();
+		$point = new Point(count($this->getMaxRangeArray()));
+		$maxRange = $this->getMaxRangeArray();
+		$minRange = $this->getMinRangeArray();
+		$decreaser = 0;
 		foreach ($values as $key => $value) {
-			if ($value == 'undefined') {
-				unset($values[$key]);
+			if (!in_array($key, array_keys($dimensions))) {
+				$decreaser+=$value;
 			}
 		}
 
-		$maxRange = $this->getMaxRangeArray();
-		//$minRange = $this->getMinRangeArray();
-		$point = new Point(count($maxRange));
-		//MAXES
-		$maxX = (float) $values[array_keys($values)[0]][1];
-		$addX = round($maxX / 20, 2);
-		$maxY = (float) $values[array_keys($values)[1]][1];
-		$addY = round($maxY / 20, 2);
-		$maxZ = (float) $values[array_keys($values)[2]][1];
-		$addZ = round($maxZ / 20, 2);
-		//MINS
-		$minX = (float) $values[array_keys($values)[0]][0];
-		$minY = (float) $values[array_keys($values)[1]][0];
-		$minZ = (float) $values[array_keys($values)[2]][0];
-		for ($i = $minX; $i <= $maxX; $i+=$addX) {
-			for ($j = $minY; $j <= $maxY; $j+=$addY) {
-				for ($k = $minZ; $k <= $maxZ; $k+=$addZ) {
+		for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
+			for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
+				for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 10)) {
 					$point->resetPoint();
-					$point->setPointDimension(array_keys($dimensions)[0], $i);
-					$point->setPointDimension(array_keys($dimensions)[1], $j);
-					$point->setPointDimension(array_keys($dimensions)[2], $k);
-					if ($this->isValidPoint($point)) {
-						$json[] = Array($i, $j, $k);
+					$point->setPointDimension(0, $i);
+					$point->setPointDimension(1, $j);
+					$point->setPointDimension(2, $k);
+					if ($this->isValidPoint($point, $decreaser)) {
+						$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
 					}
 				}
 			}
