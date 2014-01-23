@@ -14,7 +14,8 @@ header('Content-Type: application/json');
 if (isset($_POST['object']) && isset($_POST['dimensions']) && isset($_POST['values'])) {
 	try {
 		$simplex = unserialize($_POST['object']);
-		echo $simplex->getRedrawData($_POST['dimensions'], $_POST['values']);
+		$json = $simplex->getRedrawData($_POST['dimensions'], $_POST['values']);
+		echo json_encode($json);
 	} catch (Exception $ex) {
 		echo $ex->getMessage();
 	}
