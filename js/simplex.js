@@ -68,6 +68,10 @@ $(document).ajaxStart(function() {
 					});
 					$('#resultdiv').slideDown('slow');
 					$('#resultdiv2').slideDown('slow');
+				},
+				error: function(ajaxData) {
+					$.unblockUI();
+					alert(ajaxData);
 				}
 			});
 		}
