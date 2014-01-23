@@ -56,7 +56,7 @@ Grapher.prototype.showSlides = function() {
 Grapher.prototype.setVars = function() {
 	this.vars = [];
 	for (var i = 0; i < this.data[5].length; i++) {
-		this.vars[i] = ("Punkt" + (i + 1));
+		this.vars[i] = ("Punkt");
 	}
 };
 Grapher.prototype.setX = function() {
@@ -150,7 +150,7 @@ Grapher.prototype.appender = function() {
 				if (i < 3) {
 					string += 'checked';
 				}
-				string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + ($this.data[1][i]) + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
+				string += '/><label for="slider_' + i + '">x<sub>' + (i + 1) + '</sub>:</label><input type="text" class="sliderinput" id="slider_' + i + '_input" value="' + ($this.data[2][i]) + '"/><div name="slider_' + i + '" id="slider_' + i + '"></div>';
 				$this.slidersdiv.append(string);
 				$this.sliders[i] = $('#slider_' + i);
 				$this.inputs[i] = $('#slider_' + i + '_input');
@@ -193,6 +193,8 @@ Grapher.prototype.redraw = function() {
 						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
 						$this.setVars();
 						$this.setX();
+						console.log($this.variables);
+						console.log($this.x);
 						$this.cx.updateData($this.x);
 					} else {
 						alert('Ten zbiór wartości jest pusty.');

@@ -7,7 +7,7 @@ if (isset($_GET['a'])) {
 			$json[] = Array(1, 1, 1);
 			break;
 		case 'b':
-			$json[] = Array(2, 2, 2);
+			$json[] = Array((float) 0, (float) 0, (float) 0.1);
 			break;
 		default :
 			$json[] = Array(3, 3, 3);
