@@ -729,40 +729,11 @@ class Simplex {
 				}
 			}
 		} else {
-			$b = count($this->boundaries);
-			$maxx = new Fraction(0);
-			$maxy = new Fraction(0);
-			$maxz = new Fraction(0);
-			for ($i = 0; $i < $b; $i++) {
-				if (Fraction::equalsZero($this->variables[$i][2])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][2]);
-				if ($s->compare($maxz)) {
-					$maxz = $s;
-				}
-				if (Fraction::equalsZero($this->variables[$i][1])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][1]);
-				if ($s->compare($maxy)) {
-					$maxy = $s;
-				}
-
-				if (Fraction::equalsZero($this->variables[$i][0])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][0]);
-				if ($s->compare($maxx)) {
-					$maxx = $s;
-				}
-			}
-			for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
-				for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
-					for ($k = 0; $k < $maxz->getRealValue(); $k+=($maxz->getRealValue() / 20)) {
+			$maxRange = $this->getMaxRangeArray();
+			$minRange = $this->getMinRangeArray();
+			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 20)) {
+				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 20)) {
+					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 20)) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
