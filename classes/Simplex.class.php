@@ -763,7 +763,7 @@ class Simplex {
 			}
 			$left = $currentRow->multiplyBy($p);
 			$right = $this->boundaries[$i]->getRealValue();
-			if ($decreaser != 0) {
+			if ($decreaser != 0 && $decreaser > 0) {
 				$right-=$decreaser;
 			}
 			switch ($this->signs[$i]) {
@@ -869,15 +869,15 @@ class Simplex {
 
 	/**
 	 * Returns array of points where slider parameters present
-	 * @param array $dimensions
-	 * @param array $values
+	 * @param Array $dimensions
+	 * @param Array $values
 	 * @return Array
 	 */
 	public function getRedrawData(Array $dimensions, Array $values) {
 		$json = Array();
-		$point = new Point(count($this->getMaxRangeArray()));
 		$maxRange = $this->getMaxRangeArray();
 		$minRange = $this->getMinRangeArray();
+		$point = new Point(count($maxRange));
 		$decreaser = 0;
 
 		foreach ($values as $key => $value) {
