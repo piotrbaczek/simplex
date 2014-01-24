@@ -32,6 +32,7 @@
 							"data": data
 						}
 					};
+					console.log(x);
 					return x;
 				}
 
@@ -67,6 +68,8 @@
 						data: {'a': $('#select1 option:selected').val()},
 						success: function(ajaxData) {
 							if (Array.isArray(ajaxData) && ajaxData.length > 0) {
+								//THIS SHIT CAUSES toFIXED() ERROR
+								//variables = ["x2", "x3", "x4"];
 								cx.updateData(generateData(ajaxData));
 							}
 						},

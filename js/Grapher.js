@@ -76,6 +76,9 @@ Grapher.prototype.setX = function() {
 		}
 	};
 };
+Grapher.prototype.setPlot3DData = function(data) {
+	this.data[5] = data;
+};
 Grapher.prototype.plot3d = function() {
 	if (this.cx instanceof CanvasXpress) {
 		this.setVars();
@@ -129,7 +132,7 @@ Grapher.prototype.getDimensions = function() {
 Grapher.prototype.getSliderValues = function() {
 	var values = new Array();
 	for (var i = 0; i < this.sliders.length; i++) {
-		if (this.checkboxes[i] === undefined) {
+		if (this.checkboxes[i] == undefined) {
 			continue;
 		}
 		if (!this.checkboxes[i].is(':checked')) {
@@ -188,13 +191,11 @@ Grapher.prototype.redraw = function() {
 				type: "POST",
 				data: {'object': $this.data[6], "dimensions": $this.getDimensions(), "values": $this.getSliderValues()},
 				success: function(ajaxData) {
-					if (ajaxData.length !== 0) {
-						$this.data[5] = ajaxData;
-						$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
+					if (Array.isArray(ajaxData) && ajaxData.length > 0) {
+						$this.setPlot3DData(ajaxData);
+						//$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
 						$this.setVars();
 						$this.setX();
-						console.log($this.variables);
-						console.log($this.x);
 						$this.cx.updateData($this.x);
 					} else {
 						alert('Ten zbiór wartości jest pusty.');
@@ -207,5 +208,4 @@ Grapher.prototype.redraw = function() {
 			});
 		})(this);
 	}
-//	this.cx.initGraph();
 };

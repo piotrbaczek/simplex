@@ -879,6 +879,12 @@ class Simplex {
 		$maxRange = $this->getMaxRangeArray();
 		$minRange = $this->getMinRangeArray();
 		$decreaser = 0;
+
+		foreach ($values as $key => $value) {
+			if ($value == 'undefined') {
+				unset($values[$key]);
+			}
+		}
 		foreach ($values as $key => $value) {
 			if (!in_array($key, array_keys($dimensions))) {
 				$decreaser+=$value;
@@ -893,12 +899,12 @@ class Simplex {
 					$point->setPointDimension(1, $j);
 					$point->setPointDimension(2, $k);
 					if ($this->isValidPoint($point, $decreaser)) {
-						$json[] = Array((float) round($i, 2), (float) round($j, 2), (float) round($k, 2));
+						$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
 					}
 				}
 			}
 		}
-		return json_encode($json);
+		return $json;
 	}
 
 }
