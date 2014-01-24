@@ -83,6 +83,9 @@ Grapher.prototype.plot3d = function() {
 	if (this.cx instanceof CanvasXpress) {
 		this.setVars();
 		this.setX();
+		this.cx.xAxisTitle = "x1";
+		this.cx.yAxisTitle = "x2";
+		this.cx.zAxisTitle = "x3";
 		this.cx.updateData(this.x);
 	} else {
 		this.setVars();
