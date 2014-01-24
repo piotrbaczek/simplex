@@ -193,7 +193,6 @@ Grapher.prototype.redraw = function() {
 				success: function(ajaxData) {
 					if (Array.isArray(ajaxData) && ajaxData.length > 0) {
 						$this.setPlot3DData(ajaxData);
-						//$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
 						$this.setVars();
 						$this.setX();
 						$this.cx.xAxisTitle = "x" + (1 + $this.getDimensions()[0]);
