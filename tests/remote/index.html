@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width">
 		<title>Points testing</title>
 		<script src="http://simplexpg.zz.mu/js/jquery.js"></script>
-		<script src="../../js/CanvasXpress.min.js"></script>
+		<script src="http://simplexpg.zz.mu/js/CanvasXpress.min.js"></script>
 		<script src="http://simplexpg.zz.mu/js/excanvas.js"></script>
 		<script>
 			$(document).ready(function() {
@@ -32,7 +32,6 @@
 							"data": data
 						}
 					};
-					console.log(x);
 					return x;
 				}
 
@@ -60,7 +59,6 @@
 				//-----------------------
 				//TRY REMOTE
 				$('#button1').click(function() {
-					//I AJAX AND GET
 					$.ajax({
 						url: "source.php",
 						dataType: "json",
@@ -68,8 +66,6 @@
 						data: {'a': $('#select1 option:selected').val()},
 						success: function(ajaxData) {
 							if (Array.isArray(ajaxData) && ajaxData.length > 0) {
-								//THIS SHIT CAUSES toFIXED() ERROR
-								//variables = ["x2", "x3", "x4"];
 								cx.xAxisTitle = "x2";
 								cx.yAxisTitle = "x3";
 								cx.zAxisTitle = "x4";
