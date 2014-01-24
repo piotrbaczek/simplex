@@ -29,12 +29,12 @@ class Simplex {
 
 	/**
 	 * Construct with PL problem data
-	 * @param array $variables
-	 * @param array $boundaries
-	 * @param array $signs
-	 * @param array $targetfunction
-	 * @param type $max
-	 * @param type $gomory
+	 * @param Array $variables
+	 * @param Array $boundaries
+	 * @param Array $signs
+	 * @param Array $targetfunction
+	 * @param boolean $max
+	 * @param boolean $gomory
 	 * @throws Exception
 	 */
 	public function __construct(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomory = false) {
@@ -883,21 +883,18 @@ class Simplex {
 		foreach ($values as $key => $value) {
 			if ($value == 'undefined') {
 				unset($values[$key]);
-			}
-		}
-		foreach ($values as $key => $value) {
-			if (!in_array($key, array_keys($dimensions))) {
+			} else {
 				$decreaser+=$value;
 			}
 		}
 
-		for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
-			for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
-				for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 10)) {
+		for ($i = $minRange[$dimensions[array_keys($dimensions)[0]]]; $i <= $maxRange[$dimensions[array_keys($dimensions)[0]]]; $i += ($maxRange[$dimensions[array_keys($dimensions)[0]]] / 10)) {
+			for ($j = $minRange[$dimensions[array_keys($dimensions)[1]]]; $j <= $maxRange[$dimensions[array_keys($dimensions)[1]]]; $j += ($maxRange[$dimensions[array_keys($dimensions)[1]]] / 10)) {
+				for ($k = $minRange[$dimensions[array_keys($dimensions)[2]]]; $k <= $maxRange[$dimensions[array_keys($dimensions)[2]]]; $k+=($maxRange[$dimensions[array_keys($dimensions)[2]]] / 10)) {
 					$point->resetPoint();
-					$point->setPointDimension(0, $i);
-					$point->setPointDimension(1, $j);
-					$point->setPointDimension(2, $k);
+					$point->setPointDimension($dimensions[array_keys($dimensions)[0]], $i);
+					$point->setPointDimension($dimensions[array_keys($dimensions)[1]], $j);
+					$point->setPointDimension($dimensions[array_keys($dimensions)[2]], $k);
 					if ($this->isValidPoint($point, $decreaser)) {
 						$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
 					}
