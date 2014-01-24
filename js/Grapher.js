@@ -196,6 +196,9 @@ Grapher.prototype.redraw = function() {
 						//$this.variables = ["x" + (1 + $this.getDimensions()[0]), "x" + (1 + $this.getDimensions()[1]), "x" + (1 + $this.getDimensions()[2])];
 						$this.setVars();
 						$this.setX();
+						$this.cx.xAxisTitle = "x" + (1 + $this.getDimensions()[0]);
+						$this.cx.yAxisTitle = "x" + (1 + $this.getDimensions()[1]);
+						$this.cx.zAxisTitle = "x" + (1 + $this.getDimensions()[2]);
 						$this.cx.updateData($this.x);
 					} else {
 						alert('Ten zbiór wartości jest pusty.');
