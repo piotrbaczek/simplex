@@ -113,7 +113,11 @@ Grapher.prototype.plot3d = function() {
 };
 
 Grapher.prototype.plot2d = function() {
-	$.plot(this.placeholder, this.data[4]);
+	if (this.data[4].length > 0) {
+		$.plot(this.placeholder, this.data[4]);
+	} else {
+		this.placeholder.hide();
+	}
 };
 Grapher.prototype.are3CheckboxesChecked = function() {
 	if ($('input[type=checkbox].slider:checked').size() === 3) {
