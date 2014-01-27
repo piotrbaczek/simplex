@@ -663,72 +663,54 @@ class Simplex {
 	 */
 	public function getSecondaryGraphJson() {
 		$point = new Point(count($this->getMaxRangeArray()));
-		$a = 0;
+		$maxRange = $this->getMaxRangeArray();
+		$minRange = $this->getMinRangeArray();
 		$json = Array();
-		$nonZeroTargetFunction = Array();
-		foreach ($this->targetfunction[$this->index] as $key => $value) {
-			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
-				$a++;
-				$nonZeroTargetFunction[] = $key;
-			}
-		}
-		if ($a == 2) {
-			$b = count($this->boundaries);
-			$maxx = new Fraction(0);
-			$maxy = new Fraction(0);
-			for ($i = 0; $i < $b; $i++) {
-				if (Fraction::equalsZero($this->variables[$i][1])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][1]);
-				if ($s->compare($maxy)) {
-					$maxy = $s;
-				}
-
-				if (Fraction::equalsZero($this->variables[$i][0])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][0]);
-				if ($s->compare($maxx)) {
-					$maxx = $s;
-				}
-			}
+		if (count($this->getTargetFunction()) == 2) {
 			if ($this->extreme) {
-				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 10)) {
-					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 10)) {
+				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
+					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
 						if ($this->isValidPoint($point)) {
-							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
+							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
 						}
 					}
 				}
 				foreach ($this->matrixes as $key => $value) {
 					$key1 = $this->getValuePair($key);
-					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
+					$point->resetPoint();
+					foreach ($key1 as $key2 => $value2) {
+						$point->setPointDimension($key2 - 1, $value2->getRealValue());
+					}
+					if ($this->isValidPoint($point)) {
+						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
+					}
 				}
 			} else {
-				for ($i = 0; $i < $maxx->getRealValue(); $i += ($maxx->getRealValue() / 20)) {
-					for ($j = 0; $j < $maxy->getRealValue(); $j += ($maxy->getRealValue() / 20)) {
+				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
+					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
 						if ($this->isValidPoint($point)) {
-							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $i + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $j, 2));
+							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
 						}
 					}
 				}
 				foreach ($this->matrixes as $key => $value) {
 					$key1 = $this->getValuePair($key);
-					$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[$this->index][$nonZeroTargetFunction[0]]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[$this->index][$nonZeroTargetFunction[1]]->getRealValue() * $key1[2]->getRealValue(), 2));
+					$point->resetPoint();
+					foreach ($key1 as $key2 => $value2) {
+						$point->setPointDimension($key2 - 1, $value2->getRealValue());
+					}
+					if ($this->isValidPoint($point)) {
+						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
+					}
 				}
 			}
 		} else {
-			$maxRange = $this->getMaxRangeArray();
-			$minRange = $this->getMinRangeArray();
 			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
 				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
 					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 10)) {
@@ -813,7 +795,7 @@ class Simplex {
 	public function getMaxRangeArray() {
 		$x = Array();
 		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
-			$x[] = new Fraction(0);
+			$x[] = new Fraction(PHP_INT_MAX);
 		}
 		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
 			$flag = FALSE;
@@ -824,7 +806,7 @@ class Simplex {
 					continue;
 				} else {
 					$b->divide($temp);
-					if ($b->compare($x[$i]) && !$flag) {
+					if (!$b->compare($x[$i]) && !$flag) {
 						if ($this->signs[$j] == enumSigns::_GEQ) {
 							$b->multiply(2);
 							$flag = TRUE;
@@ -835,7 +817,7 @@ class Simplex {
 					} else {
 						if ($this->signs[$j] == enumSigns::_GEQ) {
 							$b->multiply(2);
-							if ($b->compare($x[$i])) {
+							if (!$b->compare($x[$i])) {
 								$x[$i] = $b;
 							}
 						}
