@@ -28,6 +28,8 @@ Grapher.prototype.__run = function(data, slidersdiv, placeholder, canvas, textdi
 				//Exception
 				this.defaultdiv.empty().append(this.data[3]);
 				break;
+			case 0:
+			case 1:
 			case 2:
 				this.textdiv.empty().append(this.data[3]);
 				this.plot2d();
