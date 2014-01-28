@@ -625,11 +625,15 @@ class Simplex {
 					$json[$i]['data'][] = Array($j->getValue(), 0);
 				}
 			}
-			if (!Fraction::equalsZero($this->targetfunction[$this->index][0])) {
-				$t = clone $this->targetfunction[$this->index][1];
-				$t->multiply($maxx);
-				$t->divide($this->targetfunction[$this->index][0]);
-				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
+			if (!Fraction::equalsZero($this->targetfunction[0][0])) {
+				if (!Fraction::equalsZero($this->targetfunction[0][1])) {
+					$t = clone $this->targetfunction[$this->index][1];
+					$t->multiply($maxx);
+					$t->divide($this->targetfunction[$this->index][0]);
+					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
+				} else {
+					$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue(), 0)));
+				}
 			} else {
 				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array(0, $maxy->getRealValue())));
 			}
