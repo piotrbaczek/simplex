@@ -494,7 +494,7 @@ class Simplex {
 		ksort($this->targetfunction[0]);
 		foreach ($this->targetfunction[0] as $key => $value) {
 			$temp = clone $value;
-			if (Fraction::equalsZero($temp)) {
+			if (Fraction::equalsZero($temp) && ($key >= $this->M - 1)) {
 				continue;
 			}
 			if ($this->extreme) {
@@ -572,16 +572,17 @@ class Simplex {
 	/**
 	 * Returns data for jQuery.flot graph
 	 * @return Array
+	 * @TODO REWRITE!!!
 	 */
 	public function getPrimaryGraphJson() {
 		$a = 0;
 		$json = Array();
-		foreach ($this->targetfunction[$this->index] as $value) {
-			if (!Fraction::equalsZero($value) && !Fraction::hasM($value)) {
+		foreach ($this->targetfunction[$this->index] as $key => $value) {
+			if (!Fraction::equalsZero($value) && !Fraction::hasM($value) || ($key < $this->M - 1)) {
 				$a++;
 			}
 		}
-		if ($a == 2) {
+		if ($a == 2 || $a == 1) {
 			$b = count($this->boundaries);
 			$maxx = new Fraction(0);
 			$maxy = new Fraction(0);
@@ -629,6 +630,8 @@ class Simplex {
 				$t->multiply($maxx);
 				$t->divide($this->targetfunction[$this->index][0]);
 				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
+			} else {
+				$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array(0, $maxy->getRealValue())));
 			}
 			foreach ($this->matrixes as $key => $value) {
 				if (!$value->isGomory()) {
@@ -666,7 +669,7 @@ class Simplex {
 		$maxRange = $this->getMaxRangeArray();
 		$minRange = $this->getMinRangeArray();
 		$json = Array();
-		if (count($this->getTargetFunction()) == 2) {
+		if (count($this->getTargetFunction()) == 2 || count($this->getTargetFunction()) == 1) {
 			if ($this->extreme) {
 				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
 					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
