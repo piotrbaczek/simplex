@@ -572,7 +572,6 @@ class Simplex {
 	/**
 	 * Returns data for jQuery.flot graph
 	 * @return Array
-	 * @TODO REWRITE!!!
 	 */
 	public function getPrimaryGraphJson() {
 		$a = 0;
