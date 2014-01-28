@@ -114,6 +114,7 @@ Grapher.prototype.plot3d = function() {
 
 Grapher.prototype.plot2d = function() {
 	if (this.data[4].length > 0) {
+		this.placeholder.show();
 		$.plot(this.placeholder, this.data[4]);
 	} else {
 		this.placeholder.hide();
