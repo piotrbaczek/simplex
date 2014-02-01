@@ -664,8 +664,30 @@ class Simplex {
 	}
 
 	/**
+	 * Returns number to increase in for loops, to prevent some points not being displayed
+	 * due to the too large separation
+	 * @param Integer $number
+	 * @return real|int
+	 */
+	public static function getIterationSeparation($number = -1) {
+		if ($number < 0) {
+			throw new Exception('$number in ' . __FUNCTION__ . ' can\'t be negative');
+		} else {
+			if ($number < 10) {
+				return 0.2;
+			} elseif ($number < 50) {
+				return 0.5;
+			} elseif ($number < 100) {
+				return 1;
+			} else {
+				return $number / 10;
+			}
+		}
+	}
+
+	/**
 	 * Returns data for XpressCanvas graph
-	 * @return String
+	 * @return Array Array of points for 3d graph
 	 */
 	public function getSecondaryGraphJson() {
 		$point = new Point(count($this->getMaxRangeArray()));
@@ -674,8 +696,8 @@ class Simplex {
 		$json = Array();
 		if (count($this->getTargetFunction()) == 2 || count($this->getTargetFunction()) == 1) {
 			if ($this->extreme) {
-				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
-					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
+				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
+					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
@@ -695,8 +717,8 @@ class Simplex {
 					}
 				}
 			} else {
-				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
-					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
+				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
+					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
@@ -717,9 +739,9 @@ class Simplex {
 				}
 			}
 		} else {
-			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += ($maxRange[0] / 10)) {
-				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += ($maxRange[1] / 10)) {
-					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=($maxRange[2] / 10)) {
+			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
+				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
+					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=Simplex::getIterationSeparation($maxRange[2])) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
@@ -874,9 +896,9 @@ class Simplex {
 			}
 		}
 
-		for ($i = $minRange[$dimensions[array_keys($dimensions)[0]]]; $i <= $maxRange[$dimensions[array_keys($dimensions)[0]]]; $i += ($maxRange[$dimensions[array_keys($dimensions)[0]]] / 10)) {
-			for ($j = $minRange[$dimensions[array_keys($dimensions)[1]]]; $j <= $maxRange[$dimensions[array_keys($dimensions)[1]]]; $j += ($maxRange[$dimensions[array_keys($dimensions)[1]]] / 10)) {
-				for ($k = $minRange[$dimensions[array_keys($dimensions)[2]]]; $k <= $maxRange[$dimensions[array_keys($dimensions)[2]]]; $k+=($maxRange[$dimensions[array_keys($dimensions)[2]]] / 10)) {
+		for ($i = $minRange[$dimensions[array_keys($dimensions)[0]]]; $i <= $maxRange[$dimensions[array_keys($dimensions)[0]]]; $i += Simplex::getIterationSeparation($maxRange[$dimensions[array_keys($dimensions)[0]]])) {
+			for ($j = $minRange[$dimensions[array_keys($dimensions)[1]]]; $j <= $maxRange[$dimensions[array_keys($dimensions)[1]]]; $j += Simplex::getIterationSeparation($maxRange[$dimensions[array_keys($dimensions)[1]]])) {
+				for ($k = $minRange[$dimensions[array_keys($dimensions)[2]]]; $k <= $maxRange[$dimensions[array_keys($dimensions)[2]]]; $k+=Simplex::getIterationSeparation($maxRange[$dimensions[array_keys($dimensions)[2]]])) {
 					$point->resetPoint();
 					$point->setPointDimension($dimensions[array_keys($dimensions)[0]], $i);
 					$point->setPointDimension($dimensions[array_keys($dimensions)[1]], $j);
