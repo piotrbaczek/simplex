@@ -706,16 +706,17 @@ class Simplex {
 						}
 					}
 				}
-				foreach ($this->matrixes as $key => $value) {
-					$key1 = $this->getValuePair($key);
-					$point->resetPoint();
-					foreach ($key1 as $key2 => $value2) {
-						$point->setPointDimension($key2 - 1, $value2->getRealValue());
-					}
-					if ($this->isValidPoint($point)) {
-						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
-					}
-				}
+				//Matrix points hidden
+//				foreach ($this->matrixes as $key => $value) {
+//					$key1 = $this->getValuePair($key);
+//					$point->resetPoint();
+//					foreach ($key1 as $key2 => $value2) {
+//						$point->setPointDimension($key2 - 1, $value2->getRealValue());
+//					}
+//					if ($this->isValidPoint($point)) {
+//						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
+//					}
+//				}
 			} else {
 				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
 					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
@@ -727,16 +728,17 @@ class Simplex {
 						}
 					}
 				}
-				foreach ($this->matrixes as $key => $value) {
-					$key1 = $this->getValuePair($key);
-					$point->resetPoint();
-					foreach ($key1 as $key2 => $value2) {
-						$point->setPointDimension($key2 - 1, $value2->getRealValue());
-					}
-					if ($this->isValidPoint($point)) {
-						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
-					}
-				}
+				//Matrix points hidden
+//				foreach ($this->matrixes as $key => $value) {
+//					$key1 = $this->getValuePair($key);
+//					$point->resetPoint();
+//					foreach ($key1 as $key2 => $value2) {
+//						$point->setPointDimension($key2 - 1, $value2->getRealValue());
+//					}
+//					if ($this->isValidPoint($point)) {
+//						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
+//					}
+//				}
 			}
 		} else {
 			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
