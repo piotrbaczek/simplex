@@ -898,9 +898,9 @@ class Simplex {
 			}
 		}
 
-		for ($i = $minRange[$dimensions[array_keys($dimensions)[0]]]; $i <= $maxRange[$dimensions[array_keys($dimensions)[0]]]; $i += Simplex::getIterationSeparation($maxRange[$dimensions[array_keys($dimensions)[0]]])) {
-			for ($j = $minRange[$dimensions[array_keys($dimensions)[1]]]; $j <= $maxRange[$dimensions[array_keys($dimensions)[1]]]; $j += Simplex::getIterationSeparation($maxRange[$dimensions[array_keys($dimensions)[1]]])) {
-				for ($k = $minRange[$dimensions[array_keys($dimensions)[2]]]; $k <= $maxRange[$dimensions[array_keys($dimensions)[2]]]; $k+=Simplex::getIterationSeparation($maxRange[$dimensions[array_keys($dimensions)[2]]])) {
+		for ($i = $minRange[$dimensions[array_keys($dimensions)[0]]]; $i <= $maxRange[$dimensions[array_keys($dimensions)[0]]]; $i += ($maxRange[$dimensions[array_keys($dimensions)[0]]] / 10)) {
+			for ($j = $minRange[$dimensions[array_keys($dimensions)[1]]]; $j <= $maxRange[$dimensions[array_keys($dimensions)[1]]]; $j += ($maxRange[$dimensions[array_keys($dimensions)[1]]] / 10)) {
+				for ($k = $minRange[$dimensions[array_keys($dimensions)[2]]]; $k <= $maxRange[$dimensions[array_keys($dimensions)[2]]]; $k+=($maxRange[$dimensions[array_keys($dimensions)[2]]] / 10)) {
 					$point->resetPoint();
 					$point->setPointDimension($dimensions[array_keys($dimensions)[0]], $i);
 					$point->setPointDimension($dimensions[array_keys($dimensions)[1]], $j);
