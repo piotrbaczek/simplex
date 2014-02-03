@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <title>Simplex 2014&copy; Logowanie do panelu Administratora</title>
+        <title>Simplex <?php echo Date("Y"); ?>&copy; Logowanie do panelu Administratora</title>
         <link rel="icon" type="image/x-icon" href="../images/icon32.png" />
         <link rel="stylesheet" href="../css/simplex.css" />
         <style>
