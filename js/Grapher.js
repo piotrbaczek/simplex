@@ -84,38 +84,42 @@ Grapher.prototype.setPlot3DData = function(data) {
 	this.data[5] = data;
 };
 Grapher.prototype.plot3d = function() {
-	if (this.cx instanceof CanvasXpress) {
-		this.setVars();
-		this.setX();
-		this.cx.xAxisTitle = "x1";
-		this.cx.yAxisTitle = "x2";
-		this.cx.zAxisTitle = "x3";
-		this.cx.updateData(this.x);
+	if (this.data[4] === undefined || this.data[5] === undefined) {
+		alert('Błąd otrzymanych danych.');
 	} else {
-		this.setVars();
-		this.setX();
-		this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
-			graphType: "Scatter3D",
-			useFlashIE: true,
-			xAxis: [
-				this.variables[0]
-			],
-			yAxis: [
-				this.variables[1]
-			],
-			zAxis: [
-				this.variables[2]
-			],
-			scatterType: false,
-			setMinX: 0,
-			setMinY: 0,
-			setMinZ: 0
-		});
+		if (this.cx instanceof CanvasXpress) {
+			this.setVars();
+			this.setX();
+			this.cx.xAxisTitle = "x1";
+			this.cx.yAxisTitle = "x2";
+			this.cx.zAxisTitle = "x3";
+			this.cx.updateData(this.x);
+		} else {
+			this.setVars();
+			this.setX();
+			this.cx = new CanvasXpress(this.canvas.attr('id'), this.x, {
+				graphType: "Scatter3D",
+				useFlashIE: true,
+				xAxis: [
+					this.variables[0]
+				],
+				yAxis: [
+					this.variables[1]
+				],
+				zAxis: [
+					this.variables[2]
+				],
+				scatterType: false,
+				setMinX: 0,
+				setMinY: 0,
+				setMinZ: 0
+			});
+		}
 	}
 };
 
 Grapher.prototype.plot2d = function() {
-	if (this.data[4].length > 0) {
+	if (this.data[4] !== undefined && this.data[4].length > 0) {
 		this.placeholder.show();
 		$.plot(this.placeholder, this.data[4]);
 	} else {
