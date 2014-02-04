@@ -16,6 +16,7 @@ Grapher.prototype.__run = function(data, slidersdiv, placeholder, canvas, textdi
 	this.canvas = canvas;
 	this.textdiv = textdiv;
 	this.defaultdiv = defaultdiv;
+	this.hideSlides();
 	if (this.data.length === 0 || this.data[0].length === 0) {
 		alert('Otrzymano pustą tablicę. Error!');
 	} else {
@@ -41,6 +42,7 @@ Grapher.prototype.__run = function(data, slidersdiv, placeholder, canvas, textdi
 				this.placeholder.hide();
 				break;
 			default:
+				this.showSlides();
 				this.textdiv.empty().append(this.data[3]);
 				this.appender();
 				this.plot3d();
@@ -142,7 +144,7 @@ Grapher.prototype.getDimensions = function() {
 Grapher.prototype.getSliderValues = function() {
 	var values = new Array();
 	for (var i = 0; i < this.sliders.length; i++) {
-		if (this.checkboxes[i] == undefined) {
+		if (this.checkboxes[i] === undefined) {
 			continue;
 		}
 		if (!this.checkboxes[i].is(':checked')) {
