@@ -158,7 +158,7 @@ class SimplexTableau {
 			} else {
 				$this->divisionArray[$i] = new DivisionCoefficient(clone $s, clone $n);
 				$s->divide($n);
-				if (!$s->compare($startv) && Fraction::isPositive($s)) {
+				if (!$s->compare($startv) && Fraction::isPositive($s) && !Fraction::equal($startv, $s)) {
 					$starti = $i;
 					$startv = $s;
 				}
