@@ -198,6 +198,20 @@ class Fraction {
 	}
 
 	/**
+	 * Checks if two fractions are equal to As Fractions without M part.
+	 * @param Fraction $fraction1
+	 * @param Fraction $fraction2
+	 * @return boolean
+	 */
+	public static function equal(Fraction $fraction1, Fraction $fraction2) {
+		if ($fraction1->getRealValue() == $fraction2->getRealValue()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Positivity test of the Fraction
 	 * Takes into consideration M values as Infinity
 	 * Returns true if positive
