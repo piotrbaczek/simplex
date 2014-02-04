@@ -424,7 +424,11 @@ class Simplex {
 	 */
 
 	public function getResult() {
-		return $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1);
+		$value = clone $this->matrixes[$this->index]->getElement($this->matrixes[$this->index]->getRows() - 1, $this->matrixes[$this->index]->getCols() - 1);
+		if (Fraction::isNegative($value)) {
+			$value->minusFraction();
+		}
+		return $value;
 	}
 
 	/**
@@ -432,7 +436,11 @@ class Simplex {
 	 * @return String
 	 */
 	public function printResult() {
-		return 'W=' . $this->getResult();
+		if ($this->eMessage == '') {
+			return 'W=' . $this->getResult();
+		} else {
+			return '';
+		}
 	}
 
 	/**
@@ -539,11 +547,15 @@ class Simplex {
 	}
 
 	public function printValuePair() {
-		$string = '';
-		foreach ($this->getValuePair() as $key => $value) {
-			$string.='x<sub>' . $key . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
+		if ($this->eMessage != '') {
+			return '';
+		} else {
+			$string = '';
+			foreach ($this->getValuePair() as $key => $value) {
+				$string.='x<sub>' . $key . '</sub>=' . $value . (Fraction::isFraction($value) ? ' (' . $value->getRealValue() . ')' : '') . '<br/>';
+			}
+			return $string;
 		}
-		return $string;
 	}
 
 	/**
