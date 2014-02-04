@@ -71,7 +71,7 @@ $(document).ajaxStart(function() {
 				},
 				error: function(ajaxData) {
 					$.unblockUI();
-					alert(ajaxData);
+					alert(JSON.stringify(ajaxData));
 				}
 			});
 		}
@@ -152,7 +152,7 @@ $(document).ajaxStart(function() {
 											}
 										}
 									});
-									if (data[7].length > 0) {
+									if (data[7] !== undefined && data[7].length > 0) {
 										if (data[7][0] === 'max') {
 											$('#funct option:eq(0)').select();
 										} else {
@@ -174,8 +174,8 @@ $(document).ajaxStart(function() {
 					}
 
 				},
-				error: function(data, status, e) {
-					alert(e);
+				error: function(data) {
+					alert(JSON.stringify(data));
 				}
 			});
 		}
