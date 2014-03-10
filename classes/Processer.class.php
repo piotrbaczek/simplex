@@ -94,7 +94,9 @@ class Processer extends Csv_Reader {
         $string = '';
         foreach ($this->getTargetFunction() as $key => $value) {
             $a = clone $value;
-            $a->minusFraction();
+            if (Fraction::isNegative($a)) {
+                $a->minusFraction();
+            }
             if ($key == 0) {
                 $string.=$a . 'x' . ($key + 1);
             } else {
