@@ -25,19 +25,19 @@ class Processer extends Csv_Reader {
     public function __construct($plik) {
         parent::__construct($plik);
         $this->table = parent::get();
-        if ($this->table['0']['0'] != "max" && $this->table['0']['0'] != "min") {
-            $this->errormessage('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.');
-        } else {
+        if ($this->table[0][0] == 'max' || $this->table[0][0] == 'min') {
             if ($this->table[0][0] == 'max') {
                 $this->function = true;
             } else {
                 $this->function = false;
             }
-        }
-        if ($this->table['0']['1'] != 'false' && $this->table['0']['1'] != 'true') {
-            $this->errormessage('Nierozpoznane zastosowanie algorytmu Gomorry\'ego. Drugie pole powinno zawierać \'true\' lub \'false\'.');
         } else {
-            $this->gomorry = ($this->table['0']['1'] == 'true' ? true : false);
+            throw new Exception('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.' . $string);
+        }
+        if ($this->table[0][1] != 'false' && $this->table[0][1] != 'true') {
+            throw new Exception('Nierozpoznane zastosowanie algorytmu Gomorry\'ego. Drugie pole powinno zawierać \'true\' lub \'false\'.' . $this->table[0][1]);
+        } else {
+            $this->gomorry = ($this->table[0][1] == 'true' ? true : false);
         }
         $bb = count($this->table['1']);
 //		for ($i = 1; $i < $bb; $i++) {
