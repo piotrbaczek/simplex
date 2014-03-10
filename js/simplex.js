@@ -153,15 +153,15 @@ $(document).ajaxStart(function() {
                                         }
                                     });
                                     if (data[7] !== undefined && data[7].length > 0) {
-                                        if (data[7][0] === 'max') {
-                                            $('#funct option:eq(0)').select();
+                                        if (data[7][0] === true) {
+                                            $('#funct option:eq(0)').attr('selected',true);
                                         } else {
-                                            $('#funct option:eq(1)').select();
+                                            $('#funct option:eq(1)').attr('selected',true);
                                         }
                                         if (data[7][1] === 'false') {
-                                            $('#gomorryf option:eq(0)').select();
+                                            $('#gomorryf option:eq(0)').attr('selected',true);
                                         } else {
-                                            $('#gomorryf option:eq(1)').select();
+                                            $('#gomorryf option:eq(1)').attr('selected',true);
                                         }
                                         $('#targetfunction').empty().val(data[7][2]);
                                         $('#textarea').empty().html(data[7][3]);
