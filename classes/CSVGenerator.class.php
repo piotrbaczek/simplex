@@ -43,7 +43,7 @@ class CSVGenerator {
 	 */
 	public function toArray() {
 		$array = Array();
-		if ($this->function == true) {
+		if ($this->function=='true') {
 			$array[0][0] = 'max';
 		} else {
 			$array[0][0] = 'min';
