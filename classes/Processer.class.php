@@ -32,7 +32,7 @@ class Processer extends Csv_Reader {
                 $this->function = false;
             }
         } else {
-            throw new Exception('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.' . $string);
+            throw new Exception('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.');
         }
         if ($this->table[0][1] != 'false' && $this->table[0][1] != 'true') {
             throw new Exception('Nierozpoznane zastosowanie algorytmu Gomorry\'ego. Drugie pole powinno zawierać \'true\' lub \'false\'.' . $this->table[0][1]);
