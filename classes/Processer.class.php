@@ -36,12 +36,12 @@ class Processer extends Csv_Reader {
 			$this->gomorry = ($this->table['0']['1'] == 'true' ? true : false);
 		}
 		$bb = count($this->table['1']);
-		for ($i = 1; $i < $bb; $i++) {
-			if ($bb != count($this->table[$i])) {
-				$this->errormessage('Równania są różnej długości. Ilość zmiennych równania powinna wynosić ' . $bb . ', a w równaniu ' . $i . ' jest ich ' . count($this->table[$i]));
-				break;
-			}
-		}
+//		for ($i = 1; $i < $bb; $i++) {
+//			if ($bb != count($this->table[$i])) {
+//				$this->errormessage('Równania są różnej długości. Ilość zmiennych równania powinna wynosić ' . $bb . ', a w równaniu ' . $i . ' jest ich ' . count($this->table[$i]));
+//				break;
+//			}
+//		}
 		foreach ($this->table[0] as $key => $value) {
 			if (is_numeric(trim($value))) {
 				if (strpos($value, '/')) {
