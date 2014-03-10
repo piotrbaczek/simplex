@@ -23,6 +23,9 @@ class Processer extends Csv_Reader {
      * @param File $plik
      */
     public function __construct($plik) {
+        if(!file_exists($plik)){
+            throw new Exception('Processer Class : File Not Found Error. Please notify the administrator of the website.');
+        }
         parent::__construct($plik);
         $this->table = parent::get();
         if ($this->table[0][0] == 'max' || $this->table[0][0] == 'min') {

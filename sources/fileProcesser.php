@@ -21,7 +21,7 @@ if ($ss) {
         if (!isset($_POST['filename'])) {
             throw new Exception('Name of the file cannot be empty!');
         }
-        $adres = '../download/' . mysql_real_escape_string($_POST['filename']) . '.csv';
+        $adres = '../download/' . $_POST['filename'] . '.csv';
         $processer = new Processer($adres);
         $simplex = new Simplex($processer->getVariables(), $processer->getBoundaries(), $processer->getSigns(), $processer->getTargetfunction(), $processer->getMinMax(), $processer->getGomorry());
         $json[0] = count($simplex->getTargetFunction());
