@@ -134,6 +134,7 @@ $(document).ajaxStart(function() {
                                 url: "sources/fileProcesser.php",
                                 data: {'filename': data1.msg},
                                 dataType: "json",
+                                timeout: 10000,
                                 success: function(data) {
                                     grapher.__run(data, $('#sliders'), $('#placeholder1'), $('#canvas1'), $('#resultdiv2'), $('#defaultdiv'));
                                     $('table.result td[data-dane]').tooltip({
