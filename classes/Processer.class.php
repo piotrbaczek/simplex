@@ -28,7 +28,11 @@ class Processer extends Csv_Reader {
         if ($this->table['0']['0'] != "max" && $this->table['0']['0'] != "min") {
             $this->errormessage('Nierozpoznane ekstremum funkcji. Pierwsze pole powinno zawierać \'min\' lub \'max\'.');
         } else {
-            $this->function = $this->table['0']['0'];
+            if ($this->table[0][0] == 'max') {
+                $this->function = true;
+            } else {
+                $this->function = false;
+            }
         }
         if ($this->table['0']['1'] != 'false' && $this->table['0']['1'] != 'true') {
             $this->errormessage('Nierozpoznane zastosowanie algorytmu Gomorry\'ego. Drugie pole powinno zawierać \'true\' lub \'false\'.');
