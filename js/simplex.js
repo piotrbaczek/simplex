@@ -16,7 +16,7 @@ $(document).ajaxStart(function() {
         return this.optional(element) || /(([0-9]*x[0-9]*[+]?)+|([0-9]\/[1-9][0-9]*x[0-9]*)[+]?)(<=|>=|=)[0-9]+/g.test(value);
     }, "Wprowadzona tre\u015bć zadania jest nieprawidłowa - Tylko forma Axa+BxB+...<=C (>=C lub =C)jest dopuszczalna.");
     $.validator.addMethod("regex2", function(value, element) {
-        return this.optional(element) || /(\d*\/[1-9]{1,}\d*x[1-9]{1,}\d*)|([+|-]\d*\/[1-9]{1,}\d*x[1-9]*)/g.test(value);
+        return this.optional(element) || /(\d+[x]([1-9][0-9]*))|(\d+[/]([1-9][0-9]*)[x]([1-9][0-9]*))/g.test(value);
     }, "Wprowadzona funkcja celu jest nieprawid\u0142owa - Tylko forma Axa+Bxb+... jest dopuszczalna.");
     $('#solvethisform').validate({
         rules: {
