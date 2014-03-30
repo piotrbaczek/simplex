@@ -14,7 +14,7 @@ $(document).ajaxStart(function() {
     var grapher = new Grapher();
     $.validator.addMethod("regex", function(value, element) {
         return this.optional(element) || /((([1-9]+\d*[x][1-9]+)|(\d+[/][0-9]+\d*[x][1-9+\d*])){1}((\+|\-)([1-9]+\d*[x][1-9]+|\d+[/][0-9]+\d*[x][1-9+\d*]))+(<=|>=|=)(\d+|\d+[/][0-9]+\d*)(\n|$))+/g.test(value);
-    }, "Wprowadzona tre\u015bć zadania jest nieprawidłowa - Tylko forma Axa+BxB+...<=C (>=C lub =C)jest dopuszczalna.");
+    }, "Wprowadzona tre\u015bć zadania jest nieprawidłowa - Tylko forma Axa+BxB+...<=C (>=C lub =C) jest dopuszczalna.");
     $.validator.addMethod("regex2", function(value, element) {
         return this.optional(element) || /(\d+[x]([1-9][0-9]*))|(\d+[/]([1-9][0-9]*)[x]([1-9][0-9]*))/g.test(value); 
     }, "Wprowadzona funkcja celu jest nieprawid\u0142owa - Tylko forma Axa+Bxb+... jest dopuszczalna.");
