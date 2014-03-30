@@ -252,7 +252,7 @@ class Simplex {
     public function printSolution() {
         foreach ($this->cCoefficient[$this->index] as $value) {
             if (Fraction::hasM($value)) {
-                $this->eMessage.='Zbiór rozwiązań dopuszczalnych jest pusty.';
+                $this->eMessage.='Feasible set is empty.';
                 break;
             }
         }
