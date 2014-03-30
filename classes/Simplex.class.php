@@ -171,7 +171,7 @@ class Simplex {
             }
             $q = $this->matrixes[$this->index]->findBaseRow($p);
             if ($q == -1) {
-                $this->eMessage.='Linear problem is unbounded';
+                $this->eMessage.='Problem PL jest nieograniczony w ekstremum.';
                 unset($this->matrixes[$this->index]);
                 $this->index--;
                 break;
@@ -252,7 +252,7 @@ class Simplex {
     public function printSolution() {
         foreach ($this->cCoefficient[$this->index] as $value) {
             if (Fraction::hasM($value)) {
-                $this->eMessage.='Feasible set is empty.';
+                $this->eMessage.='Zbiór rozwiązań dopuszczalnych jest pusty.';
                 break;
             }
         }
