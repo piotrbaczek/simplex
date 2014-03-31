@@ -152,7 +152,7 @@ class Simplex {
         while (true) {
             $this->index++;
             $this->matrixes[$this->index] = clone $this->matrixes[$this->index - 1];
-            $this->matrixes[$this->index]->setIndex($this->index);
+            $this->matrixes[$this->index]->setIndex($this->index + 1);
             if ($recurring) {
                 $this->matrixes[$this->index]->swapGomory();
             }
@@ -215,7 +215,7 @@ class Simplex {
             $this->index++;
             $this->matrixes[$this->index] = new SimplexTableau($this->matrixes[$this->index - 1]->getCols() + 1, $this->matrixes[$this->index - 1]->getRows() + 2);
             $this->matrixes[$this->index]->swapGomory();
-            $this->matrixes[$this->index]->setIndex($this->index);
+            $this->matrixes[$this->index]->setIndex($this->index + 1);
             $this->basisVariable[$this->index] = $this->basisVariable[$this->index - 1];
             $this->nonBasisVariable[$this->index] = $this->nonBasisVariable[$this->index - 1];
             $this->cCoefficient[$this->index] = $this->cCoefficient[$this->index - 1];
@@ -232,7 +232,7 @@ class Simplex {
             $this->partialAdding();
             $this->matrixes[$this->index]->setMainRow($this->matrixes[$this->index]->getCols() - 2);
             $this->matrixes[$this->index]->setMainCol($this->matrixes[$this->index]->findBaseCol());
-            $this->basisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction[$this->index]) - 1) . '</sub>';
+            $this->basisVariable[$this->index][] = 'x<sub>' . count($this->targetfunction[$this->index]) . '</sub>';
             $this->nonBasisVariable[$this->index][] = 'x<sub>' . (count($this->targetfunction[$this->index]) - 1) . '</sub>';
             $this->nonBasisVariable[$this->index][] = 'x<sub>' . count($this->targetfunction[$this->index]) . '</sub>';
             $this->Solve(true);

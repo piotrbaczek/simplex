@@ -10,7 +10,7 @@ class SimplexTableau {
 
 	private $mainRow = -1;
 	private $mainCol = -1;
-	private $index = 0;
+	private $index = 1;
 	private $gomoryTable = false;
 	private $array;
 	private $divisionArray = Array();
