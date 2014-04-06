@@ -31,7 +31,7 @@ class Point {
 		} else {
 			$this->array = Array();
 			for ($i = 0; $i < $size; $i++) {
-				$this->array[$i] = 0;
+				$this->array[$i] = 0.0;
 			}
 		}
 	}
@@ -42,7 +42,7 @@ class Point {
 	 */
 	public function resetPoint() {
 		for ($i = 0; $i < count($this->array); $i++) {
-			$this->array[$i] = 0;
+			$this->array[$i] = 0.0;
 		}
 	}
 
