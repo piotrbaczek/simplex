@@ -56,7 +56,7 @@ class Point {
 		if ($key >= $this->getPointDimensionAmount()) {
 			throw new Exception(__FUNCTION__ . ' array exceeded. (' . $key . ':' . $this->getPointDimensionAmount() . ')');
 		} else {
-			$this->array[(int) $key] = (int) $value;
+			$this->array[$key] = (float) $value;
 		}
 	}
 
