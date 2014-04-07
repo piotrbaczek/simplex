@@ -698,10 +698,10 @@ class Simplex {
 		if ($number < 0) {
 			throw new Exception('$number in ' . __FUNCTION__ . ' can\'t be negative');
 		} else {
-			if ($number < 10) {
+			if ($number < 20) {
+				return 0.1;
+			} elseif ($number < 40) {
 				return 0.2;
-			} elseif ($number < 50) {
-				return 0.5;
 			} elseif ($number < 100) {
 				return 1;
 			} else {
@@ -721,13 +721,13 @@ class Simplex {
 		$json = Array();
 		if (count($this->getTargetFunction()) == 2 || count($this->getTargetFunction()) == 1) {
 			if ($this->extreme) {
-				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
-					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
+				for ($i = $minRange[0]; $i < $maxRange[0] + Simplex::getIterationSeparation($maxRange[0]); $i += Simplex::getIterationSeparation($maxRange[0])) {
+					for ($j = $minRange[1]; $j < $maxRange[1] + Simplex::getIterationSeparation($maxRange[1]); $j += Simplex::getIterationSeparation($maxRange[1])) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
 						if ($this->isValidPoint($point)) {
-							$json[] = Array(round($i, 2), round($j, 2), -round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
+							$json[] = Array($i, $j, -round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
 						}
 					}
 				}
@@ -743,13 +743,13 @@ class Simplex {
 //					}
 //				}
 			} else {
-				for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
-					for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
+				for ($i = $minRange[0]; $i < $maxRange[0] + Simplex::getIterationSeparation($maxRange[0]); $i += Simplex::getIterationSeparation($maxRange[0])) {
+					for ($j = $minRange[1]; $j < $maxRange[1] + Simplex::getIterationSeparation($maxRange[1]); $j += Simplex::getIterationSeparation($maxRange[1])) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
 						if ($this->isValidPoint($point)) {
-							$json[] = Array(round($i, 2), round($j, 2), round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
+							$json[] = Array($i, $j, round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
 						}
 					}
 				}
@@ -766,15 +766,15 @@ class Simplex {
 //				}
 			}
 		} else {
-			for ($i = $minRange[0]; $i <= $maxRange[0]; $i += Simplex::getIterationSeparation($maxRange[0])) {
-				for ($j = $minRange[1]; $j <= $maxRange[1]; $j += Simplex::getIterationSeparation($maxRange[1])) {
-					for ($k = $minRange[2]; $k <= $maxRange[2]; $k+=Simplex::getIterationSeparation($maxRange[2])) {
+			for ($i = $minRange[0]; $i < $maxRange[0] + Simplex::getIterationSeparation($maxRange[0]); $i += Simplex::getIterationSeparation($maxRange[0])) {
+				for ($j = $minRange[1]; $j < $maxRange[1] + Simplex::getIterationSeparation($maxRange[1]); $j += Simplex::getIterationSeparation($maxRange[1])) {
+					for ($k = $minRange[2]; $k < $maxRange[2] + Simplex::getIterationSeparation($maxRange[2]); $k+=Simplex::getIterationSeparation($maxRange[2])) {
 						$point->resetPoint();
 						$point->setPointDimension(0, $i);
 						$point->setPointDimension(1, $j);
 						$point->setPointDimension(2, $k);
 						if ($this->isValidPoint($point)) {
-							$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
+							$json[] = Array($i, $j, $k);
 						}
 					}
 				}
