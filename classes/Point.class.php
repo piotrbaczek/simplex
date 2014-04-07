@@ -19,6 +19,7 @@
 class Point {
 
 	private $array;
+	private $size;
 
 	/**
 	 * Construct array of size $size
@@ -29,8 +30,9 @@ class Point {
 		if ($size == 0) {
 			throw new Exception('Unspecified size of array in ' . __FUNCTION__);
 		} else {
+			$this->size = $size;
 			$this->array = Array();
-			for ($i = 0; $i < $size; $i++) {
+			for ($i = 0; $i < $this->size; $i++) {
 				$this->array[$i] = 0.0;
 			}
 		}
@@ -41,7 +43,9 @@ class Point {
 	 * (Setting point to [0,0,.......]
 	 */
 	public function resetPoint() {
-		for ($i = 0; $i < count($this->array); $i++) {
+		unset($this->array);
+		$this->array = Array();
+		for ($i = 0; $i < $this->size; $i++) {
 			$this->array[$i] = 0.0;
 		}
 	}
@@ -49,14 +53,14 @@ class Point {
 	/**
 	 * Setting $key-th dimension to $value
 	 * @param Integer $key
-	 * @param Integer $value
+	 * @param Float $value
 	 * @throws Exception
 	 */
 	public function setPointDimension($key, $value) {
 		if ($key >= $this->getPointDimensionAmount()) {
 			throw new Exception(__FUNCTION__ . ' array exceeded. (' . $key . ':' . $this->getPointDimensionAmount() . ')');
 		} else {
-			$this->array[$key] = (float) $value;
+			$this->array[$key] = (float) round($value, 2);
 		}
 	}
 
@@ -86,7 +90,7 @@ class Point {
 	 */
 	public function multiplyBy(Point $p) {
 		if ($this->getPointDimensionAmount() == $p->getPointDimensionAmount()) {
-			$sum = 0;
+			$sum = 0.0;
 			$remote = (Array) $p->toArray();
 			foreach ($this->toArray() as $key => $value) {
 				$sum+=($value * $remote[$key]);
