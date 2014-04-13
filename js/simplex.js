@@ -186,7 +186,7 @@ $(document).ajaxStart(function() {
     $('input.fake').click(function() {
         $('input[name=fileToUpload]').click();
     });
-    $('input[name=fileToUpload]').bind('change', function() {
+    $('input[name=fileToUpload]').live('change', function() {
         $('input.fake').val($(this).val());
     });
     $('#firstButton').button({
