@@ -35,7 +35,6 @@ class CSVGenerator {
         $this->gomorryFunction = $gomorry;
         $this->targetFunction = $targetFunction;
         $this->textarea = $textarea;
-        echo urldecode($this->textarea);
     }
 
     /**
@@ -65,7 +64,6 @@ class CSVGenerator {
             $rows[$key] = urldecode($value);
         }
         foreach ($rows as $key => $value) {
-            echo $value . PHP_EOL;
             $row = preg_split('/=|<=|>=/', $value);
             $left = preg_split('/x1|x2|x3|x4|x5|x6|x7|x8|x9/', $row[0]);
             for ($i = 0; $i < count($left); $i++) {
