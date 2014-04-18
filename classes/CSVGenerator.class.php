@@ -70,7 +70,7 @@ class CSVGenerator {
                 if (empty($left[$i])) {
                     continue;
                 } else {
-                    $array[$key + 1][] = (float) $left[$i];
+                    $array[$key + 1][] = $left[$i];
                 }
             }
             if (strpos($value, '<=') !== false) {
