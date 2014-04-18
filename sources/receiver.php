@@ -15,10 +15,10 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header('Content-Type: application/json');
 if ($ss) {
-//	$_POST['textarea'] = '2x1+1x2+1x3<=1200
-//7x1+3x2+0x3>=2100
-//0x1+1x2+2x3>=1200';
-//	$_POST['targetfunction'] = '3x1+6x2+2x3';
+//	$_POST['textarea'] = '1x1+1x2<=10
+//2x1-1x2>=0
+//1x1-2x2<=0';
+//	$_POST['targetfunction'] = '2x1+1x2';
 //	$_POST['funct'] = 'false';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
