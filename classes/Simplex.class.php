@@ -848,46 +848,24 @@ class Simplex {
 	 * @return Array
 	 */
 	public function getMaxRangeArray() {
-		$x = Array();
-		for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
-			$x[] = new Fraction(PHP_INT_MAX);
-		}
-		for ($i = 0; $i < $this->matrixes[0]->getRows() - 1; $i++) {
-			$flag = FALSE;
-			for ($j = 0; $j < $this->matrixes[0]->getCols() - 1; $j++) {
-				$b = clone $this->matrixes[0]->getElement($this->matrixes[0]->getRows() - 1, $j);
-				$temp = clone $this->matrixes[0]->getElement($i, $j);
-				if (Fraction::equalsZero($temp) || Fraction::isNegative($temp)) {
-					continue;
+		$array = Array();
+		for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
+			for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
+				$temp = clone $this->matrixes[0]->getElement($j, $i);
+				$variable = clone $this->matrixes[0]->getElement($this->matrixes[0]->getRows() - 1, $i);
+				if (Fraction::equalsZero($temp)) {
+					$array[$j][$i] = 0;
 				} else {
-					$b->divide($temp);
-					if (!$b->compare($x[$i]) && !$flag) {
-						if ($this->signs[$j] == enumSigns::_GEQ) {
-							$b->multiply(2);
-							$flag = TRUE;
-							$x[$i] = $b;
-						} else {
-							$x[$i] = $b;
-						}
-					} else {
-						if ($this->signs[$j] == enumSigns::_GEQ) {
-							$b->multiply(2);
-							if (!$b->compare($x[$i])) {
-								$x[$i] = $b;
-							}
-						}
-					}
+					$variable->divide($temp);
+					$array[$j][$i] = $variable->getValue();
 				}
 			}
 		}
-		foreach ($x as $key => $value) {
-			if ($x[$key]->getRealValue() == PHP_INT_MAX) {
-				$x[$key] = 0;
-				continue;
-			}
-			$x[$key] = round($value->getRealValue(), 2);
+		$array2 = Array();
+		foreach ($array as $key => $value) {
+			$array2[$key] = max($value);
 		}
-		return $x;
+		return $array2;
 	}
 
 	/**
