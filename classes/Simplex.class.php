@@ -608,32 +608,21 @@ class Simplex {
 		}
 		if ($a == 2 || $a == 1) {
 			$b = count($this->boundaries);
-			$maxx = new Fraction(0);
-			$maxy = new Fraction(0);
-			for ($i = 0; $i < $b; $i++) {
-				if (Fraction::equalsZero($this->variables[$i][1])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][1]);
-				if ($s->compare($maxy)) {
-					$maxy = $s;
-				}
-				if (Fraction::equalsZero($this->variables[$i][0])) {
-					continue;
-				}
-				$s = clone $this->boundaries[$i];
-				$s->divide($this->variables[$i][0]);
-				if ($s->compare($maxx)) {
-					$maxx = $s;
-				}
-			}
+			$maxx = new Fraction($this->getMaxRangeArray()[0]);
+			$maxy = new Fraction($this->getMaxRangeArray()[1]);
 			for ($i = 0; $i < $b; $i++) {
 				$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
 				if (Fraction::equalsZero($this->variables[$i][1])) {
 					$s = clone $this->boundaries[$i];
 					$s->divide($this->variables[$i][0]);
 					$json[$i]['data'][] = Array($s->getValue(), $maxy->getValue());
+				} elseif (Fraction::isNegative($this->variables[$i][1])) {
+					$left = clone $this->variables[$i][0];
+					$left->multiply($maxx);
+					$boundaries = clone $this->boundaries[$i];
+					$boundaries->substract($left);
+					$boundaries->divide($this->variables[$i][1]);
+					$json[$i]['data'][] = Array($maxx->getValue(), $boundaries->getValue());
 				} else {
 					$j = clone $this->boundaries[$i];
 					$j->divide($this->variables[$i][1]);
@@ -643,6 +632,13 @@ class Simplex {
 					$s = clone $this->boundaries[$i];
 					$s->divide($this->variables[$i][1]);
 					$json[$i]['data'][] = Array($maxx->getValue(), $s->getValue());
+				} elseif (Fraction::isNegative($this->variables[$i][0])) {
+					$left = clone $this->variables[$i][0];
+					$left->multiply($maxx);
+					$boundaries = clone $this->boundaries[$i];
+					$boundaries->substract($left);
+					$boundaries->divide($this->variables[$i][1]);
+					$json[$i]['data'][] = Array($maxx->getValue(), $boundaries->getValue());
 				} else {
 					$j = clone $this->boundaries[$i];
 					$j->divide($this->variables[$i][0]);
