@@ -355,7 +355,7 @@ class Simplex {
 						if (Fraction::hasM($this->matrixes[$key - 1]->getElement($j, $i)) || Fraction::hasM($this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i))) {
 							$removedM = clone $this->matrixes[$key - 1]->getElement($j, $i);
 							Fraction::removeM($removedM);
-							$removedM2 = $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i);
+							$removedM2 = clone $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i);
 							Fraction::removeM($removedM2);
 							$string.='<td data-dane="g,' . $removedM . ',' . $removedM2 . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 							unset($removedM);
