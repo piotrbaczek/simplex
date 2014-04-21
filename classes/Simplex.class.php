@@ -352,11 +352,14 @@ class Simplex {
 					} elseif ($i == $this->matrixes[$key - 1]->getMainRow()) {
 						$string.='<td data-dane="r,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 					} else {
-						if (Fraction::hasM($this->matrixes[$key - 1]->getElement($j, $i))) {
+						if (Fraction::hasM($this->matrixes[$key - 1]->getElement($j, $i)) || Fraction::hasM($this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i))) {
 							$removedM = clone $this->matrixes[$key - 1]->getElement($j, $i);
 							Fraction::removeM($removedM);
-							$string.='<td data-dane="g,' . $removedM . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
+							$removedM2 = $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i);
+							Fraction::removeM($removedM2);
+							$string.='<td data-dane="g,' . $removedM . ',' . $removedM2 . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 							unset($removedM);
+							unset($removedM2);
 						} else {
 							$string.='<td data-dane="g,' . $this->matrixes[$key - 1]->getElement($j, $i) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $i) . ',' . $this->matrixes[$key - 1]->getElement($j, $this->matrixes[$key - 1]->getMainRow()) . ',' . $this->matrixes[$key - 1]->getElement($this->matrixes[$key - 1]->getMainCol(), $this->matrixes[$key - 1]->getMainRow()) . '">' . $value->getElement($j, $i) . '</td>';
 						}
