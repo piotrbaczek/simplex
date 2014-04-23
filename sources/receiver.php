@@ -1,5 +1,4 @@
 <?php
-
 include '../classes/TextareaProcesser.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/SimplexTableau.class.php';
@@ -9,12 +8,11 @@ include '../classes/activity.class.php';
 include '../classes/DivisionCoefficient.class.php';
 include '../classes/Point.class.php';
 
-$ss = activity::isactivated2('../activity/active.xml') ? true : false;
 $json = Array();
 header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header('Content-Type: application/json');
-if ($ss) {
+if (activity::isactivated2('../activity/active.xml')) {
 //	$_POST['textarea'] = '1x1+1x2<=10
 //2x1-1x2>=0
 //1x1-2x2<=0';
