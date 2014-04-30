@@ -14,9 +14,11 @@
 class RandomClass {
 
     public $array;
+    public $array2;
 
     public function __construct() {
-        $this->array = Array(1, 5, 2, 4, 3, 6);
+        $this->array = Array(0, 4, 2, 4, 3, 6);
+        $this->array2 = $this->array;
     }
 
     public function getArray() {
@@ -24,14 +26,11 @@ class RandomClass {
     }
 
     public function go() {
+        $this->array[1] = count($this->array2);
         for ($i = $this->getArray()[0]; $i < $this->getArray()[1]; $i++) {
-            for ($j = $this->getArray()[2]; $j < $this->getArray()[3]; $j++) {
-                for ($k = $this->getArray()[4]; $k < $this->getArray()[5]; $k++) {
-                    $this->array[$i] = 0;
-                }
-            }
+            $this->array2[$i] = 0;
         }
-        if (max($this->array) == 0) {
+        if (max($this->array2) == 0) {
             echo 'Here you can cast functions as arrays<br/>';
         } else {
             echo 'Here you <b>can\'t</b> cast functions as arrays<br/>';
