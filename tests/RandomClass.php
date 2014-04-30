@@ -27,9 +27,14 @@ class RandomClass {
         for ($i = $this->getArray()[0]; $i < $this->getArray()[1]; $i++) {
             for ($j = $this->getArray()[2]; $j < $this->getArray()[3]; $j++) {
                 for ($k = $this->getArray()[4]; $k < $this->getArray()[5]; $k++) {
-                    echo $i . '|' . $j . '|' . $k . PHP_EOL;
+                    $this->array[$i] = 0;
                 }
             }
+        }
+        if (max($this->array) == 0) {
+            echo 'Here you can cast functions as arrays<br/>';
+        } else {
+            echo 'Here you <b>can\'t</b> cast functions as arrays<br/>';
         }
     }
 
