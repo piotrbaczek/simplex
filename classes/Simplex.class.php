@@ -611,7 +611,7 @@ class Simplex {
         }
         if ($a == 2 || $a == 1) {
             $b = count($this->boundaries);
-            $mr0 = $this->getMaxRangeArray();
+            $mr = $this->getMaxRangeArray();
             $maxx = new Fraction($mr[0]);
             $maxy = new Fraction($mr[1]);
             for ($i = 0; $i < $b; $i++) {
