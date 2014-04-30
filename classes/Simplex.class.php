@@ -863,7 +863,7 @@ class Simplex {
         }
         $array2 = Array();
         foreach ($array as $key => $value) {
-            $array2[$key] = max($value);
+            $array2[$key] = round(max($value), 2);
         }
         return $array2;
     }
