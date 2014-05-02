@@ -705,7 +705,7 @@ class Simplex {
             } elseif ($number < 100) {
                 return 1;
             } else {
-                return $number / 10;
+                return $number / 75;
             }
         }
     }
