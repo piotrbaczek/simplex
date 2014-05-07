@@ -698,14 +698,14 @@ class Simplex {
         if ($number < 0) {
             throw new Exception('$number in ' . __FUNCTION__ . ' can\'t be negative');
         } else {
-            if ($number < 20) {
+            if ($number < 10) {
                 return 0.1;
             } elseif ($number < 40) {
-                return 0.2;
-            } elseif ($number < 100) {
                 return 1;
+            } elseif ($number < 100) {
+                return 5;
             } else {
-                return $number / 75;
+                return $number / 25;
             }
         }
     }

@@ -1,4 +1,5 @@
 <?php
+ini_set('max_execution_time', 300);
 include '../classes/TextareaProcesser.class.php';
 include '../classes/Fraction.class.php';
 include '../classes/SimplexTableau.class.php';
@@ -13,10 +14,10 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header('Content-Type: application/json');
 if (activity::isactivated2('../activity/active.xml')) {
-//	$_POST['textarea'] = '1x1+1x2<=10
-//2x1-1x2>=0
-//1x1-2x2<=0';
-//	$_POST['targetfunction'] = '2x1+1x2';
+//	$_POST['textarea'] = '1x1+2x2+3x3<=20
+//1x1+1x2+1x3<=15
+//3x1+2x1x3<=25';
+//	$_POST['targetfunction'] = '3x1+4x2+2x3';
 //	$_POST['funct'] = 'false';
 //	$_POST['gomorryf'] = 'false';
 	$tp = new TextareaProcesser(
