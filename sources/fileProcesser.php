@@ -1,5 +1,5 @@
 <?php
-
+ini_set('max_execution_time', 300);
 include '../classes/CSVReader.class.php';
 include '../classes/Simplex.class.php';
 include '../classes/SimplexTableau.class.php';
