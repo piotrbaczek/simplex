@@ -88,7 +88,7 @@ Grapher.prototype.setPlot3DData = function(data) {
     this.data[5] = data;
 };
 Grapher.prototype.plot3d = function() {
-    if (this.data[4] === undefined || this.data[5] === undefined || this.data[4].length === 0 || this.data[5].length === 0) {
+    if (this.data[5] === undefined || this.data[5].length === 0) {
         alert('Błąd otrzymanych danych lub pusty zbiór rozwiązań.');
     } else {
         if (this.cx instanceof CanvasXpress) {
