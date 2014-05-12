@@ -159,7 +159,7 @@ class Fraction {
 	 * @return float
 	 */
 	public function getRealM() {
-		return (int) $this->mnumerator / $this->mdenominator;
+		return $this->mnumerator / $this->mdenominator;
 	}
 
 	/**
@@ -167,7 +167,7 @@ class Fraction {
 	 * @return float
 	 */
 	public function getRealValue() {
-		return (int) $this->numerator / $this->denominator;
+		return $this->numerator / $this->denominator;
 	}
 
 	/**
