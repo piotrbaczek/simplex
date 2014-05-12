@@ -453,7 +453,11 @@ class Simplex {
      */
     public function printResult() {
 	if ($this->eMessage == '') {
-	    return 'W=' . $this->getResult();
+	    if (Fraction::isFraction($this->getResult())) {
+		return 'W=' . $this->getResult() . '(' . $this->getResult()->getRealValue() . ')';
+	    } else {
+		return 'W=' . $this->getResult();
+	    }
 	} else {
 	    return '';
 	}
