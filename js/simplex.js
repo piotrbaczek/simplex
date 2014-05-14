@@ -177,6 +177,7 @@ $(document).ajaxStart(function() {
 
                 },
                 error: function(data) {
+                    $.unblockUI();
                     alert(JSON.stringify(data));
                 }
             });
