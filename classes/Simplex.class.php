@@ -548,11 +548,11 @@ class Simplex {
 	    for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
 		$element = clone $this->matrixes[0]->getElement($j, $i);
 		if (Fraction::isPositive($element) || Fraction::equalsZero($element)) {
-		    $string.=$j != 0 ? '+' : '';
+		    $string.=($j != 0) ? '+' : '';
 		}
 		$string.=$element . 'x<sub>' . ($j + 1) . '</sub>';
 	    }
-	    $string.=$this->signs[$i];
+	    $string.=enumSigns::_EQ;
 	    $string.=$this->boundaries[$i];
 	    $string.='<br/>';
 	}
