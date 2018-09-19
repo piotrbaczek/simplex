@@ -3,7 +3,7 @@
 /**
  * Dantzig's Simplex Method and Gomory's Cutting Plane Method
  * Master thesis for Gdańsk University of Technology
- * 
+ *
  * GNU Licence 2014 For public use
  * @author Piotr Gołasz <pgolasz@gmail.com>
  * @see sources/receiver.php
@@ -11,13 +11,13 @@
 class Simplex {
 
     private $index = 0;
-    private $matrixes = Array();
+    private $matrixes = array();
     private $gomory;
     private $extreme;
     private $variables;
     private $boundaries;
     private $signs;
-    private $targetfunction;
+    private $targetfunction = [];
     private $wrongsigns = 0;
     private $M, $N, $O;
     private $cCoefficient;
@@ -35,7 +35,7 @@ class Simplex {
      * @param boolean $gomory
      * @throws Exception
      */
-    public function __construct(Array $variables, Array $boundaries, Array $signs, Array $targetfunction, $max = true, $gomory = false) {
+    public function __construct(array $variables, array $boundaries, array $signs, array $targetfunction, $max = true, $gomory = false) {
 	$this->gomory = (boolean) $gomory;
 	$this->extreme = (boolean) $max;
 	$this->variables = $variables;
@@ -45,9 +45,9 @@ class Simplex {
 	$this->M = count($variables[0]) + 1; //3
 	$this->N = count($boundaries) + 1; //4
 	$this->O = count($targetfunction[$this->index]);
-	$this->cCoefficient[$this->index] = Array();
-	$this->basisVariable = Array();
-	$this->nonBasisVariable = Array();
+	$this->cCoefficient[$this->index] = array();
+	$this->basisVariable = array();
+	$this->nonBasisVariable = array();
 
 	if (empty($variables) || empty($boundaries) || empty($signs) || empty($targetfunction[$this->index])) {
 	    throw new Exception('Input array is empty!.');
@@ -259,12 +259,12 @@ class Simplex {
 	$string = '';
 	foreach ($this->matrixes as $key => $value) {
 	    if (($key + 1) > $this->index) {
-		$divisionArray = Array();
-		foreach ($value->getDivisionArray() as $key2 => $darray) {
+		$divisionArray = array();
+		foreach ($value->getDivisionarray() as $key2 => $darray) {
 		    $divisionArray[$key2] = new DivisionCoefficient();
 		}
 	    } else {
-		$divisionArray = $this->matrixes[$key + 1]->getDivisionArray();
+		$divisionArray = $this->matrixes[$key + 1]->getDivisionarray();
 	    }
 	    $string.='<table class="result">';
 	    $string.='<tbody>';
@@ -527,7 +527,7 @@ class Simplex {
 	    }
 	    if ($this->extreme) {
 		if (Fraction::hasM($temp)) {
-		    
+
 		} else {
 		    $temp->minusFraction();
 		}
@@ -587,7 +587,7 @@ class Simplex {
 	if ($indexarray == -1) {
 	    $indexarray = $this->index;
 	}
-	$x = Array();
+	$x = array();
 	for ($i = 1; $i < 2 + max(array_keys($this->targetfunction[$indexarray])); $i++) {
 	    $x[$i] = new Fraction();
 	}
@@ -607,7 +607,7 @@ class Simplex {
      */
     public function getPrimaryGraphJson() {
 	$a = 0;
-	$json = Array();
+	$json = array();
 	foreach ($this->targetfunction[$this->index] as $key => $value) {
 	    if (!Fraction::equalsZero($value) && !Fraction::hasM($value) || ($key < $this->M - 1)) {
 		$a++;
@@ -615,42 +615,42 @@ class Simplex {
 	}
 	if ($a == 2 || $a == 1) {
 	    $b = count($this->boundaries);
-	    $mr = $this->getMaxRangeArray();
+	    $mr = $this->getMaxRangearray();
 	    $maxx = new Fraction($mr[0]);
 	    $maxy = new Fraction($mr[1]);
 	    for ($i = 0; $i < $b; $i++) {
-		$json[$i] = Array('label' => 'S' . ($i + 1), 'data' => '');
+		$json[$i] = array('label' => 'S' . ($i + 1), 'data' => []);
 		if (Fraction::equalsZero($this->variables[$i][1])) {
 		    $s = clone $this->boundaries[$i];
 		    $s->divide($this->variables[$i][0]);
-		    $json[$i]['data'][] = Array($s->getValue(), $maxy->getValue());
+		    $json[$i]['data'][] = array($s->getValue(), $maxy->getValue());
 		} elseif (Fraction::isNegative($this->variables[$i][1])) {
 		    $left = clone $this->variables[$i][0];
 		    $left->multiply($maxx);
 		    $boundaries = clone $this->boundaries[$i];
 		    $boundaries->substract($left);
 		    $boundaries->divide($this->variables[$i][1]);
-		    $json[$i]['data'][] = Array($maxx->getValue(), $boundaries->getValue());
+		    $json[$i]['data'][] = array($maxx->getValue(), $boundaries->getValue());
 		} else {
 		    $j = clone $this->boundaries[$i];
 		    $j->divide($this->variables[$i][1]);
-		    $json[$i]['data'][] = Array(0, $j->getValue());
+		    $json[$i]['data'][] = array(0, $j->getValue());
 		}
 		if (Fraction::equalsZero($this->variables[$i][0])) {
 		    $s = clone $this->boundaries[$i];
 		    $s->divide($this->variables[$i][1]);
-		    $json[$i]['data'][] = Array($maxx->getValue(), $s->getValue());
+		    $json[$i]['data'][] = array($maxx->getValue(), $s->getValue());
 		} elseif (Fraction::isNegative($this->variables[$i][0])) {
 		    $left = clone $this->variables[$i][0];
 		    $left->multiply($maxx);
 		    $boundaries = clone $this->boundaries[$i];
 		    $boundaries->substract($left);
 		    $boundaries->divide($this->variables[$i][1]);
-		    $json[$i]['data'][] = Array($maxx->getValue(), $boundaries->getValue());
+		    $json[$i]['data'][] = array($maxx->getValue(), $boundaries->getValue());
 		} else {
 		    $j = clone $this->boundaries[$i];
 		    $j->divide($this->variables[$i][0]);
-		    $json[$i]['data'][] = Array($j->getValue(), 0);
+		    $json[$i]['data'][] = array($j->getValue(), 0);
 		}
 	    }
 	    if (!Fraction::equalsZero($this->targetfunction[0][0])) {
@@ -658,17 +658,17 @@ class Simplex {
 		    $t = clone $this->targetfunction[$this->index][1];
 		    $t->multiply($maxx);
 		    $t->divide($this->targetfunction[$this->index][0]);
-		    $json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue() / 4, $t->getValue() / 4)));
+		    $json[] = array('label' => 'gradient', 'data' => array(array(0, 0), array($maxx->getValue() / 4, $t->getValue() / 4)));
 		} else {
-		    $json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array($maxx->getValue(), 0)));
+		    $json[] = array('label' => 'gradient', 'data' => array(array(0, 0), array($maxx->getValue(), 0)));
 		}
 	    } else {
-		$json[] = Array('label' => 'gradient', 'data' => Array(Array(0, 0), Array(0, $maxy->getRealValue())));
+		$json[] = array('label' => 'gradient', 'data' => array(array(0, 0), array(0, $maxy->getRealValue())));
 	    }
 	    foreach ($this->matrixes as $key => $value) {
 		if (!$value->isGomory()) {
 		    $key1 = $this->getValuePair($key);
-		    $json[] = Array('label' => 'A' . ($key + 1), 'data' => Array(Array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => Array('show' => true));
+		    $json[] = array('label' => 'A' . ($key + 1), 'data' => array(array($key1[1]->getRealValue(), $key1[2]->getRealValue())), 'points' => array('show' => true));
 		}
 	    }
 	}
@@ -681,7 +681,7 @@ class Simplex {
      * @return Array
      */
     public function getTargetFunction() {
-	$x = Array();
+	$x = array();
 	foreach ($this->targetfunction[$this->index] as $key => $value) {
 	    if (Fraction::equalsZero($value) || Fraction::hasM($value)) {
 		continue;
@@ -711,10 +711,10 @@ class Simplex {
      * @return Array Array of points for 3d graph
      */
     public function getSecondaryGraphJson() {
-	$point = new Point(count($this->getMaxRangeArray()));
-	$maxRange = $this->getMaxRangeArray();
-	$minRange = $this->getMinRangeArray();
-	$json = Array();
+	$point = new Point(count($this->getMaxRangearray()));
+	$maxRange = $this->getMaxRangearray();
+	$minRange = $this->getMinRangearray();
+	$json = array();
 	if (count($this->getTargetFunction()) == 2 || count($this->getTargetFunction()) == 1) {
 	    if ($this->extreme) {
 		for ($i = $minRange[0]; $i < $maxRange[0] + Simplex::getIterationSeparation($maxRange[0]); $i += Simplex::getIterationSeparation($maxRange[0])) {
@@ -723,7 +723,7 @@ class Simplex {
 			$point->setPointDimension(0, $i);
 			$point->setPointDimension(1, $j);
 			if ($this->isValidPoint($point)) {
-			    $json[] = Array($i, $j, -round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
+			    $json[] = array($i, $j, -round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
 			}
 		    }
 		}
@@ -735,7 +735,7 @@ class Simplex {
 //						$point->setPointDimension($key2 - 1, $value2->getRealValue());
 //					}
 //					if ($this->isValidPoint($point)) {
-//						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
+//						$json[] = array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), -round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
 //					}
 //				}
 	    } else {
@@ -745,7 +745,7 @@ class Simplex {
 			$point->setPointDimension(0, $i);
 			$point->setPointDimension(1, $j);
 			if ($this->isValidPoint($point)) {
-			    $json[] = Array($i, $j, round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
+			    $json[] = array($i, $j, round($this->targetfunction[0][0]->getRealValue() * $i + $this->targetfunction[0][1]->getRealValue() * $j, 2));
 			}
 		    }
 		}
@@ -757,7 +757,7 @@ class Simplex {
 //						$point->setPointDimension($key2 - 1, $value2->getRealValue());
 //					}
 //					if ($this->isValidPoint($point)) {
-//						$json[] = Array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
+//						$json[] = array(round($key1[1]->getRealValue(), 2), round($key1[2]->getRealValue(), 2), round($this->targetfunction[0][0]->getRealValue() * $key1[1]->getRealValue() + $this->targetfunction[0][1]->getRealValue() * $key1[2]->getRealValue(), 2));
 //					}
 //				}
 	    }
@@ -770,7 +770,7 @@ class Simplex {
 			$point->setPointDimension(1, $j);
 			$point->setPointDimension(2, $k);
 			if ($this->isValidPoint($point)) {
-			    $json[] = Array($i, $j, $k);
+			    $json[] = array($i, $j, $k);
 			}
 		    }
 		}
@@ -843,8 +843,8 @@ class Simplex {
      * Returns array of Maximal value of each dimension's range
      * @return Array
      */
-    public function getMaxRangeArray() {
-	$array = Array();
+    public function getMaxRangearray() {
+	$array = array();
 	for ($i = 0; $i < $this->matrixes[0]->getCols() - 1; $i++) {
 	    for ($j = 0; $j < $this->matrixes[0]->getRows() - 1; $j++) {
 		$temp = clone $this->matrixes[0]->getElement($j, $i);
@@ -857,7 +857,7 @@ class Simplex {
 		}
 	    }
 	}
-	$array2 = Array();
+	$array2 = array();
 	foreach ($array as $key => $value) {
 	    $array2[$key] = round(max($value), 2);
 	}
@@ -868,8 +868,8 @@ class Simplex {
      * Returns Array of Zero's
      * @return Array
      */
-    public function getMinRangeArray() {
-	$x = Array();
+    public function getMinRangearray() {
+	$x = array();
 	for ($i = 0; $i < count($this->targetfunction[0]); $i++) {
 	    $x[] = 0;
 	}
@@ -883,9 +883,9 @@ class Simplex {
      * @return Array
      */
     public function getRedrawData(Array $dimensions, Array $values) {
-	$json = Array();
-	$maxRange = $this->getMaxRangeArray();
-	$minRange = $this->getMinRangeArray();
+	$json = array();
+	$maxRange = $this->getMaxRangearray();
+	$minRange = $this->getMinRangearray();
 	$point = new Point(count($maxRange));
 	$decreaser = 0;
 
@@ -905,7 +905,7 @@ class Simplex {
 		    $point->setPointDimension($dimensions[$ak[1]], $j);
 		    $point->setPointDimension($dimensions[$ak[2]], $k);
 		    if ($this->isValidPoint($point, $decreaser)) {
-			$json[] = Array(round($i, 2), round($j, 2), round($k, 2));
+			$json[] = array(round($i, 2), round($j, 2), round($k, 2));
 		    }
 		}
 	    }
