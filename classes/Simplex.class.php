@@ -702,7 +702,7 @@ class Simplex {
 	if ($number < 0) {
 	    throw new Exception('$number in ' . __FUNCTION__ . ' can\'t be negative');
 	} else {
-	    return floatval($number / 20);
+	    return floatval($number / 50);
 	}
     }
 
