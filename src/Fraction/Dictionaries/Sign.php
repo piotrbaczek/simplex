@@ -1,11 +1,11 @@
 <?php
 
 
-namespace pbaczek\simplex;
+namespace pbaczek\simplex\Fraction\Dictionaries;
 
 /**
  * Class Sign
- * @package pbaczek\simplex
+ * @package pbaczek\simplex\Dictionaries
  */
 final class Sign
 {

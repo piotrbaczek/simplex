@@ -4,6 +4,7 @@
  * Class storing possible inequalities or equalities of LP problem
  *
  * @author PETTER
+ * @deprecated
  */
 class enumSigns {
 

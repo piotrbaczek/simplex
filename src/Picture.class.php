@@ -4,6 +4,7 @@
  * @author Piotr Gołasz <pgolasz@gmail.com>
  * @version 1.0
  * @see DivisionCoefficient
+ * @deprecated
  */
 class Picture
 {

@@ -6,6 +6,7 @@
  *
  * @version 1.0
  * @author PETTER
+ * @deprecated
  */
 class DivisionCoefficient {
 

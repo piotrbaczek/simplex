@@ -7,6 +7,7 @@
  * GNU Licence 2014 For public use
  * @author Piotr Gołasz <pgolasz@gmail.com>
  * @see sources/receiver.php
+ * @deprecated
  */
 class Simplex {
 

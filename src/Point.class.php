@@ -15,6 +15,7 @@
  *
  * @author PETTER
  * @version 1.0
+ * @deprecated
  */
 class Point {
 

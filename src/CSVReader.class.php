@@ -23,8 +23,12 @@
  * $csv = new Csv_Reader("foo.bar"); // instances class 
  * echo $csv->dump(); // returns data (raw HTML) 
  * var_dump($csv->get()); // returns data (2D array) 
- */ 
+ */
 
+/**
+ * Class Csv_Reader
+ * @deprecated
+ */
 class Csv_Reader 
 { 
     private $file; 

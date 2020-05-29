@@ -2,12 +2,17 @@
 
 namespace pbaczek\simplex;
 
+use InvalidArgumentException;
+use pbaczek\simplex\Fraction\FractionMathHelper;
+
 /**
  * Class Fraction
  * @package pbaczek\simplex
  */
 class Fraction extends FractionAbstract
 {
+    use FractionMathHelper;
+
     /**
      * Checks if fraction is equal to zero
      * @return bool
@@ -24,6 +29,10 @@ class Fraction extends FractionAbstract
      */
     public function add(FractionAbstract $fractionAbstract): void
     {
+        if ($fractionAbstract instanceof self === false) {
+            throw new InvalidArgumentException('Only same class allowed');
+        }
+
         $this->setNumerator($this->getNumerator() * $fractionAbstract->getDenominator() + $this->getDenominator() * $fractionAbstract->getNumerator());
         $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
@@ -36,6 +45,10 @@ class Fraction extends FractionAbstract
      */
     public function subtract(FractionAbstract $fractionAbstract): void
     {
+        if ($fractionAbstract instanceof self === false) {
+            throw new InvalidArgumentException('Only same class allowed');
+        }
+
         $this->setNumerator($this->getNumerator() * $fractionAbstract->getDenominator() - $this->getDenominator() * $fractionAbstract->getNumerator());
         $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
@@ -48,6 +61,10 @@ class Fraction extends FractionAbstract
      */
     public function divide(FractionAbstract $fractionAbstract): void
     {
+        if ($fractionAbstract instanceof self === false) {
+            throw new InvalidArgumentException('Only same class allowed');
+        }
+
         $this->setNumerator($this->getNumerator() * $fractionAbstract->getDenominator());
         $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
@@ -60,6 +77,10 @@ class Fraction extends FractionAbstract
      */
     public function multiply(FractionAbstract $fractionAbstract): void
     {
+        if ($fractionAbstract instanceof self === false) {
+            throw new InvalidArgumentException('Only same class allowed');
+        }
+
         $this->setNumerator($this->getNumerator() * $fractionAbstract->getNumerator());
         $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();

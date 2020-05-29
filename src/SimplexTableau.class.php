@@ -5,6 +5,7 @@
  * Private class of Simplex class
  * @author PETTER
  * @version 1.1
+ * @deprecated
  */
 class SimplexTableau {
 

@@ -3,6 +3,7 @@
 /**
  * @example ../sources/generateCSV.php generating csv from input data
  * @author PETTER
+ * @deprecated
  */
 class CSVGenerator {
 

@@ -10,6 +10,7 @@
  * which is numerator/denominator (if mnumerator !=0) + mnumerator/mdenominator
  * @author Piotr Gołasz <pgolasz@gmail.com>
  * @version 1.0
+ * @deprecated
  */
 class Fraction implements Countable {
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace pbaczek\simplex\fraction;
+namespace pbaczek\simplex\Fraction;
+
+use pbaczek\simplex\Helpers\Math;
 
 /**
  * Class FractionMathHelper
@@ -24,40 +26,8 @@ trait FractionMathHelper
             return;
         }
 
-        $hcd = $this->highestCommonDivisor($this->numerator, $this->denominator);
+        $hcd = Math::highestCommonDivisor($this->numerator, $this->denominator);
         $this->numerator /= $hcd;
         $this->denominator /= $hcd;
-    }
-
-    /**
-     * Finds hcd (Highest Common Division) of two Integers
-     * @static
-     * @param Integer $a
-     * @param Integer $b
-     * @return Integer
-     */
-    protected static function highestCommonDivisor(int $a, int $b)
-    {
-        $a = abs($a);
-        while ($a != $b) {
-            if ($a > $b) {
-                $a = $a - $b;
-                continue;
-            }
-
-            $b = $b - $a;
-        }
-        return $a;
-    }
-
-    /**
-     * Expands the Fraction (just the regular part)
-     * $num * Fraction
-     * @param int $number
-     */
-    protected function expansion(int $number)
-    {
-        $this->numerator *= $number;
-        $this->denominator *= $number;
     }
 }

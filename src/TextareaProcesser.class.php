@@ -4,6 +4,7 @@
  * Processes data from textarea into arrays to Simplex class
  * @see Simplex
  * @author Piotr Gołasz <pgolasz@gmail.com>
+ * @deprecated
  */
 class TextareaProcesser {
 

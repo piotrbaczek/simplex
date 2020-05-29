@@ -2,11 +2,11 @@
 
 namespace pbaczek\simplex\Tests\Unit;
 
-use pbaczek\simplex\Exceptions\NegativeDenominatorException;
-use pbaczek\simplex\Exceptions\UnknownSign;
-use pbaczek\simplex\Exceptions\ZeroDenominatorException;
 use pbaczek\simplex\Fraction;
-use pbaczek\simplex\Sign;
+use pbaczek\simplex\Fraction\Dictionaries\Sign;
+use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
+use pbaczek\simplex\Fraction\Exceptions\UnknownSign;
+use pbaczek\simplex\Fraction\Exceptions\ZeroDenominatorException;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 

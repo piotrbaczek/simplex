@@ -1,12 +1,12 @@
 <?php
 
-namespace pbaczek\simplex\Exceptions;
+namespace pbaczek\simplex\Fraction\Exceptions;
 
 use InvalidArgumentException;
 
 /**
  * Class ZeroDenominatorException
- * @package pbaczek\simplex\exceptions
+ * @package pbaczek\simplex\Fraction\Exceptions
  */
 class ZeroDenominatorException extends InvalidArgumentException
 {

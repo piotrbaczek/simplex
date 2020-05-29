@@ -2,10 +2,9 @@
 
 namespace pbaczek\simplex;
 
-use pbaczek\simplex\Exceptions\NegativeDenominatorException;
-use pbaczek\simplex\Exceptions\UnknownSign;
-use pbaczek\simplex\Exceptions\ZeroDenominatorException;
-use pbaczek\simplex\fraction\FractionMathHelper;
+use pbaczek\simplex\Fraction\Dictionaries\Sign;
+use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
+use pbaczek\simplex\Fraction\Exceptions\UnknownSign;
 use ReflectionClass;
 use ReflectionException;
 
@@ -15,8 +14,6 @@ use ReflectionException;
  */
 abstract class FractionAbstract
 {
-    use FractionMathHelper;
-
     /** @var int $numerator */
     private $numerator;
 
@@ -31,7 +28,7 @@ abstract class FractionAbstract
      * @param int $numerator
      * @param int $denominator
      */
-    public function __construct(int $numerator, int $denominator)
+    public function __construct(int $numerator, int $denominator = 1)
     {
         $this->validateDenominator($denominator);
 
@@ -155,7 +152,7 @@ abstract class FractionAbstract
      * Validate denominator
      * @param int $denominator
      */
-    private function validateDenominator(int $denominator)
+    private function validateDenominator(int $denominator): void
     {
         if ($denominator === 0) {
             throw new ZeroDenominatorException($denominator);
@@ -207,4 +204,10 @@ abstract class FractionAbstract
      * @param FractionAbstract $fractionAbstract
      */
     abstract public function multiply(FractionAbstract $fractionAbstract): void;
+
+    /**
+     * Perform reduction of parameters
+     * @return void
+     */
+    abstract protected function reduction(): void;
 }
