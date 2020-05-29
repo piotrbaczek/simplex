@@ -5,6 +5,8 @@ namespace pbaczek\simplex\fraction;
 /**
  * Class FractionMathHelper
  * @package pbaczek\simplex\fraction
+ * @property int $numerator
+ * @property int $denominator
  */
 trait FractionMathHelper
 {
