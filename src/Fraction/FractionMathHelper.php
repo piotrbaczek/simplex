@@ -8,7 +8,10 @@ namespace pbaczek\simplex\fraction;
  */
 trait FractionMathHelper
 {
-    protected function reduction()
+    /**
+     * Reduce numerator and denominator
+     */
+    protected function reduction(): void
     {
         if ($this->numerator == 0) {
             $this->denominator = 1;

@@ -1,6 +1,6 @@
 <?php
 
-namespace pbaczek\simplex\exceptions;
+namespace pbaczek\simplex\Exceptions;
 
 use InvalidArgumentException;
 

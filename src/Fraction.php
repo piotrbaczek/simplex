@@ -2,9 +2,9 @@
 
 namespace pbaczek\simplex;
 
-use pbaczek\simplex\exceptions\NegativeDenominatorException;
-use pbaczek\simplex\exceptions\ZeroDenominatorException;
-use pbaczek\simplex\fraction\FractionMathHelper;
+use pbaczek\simplex\Exceptions\NegativeDenominatorException;
+use pbaczek\simplex\Exceptions\ZeroDenominatorException;
+use pbaczek\simplex\Fraction\FractionMathHelper;
 
 /**
  * Class Fraction
@@ -115,12 +115,11 @@ class Fraction
 
     /**
      * Tests if Fraction is an Integer
-     * @param Fraction $param
      * @return boolean
      */
-    public function isFraction($param)
+    public function isFraction()
     {
-        return $param->getDenominator() != 1;
+        return $this->getDenominator() != 1;
     }
 
     /**
