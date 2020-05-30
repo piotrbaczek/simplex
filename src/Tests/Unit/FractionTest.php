@@ -2,11 +2,13 @@
 
 namespace pbaczek\simplex\Tests\Unit;
 
+use InvalidArgumentException;
 use pbaczek\simplex\Fraction;
 use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
 use pbaczek\simplex\Fraction\Exceptions\UnknownSign;
 use pbaczek\simplex\Fraction\Exceptions\ZeroDenominatorException;
+use pbaczek\simplex\MFraction;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 
@@ -73,10 +75,10 @@ class FractionTest extends TestCase
     public function testSettingInvalidSign(): void
     {
         $this->expectException(UnknownSign::class);
-        $this->expectExceptionMessage('ANC');
+        $this->expectExceptionMessage('SomeOtherSign');
 
         $this->fraction->setSign(Sign::NEGATIVE);
-        $this->fraction->setSign('ANC');
+        $this->fraction->setSign('SomeOtherSign');
     }
 
     /**
@@ -147,7 +149,43 @@ class FractionTest extends TestCase
         $first->add(new Fraction(-1));
         $this->assertEquals('5/6', $first->__toString());
 
-        $first->add(new Fraction(-11,6));
+        $first->add(new Fraction(-11, 6));
         $this->assertEquals('-1', $first->__toString());
+    }
+
+    /**
+     * Defined functions for
+     * @return array
+     */
+    public function definedFunctions(): array
+    {
+        return [
+            [
+                'add'
+            ],
+            [
+                'subtract'
+            ],
+            [
+                'multiply'
+            ],
+            [
+                'divide'
+            ]
+        ];
+    }
+
+    /**
+     * Test that only same type objects can be added
+     * @dataProvider definedFunctions
+     * @param string $function
+     * @return void
+     */
+    public function testAllMathFunctionsWorkOnlyOnSameObject(string $function): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Only same class allowed');
+
+        $this->fraction->{$function}(new MFraction(2));
     }
 }

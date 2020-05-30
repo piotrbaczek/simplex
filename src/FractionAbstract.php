@@ -176,7 +176,7 @@ abstract class FractionAbstract
      * Validate denominator
      * @param int $denominator
      */
-    private function validateDenominator(int $denominator): void
+    protected function validateDenominator(int $denominator): void
     {
         if ($denominator === 0) {
             throw new ZeroDenominatorException($denominator);
