@@ -16,18 +16,30 @@ use ReflectionException;
  */
 class FractionTest extends TestCase
 {
+    /** @var Fraction $fraction */
+    private $fraction;
+
+    /**
+     * @inheritDoc
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->fraction = new Fraction(1, 2);
+    }
+
     /**
      * Test basic functionality
      * @return void
      */
     public function testBasic(): void
     {
-        $fraction = new Fraction(1, 2);
-        $this->assertEquals(1, $fraction->getNumerator());
-        $this->assertEquals(2, $fraction->getDenominator());
-        $this->assertEquals(Sign::NON_NEGATIVE, $fraction->getSign());
-        $this->assertEquals(0.5, $fraction->getRealValue());
-        $this->assertTrue($fraction->isFraction());
+        $this->assertEquals(1, $this->fraction->getNumerator());
+        $this->assertEquals(2, $this->fraction->getDenominator());
+        $this->assertEquals(Sign::NON_NEGATIVE, $this->fraction->getSign());
+        $this->assertEquals(0.5, $this->fraction->getRealValue());
+        $this->assertTrue($this->fraction->isFraction());
     }
 
     /**
@@ -36,11 +48,10 @@ class FractionTest extends TestCase
      */
     public function testChangingSign(): void
     {
-        $fraction = new Fraction(1, 2);
-        $fraction->changeSign();
-        $this->assertEquals(Sign::NEGATIVE, $fraction->getSign());
-        $fraction->changeSign();
-        $this->assertEquals(Sign::NON_NEGATIVE, $fraction->getSign());
+        $this->fraction->changeSign();
+        $this->assertEquals(Sign::NEGATIVE, $this->fraction->getSign());
+        $this->fraction->changeSign();
+        $this->assertEquals(Sign::NON_NEGATIVE, $this->fraction->getSign());
     }
 
     /**
@@ -64,9 +75,8 @@ class FractionTest extends TestCase
         $this->expectException(UnknownSign::class);
         $this->expectExceptionMessage('ANC');
 
-        $fraction = new Fraction(1, 2);
-        $fraction->setSign(Sign::NEGATIVE);
-        $fraction->setSign('ANC');
+        $this->fraction->setSign(Sign::NEGATIVE);
+        $this->fraction->setSign('ANC');
     }
 
     /**
@@ -75,16 +85,15 @@ class FractionTest extends TestCase
      */
     public function testSettingNumerator(): void
     {
-        $fraction = new Fraction(1, 2);
-        $fraction->setNumerator(12);
-        $this->assertEquals('6', $fraction->__toString());
+        $this->fraction->setNumerator(12);
+        $this->assertEquals('6', $this->fraction->__toString());
 
-        $fraction->setNumerator(0);
-        $this->assertEquals('0', $fraction->__toString());
+        $this->fraction->setNumerator(0);
+        $this->assertEquals('0', $this->fraction->__toString());
 
-        $fraction = new Fraction(1, 2);
-        $fraction->setNumerator(-12);
-        $this->assertEquals('-6', $fraction->__toString());
+        $this->fraction = new Fraction(1, 2);
+        $this->fraction->setNumerator(-12);
+        $this->assertEquals('-6', $this->fraction->__toString());
     }
 
     /**
@@ -93,9 +102,8 @@ class FractionTest extends TestCase
      */
     public function testSettingPositiveDenominator(): void
     {
-        $fraction = new Fraction(1, 2);
-        $fraction->setDenominator(6);
-        $this->assertEquals('1/6', $fraction->__toString());
+        $this->fraction->setDenominator(6);
+        $this->assertEquals('1/6', $this->fraction->__toString());
     }
 
     /**
@@ -107,8 +115,7 @@ class FractionTest extends TestCase
         $this->expectException(ZeroDenominatorException::class);
         $this->expectExceptionMessage('0');
 
-        $fraction = new Fraction(1, 2);
-        $fraction->setDenominator(0);
+        $this->fraction->setDenominator(0);
     }
 
     /**
@@ -119,7 +126,6 @@ class FractionTest extends TestCase
         $this->expectException(NegativeDenominatorException::class);
         $this->expectExceptionMessage('-12');
 
-        $fraction = new Fraction(1, 2);
-        $fraction->setDenominator(-12);
+        $this->fraction->setDenominator(-12);
     }
 }

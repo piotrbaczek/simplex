@@ -7,8 +7,6 @@ use pbaczek\simplex\Helpers\Math;
 /**
  * Class FractionMathHelper
  * @package pbaczek\simplex\fraction
- * @property int $numerator
- * @property int $denominator
  */
 trait FractionMathHelper
 {
@@ -17,17 +15,17 @@ trait FractionMathHelper
      */
     protected function reduction(): void
     {
-        if ($this->numerator == 0) {
-            $this->denominator = 1;
+        if ($this->getNumerator() == 0) {
+            $this->setDenominatorWithoutReduction(1);
             return;
         }
 
-        if (abs($this->numerator) == 1 || $this->denominator == 1) {
+        if (abs($this->getNumerator()) == 1 || $this->getDenominator() == 1) {
             return;
         }
 
-        $hcd = Math::highestCommonDivisor($this->numerator, $this->denominator);
-        $this->numerator /= $hcd;
-        $this->denominator /= $hcd;
+        $hcd = Math::highestCommonDivisor($this->getNumerator(), $this->getDenominator());
+        $this->setNumeratorWithoutReduction($this->getNumerator() / $hcd);
+        $this->setDenominatorWithoutReduction($this->getDenominator() / $hcd);
     }
 }

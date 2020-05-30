@@ -5,6 +5,7 @@ namespace pbaczek\simplex;
 use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
 use pbaczek\simplex\Fraction\Exceptions\UnknownSign;
+use pbaczek\simplex\Fraction\Exceptions\ZeroDenominatorException;
 use ReflectionClass;
 use ReflectionException;
 
@@ -72,6 +73,29 @@ abstract class FractionAbstract
         $this->numerator = $numerator;
         $this->reduction();
 
+        return $this;
+    }
+
+    /**
+     * Set numerator without triggering reduction
+     * @param int $numerator
+     * @return FractionAbstract
+     */
+    protected function setNumeratorWithoutReduction(int $numerator): self
+    {
+        $this->numerator = $numerator;
+        return $this;
+    }
+
+    /**
+     * Set denominator without triggering reduction
+     * @param int $denominator
+     * @return $this
+     */
+    protected function setDenominatorWithoutReduction(int $denominator)
+    {
+        $this->validateDenominator($denominator);
+        $this->denominator = $denominator;
         return $this;
     }
 
