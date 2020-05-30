@@ -120,6 +120,7 @@ class FractionTest extends TestCase
 
     /**
      * Test that setting negative denominator throws NegativeDenominatorException
+     * @return void
      */
     public function testSettingNegativeDenominator(): void
     {
@@ -127,5 +128,26 @@ class FractionTest extends TestCase
         $this->expectExceptionMessage('-12');
 
         $this->fraction->setDenominator(-12);
+    }
+
+    /**
+     * Test adding fractions - fractions, whole number and negative number
+     * @return void
+     */
+    public function testAddingTwoFractions(): void
+    {
+        $first = clone $this->fraction;
+        $second = new Fraction(1, 3);
+        $first->add($second);
+        $this->assertEquals('5/6', $first->__toString());
+
+        $first->add(new Fraction(1));
+        $this->assertEquals('11/6', $first->__toString());
+
+        $first->add(new Fraction(-1));
+        $this->assertEquals('5/6', $first->__toString());
+
+        $first->add(new Fraction(-11,6));
+        $this->assertEquals('-1', $first->__toString());
     }
 }
