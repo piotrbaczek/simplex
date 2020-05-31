@@ -1,7 +1,8 @@
 {
   "require": {
     "phpunit/phpunit": "9.0",
-    "ramsey/collection": "1.0.1"
+    "ramsey/collection": "1.0.1",
+    "php": "7.3.*"
   },
   "autoload": {
     "psr-4": {
