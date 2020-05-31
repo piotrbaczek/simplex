@@ -33,8 +33,8 @@ class Fraction extends FractionAbstract
             throw new InvalidArgumentException('Only same class allowed');
         }
 
-        $this->setNumerator($this->getNumerator() * $fractionAbstract->getDenominator() + $this->getDenominator() * $fractionAbstract->getNumerator());
-        $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
+        $this->setNumeratorWithoutReduction($this->getNumerator() * $fractionAbstract->getDenominator() + $this->getDenominator() * $fractionAbstract->getNumerator());
+        $this->setDenominatorWithoutReduction($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
     }
 
@@ -49,8 +49,8 @@ class Fraction extends FractionAbstract
             throw new InvalidArgumentException('Only same class allowed');
         }
 
-        $this->setNumerator($this->getNumerator() * $fractionAbstract->getDenominator() - $this->getDenominator() * $fractionAbstract->getNumerator());
-        $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
+        $this->setNumeratorWithoutReduction($this->getNumerator() * $fractionAbstract->getDenominator() - $this->getDenominator() * $fractionAbstract->getNumerator());
+        $this->setDenominatorWithoutReduction($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
     }
 
@@ -65,8 +65,22 @@ class Fraction extends FractionAbstract
             throw new InvalidArgumentException('Only same class allowed');
         }
 
-        $this->setNumerator($this->getNumerator() * $fractionAbstract->getDenominator());
-        $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
+        $newNumerator = $this->getNumerator() * $fractionAbstract->getDenominator();
+        if ($newNumerator < 0) {
+            $this->changeSign();
+        }
+
+        $this->setNumeratorWithoutReduction(abs($newNumerator));
+
+
+        $newDenominator = $this->getDenominator() * $fractionAbstract->getNumerator();
+
+        if ($newDenominator < 0) {
+            $this->changeSign();
+        }
+
+        $this->setDenominatorWithoutReduction(abs($newDenominator));
+
         $this->reduction();
     }
 
@@ -81,8 +95,8 @@ class Fraction extends FractionAbstract
             throw new InvalidArgumentException('Only same class allowed');
         }
 
-        $this->setNumerator($this->getNumerator() * $fractionAbstract->getNumerator());
-        $this->setDenominator($this->getDenominator() * $fractionAbstract->getDenominator());
+        $this->setNumeratorWithoutReduction($this->getNumerator() * $fractionAbstract->getNumerator());
+        $this->setDenominatorWithoutReduction($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
     }
 

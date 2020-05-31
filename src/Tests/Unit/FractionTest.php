@@ -54,10 +54,14 @@ class FractionTest extends TestCase
         $this->assertEquals(Sign::NEGATIVE, $this->fraction->getSign());
         $this->fraction->changeSign();
         $this->assertEquals(Sign::NON_NEGATIVE, $this->fraction->getSign());
+
+        $zero = new Fraction(0);
+        $zero->changeSign();
+        $this->assertEquals(Sign::NON_NEGATIVE, $zero->getSign());
     }
 
     /**
-     * Test that reduction of numerator, denominator is occuring
+     * Test that reduction of numerator, denominator occurs
      * @return void
      */
     public function testFractionIsBeingReduced(): void
@@ -151,6 +155,65 @@ class FractionTest extends TestCase
 
         $first->add(new Fraction(-11, 6));
         $this->assertEquals('-1', $first->__toString());
+    }
+
+    /**
+     * Tests that subtracting two fractions works
+     * @return void
+     */
+    public function testSubtractingTwoFractions(): void
+    {
+        $first = clone $this->fraction;
+        $second = new Fraction(1, 2);
+        $first->subtract($second);
+        $this->assertEquals('0', $first->__toString());
+
+        $first->subtract(new Fraction(1, 2));
+        $this->assertEquals('-1/2', $first->__toString());
+
+        $first->subtract(new Fraction(-1, 2));
+        $this->assertEquals('0', $first->__toString());
+    }
+
+    /**
+     * Tests that multiplying two fractions works
+     * @return void
+     */
+    public function testMultiplyingTwoFractions(): void
+    {
+        $first = clone $this->fraction;
+        $second = clone $this->fraction;
+        $first->multiply($second);
+        $this->assertEquals('1/4', $first->__toString());
+
+        $first->multiply(new Fraction(1));
+        $this->assertEquals('1/4', $first->__toString());
+
+        $first->multiply(new Fraction(-4));
+        $this->assertEquals('-1', $first->__toString());
+
+        $first->multiply(new Fraction(0));
+        $this->assertEquals('0', $first->__toString());
+    }
+
+    /**
+     * Tests that dividing two fractions works
+     * @return void
+     */
+    public function testDividingTwoFractions(): void
+    {
+        $this->expectException(ZeroDenominatorException::class);
+        $this->expectExceptionMessage('0');
+
+        $first = clone $this->fraction;
+        $second = clone $this->fraction;
+        $first->divide($second);
+        $this->assertEquals('1', $first->__toString());
+
+        $first->divide(new Fraction(-1, 2));
+        $this->assertEquals('-2', $first->__toString());
+
+        $first->divide(new Fraction(0));
     }
 
     /**

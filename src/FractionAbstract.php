@@ -88,18 +88,6 @@ abstract class FractionAbstract
     }
 
     /**
-     * Set denominator without triggering reduction
-     * @param int $denominator
-     * @return $this
-     */
-    protected function setDenominatorWithoutReduction(int $denominator)
-    {
-        $this->validateDenominator($denominator);
-        $this->denominator = $denominator;
-        return $this;
-    }
-
-    /**
      * @param int $denominator
      * @return $this
      */
@@ -110,6 +98,18 @@ abstract class FractionAbstract
         $this->denominator = $denominator;
         $this->reduction();
 
+        return $this;
+    }
+
+    /**
+     * Set denominator without triggering reduction
+     * @param int $denominator
+     * @return $this
+     */
+    protected function setDenominatorWithoutReduction(int $denominator)
+    {
+        $this->validateDenominator($denominator);
+        $this->denominator = $denominator;
         return $this;
     }
 
@@ -137,6 +137,10 @@ abstract class FractionAbstract
      */
     public function changeSign(): void
     {
+        if ($this->equalsZero()) {
+            return;
+        }
+
         if ($this->sign === Sign::NEGATIVE) {
             $this->sign = Sign::NON_NEGATIVE;
             return;
