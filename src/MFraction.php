@@ -34,7 +34,7 @@ class MFraction extends FractionAbstract
      * Returns true when FractionAbstract equals Zero
      * @return bool
      */
-    function equalsZero(): bool
+    public function equalsZero(): bool
     {
         // TODO: Implement equalsZero() method.
     }

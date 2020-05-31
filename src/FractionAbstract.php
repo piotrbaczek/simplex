@@ -195,7 +195,7 @@ abstract class FractionAbstract
      * Returns true when FractionAbstract equals Zero
      * @return bool
      */
-    abstract function equalsZero(): bool;
+    abstract public function equalsZero(): bool;
 
     /**
      * Return float value of FractionAbstract
