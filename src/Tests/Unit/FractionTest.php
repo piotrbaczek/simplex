@@ -217,6 +217,28 @@ class FractionTest extends TestCase
     }
 
     /**
+     * Tests that returning real value works on fractions, even when changing sings
+     * @return void
+     */
+    public function testReturningRealValue(): void
+    {
+        $this->assertEquals(0.5, $this->fraction->getRealValue());
+
+        $this->fraction->setNumerator(1);
+        $this->fraction->setDenominator(3);
+        $this->assertEquals(0.33, $this->fraction->getRealValue());
+
+        $this->fraction->changeSign();
+        $this->assertEquals(-0.33, $this->fraction->getRealValue());
+
+        $this->fraction->multiply(new Fraction(3));
+        $this->assertEquals(-1, $this->fraction->getRealValue());
+
+        $this->fraction->changeSign();
+        $this->assertEquals(1, $this->fraction->getRealValue());
+    }
+
+    /**
      * Defined functions for
      * @return array
      */

@@ -3,6 +3,7 @@
 namespace pbaczek\simplex;
 
 use InvalidArgumentException;
+use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\FractionMathHelper;
 
 /**
@@ -106,7 +107,8 @@ class Fraction extends FractionAbstract
      */
     public function getRealValue(): float
     {
-        return round($this->getNumerator() / $this->getDenominator(), 2);
+        $floatValue = round($this->getNumerator() / $this->getDenominator(), 2);
+        return $this->getSign() === Sign::NON_NEGATIVE ? $floatValue : -$floatValue;
     }
 
     /**
