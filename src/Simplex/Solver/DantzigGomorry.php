@@ -11,8 +11,17 @@ class DantzigGomorry extends SolverAbstract
      * Solve the problem
      * @return void
      */
-    public function solve(): void
+    protected function solve(): void
     {
         // TODO: Implement solve() method.
+    }
+
+    /**
+     * Validate parameters
+     * @return void
+     */
+    protected function validate(): void
+    {
+        // TODO: Implement validate() method.
     }
 }

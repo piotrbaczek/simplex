@@ -2,9 +2,8 @@
 
 namespace pbaczek\simplex\Simplex\Solver;
 
-use pbaczek\simplex\Simplex\FractionCollection;
-use pbaczek\simplex\Simplex\FractionCollectionsCollection;
-use pbaczek\simplex\Simplex\SignCollection;
+use pbaczek\simplex\EquationsCollection;
+use pbaczek\simplex\FractionsCollection;
 
 /**
  * Class SolverAbstract
@@ -12,36 +11,26 @@ use pbaczek\simplex\Simplex\SignCollection;
  */
 abstract class SolverAbstract
 {
-    /** @var FractionCollectionsCollection $variables */
-    protected $variables;
+    /** @var EquationsCollection $equationsCollection */
+    protected $equationsCollection;
 
-    /** @var SignCollection */
-    protected $signs;
+    /** @var bool $maximize */
+    protected $maximize;
 
-    /** @var FractionCollection $boundaries */
-    protected $boundaries;
-
-    /** @var FractionCollection $targetFunction */
+    /** @var FractionsCollection $targetFunction */
     protected $targetFunction;
-
-    /** @var bool $max */
-    private $max;
 
     /**
      * SolverAbstract constructor.
-     * @param array $variables
-     * @param SignCollection $signs
-     * @param FractionCollection $boundaries
-     * @param FractionCollection $targetFunction
-     * @param bool $isMax
+     * @param EquationsCollection $equationsCollection
+     * @param FractionsCollection $targetFunction
+     * @param bool $maximize
      */
-    public function __construct(array $variables, SignCollection $signs, FractionCollection $boundaries, FractionCollection $targetFunction, bool $isMax = true)
+    public function __construct(EquationsCollection $equationsCollection, FractionsCollection $targetFunction, bool $maximize = true)
     {
-        $this->variables = $variables;
-        $this->signs = $signs;
-        $this->boundaries = $boundaries;
+        $this->equationsCollection = $equationsCollection;
         $this->targetFunction = $targetFunction;
-        $this->max = $isMax;
+        $this->maximize = $maximize;
     }
 
     /**

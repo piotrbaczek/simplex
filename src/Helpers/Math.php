@@ -9,23 +9,14 @@ namespace pbaczek\simplex\Helpers;
 final class Math
 {
     /**
-     * Finds hcd (Highest Common Division) of two Integers
+     * Finds GCD (Greatest Common Divisor) of two positive Integers
      * @static
      * @param Integer $a
      * @param Integer $b
      * @return Integer
      */
-    public static function highestCommonDivisor(int $a, int $b): int
+    public static function greatestCommonDivisor(int $a, int $b): int
     {
-        $a = abs($a);
-        while ($a != $b) {
-            if ($a > $b) {
-                $a = $a - $b;
-                continue;
-            }
-
-            $b = $b - $a;
-        }
-        return $a;
+        return gmp_intval(gmp_gcd($a, $b));
     }
 }

@@ -5,13 +5,14 @@ namespace pbaczek\simplex\Fraction;
 use pbaczek\simplex\Helpers\Math;
 
 /**
- * Class FractionMathHelper
- * @package pbaczek\simplex\fraction
+ * Trait FractionMathHelper
+ * @package pbaczek\simplex\Fraction
  */
 trait FractionMathHelper
 {
     /**
      * Reduce numerator and denominator
+     * @return void
      */
     protected function reduction(): void
     {
@@ -24,8 +25,8 @@ trait FractionMathHelper
             return;
         }
 
-        $hcd = Math::highestCommonDivisor($this->getNumerator(), $this->getDenominator());
-        $this->setNumeratorWithoutReduction($this->getNumerator() / $hcd);
-        $this->setDenominatorWithoutReduction($this->getDenominator() / $hcd);
+        $greatestCommonDivisor = Math::greatestCommonDivisor($this->getNumerator(), $this->getDenominator());
+        $this->setNumeratorWithoutReduction($this->getNumerator() / $greatestCommonDivisor);
+        $this->setDenominatorWithoutReduction($this->getDenominator() / $greatestCommonDivisor);
     }
 }

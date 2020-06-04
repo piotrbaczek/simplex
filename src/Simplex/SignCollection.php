@@ -9,7 +9,7 @@ use Ramsey\Collection\AbstractCollection;
  * Class SignCollection
  * @package pbaczek\simplex\Simplex
  */
-class SignCollection extends AbstractCollection
+final class SignCollection extends AbstractCollection
 {
     /**
      * Returns the type associated with this collection.

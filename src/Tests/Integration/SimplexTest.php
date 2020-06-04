@@ -3,7 +3,10 @@
 namespace pbaczek\simplex\Tests\Integration;
 
 use Exception;
+use pbaczek\simplex\Equation;
+use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\Fraction;
+use pbaczek\simplex\FractionsCollection;
 use pbaczek\simplex\Simplex\Sign;
 use pbaczek\simplex\Simplex\Solver\Dantzig;
 use PHPUnit\Framework\TestCase;
@@ -16,38 +19,43 @@ use TextareaProcesser;
  */
 class SimplexTest extends TestCase
 {
-//    /**
-//     * Test simple functionality
-//     * @return void
-//     *
-//     */
-//    public function testBasicFunctionality(): void
-//    {
-//        // max 2x1+6x2
-//        //2x1+5x2<=30
-//        //2x1+3x2<=26
-//        //0x1+3x2<=15
+    /**
+     * Test simple functionality
+     * @return void
+     * @throws Exception
+     */
+    public function testBasicFunctionality(): void
+    {
+        // max 2x1+6x2
+        //2x1+5x2<=30
+        //2x1+3x2<=26
+        //0x1+3x2<=15
+
+        $equationsCollection = new EquationsCollection();
+
+        $firstEquationVariables = new FractionsCollection();
+        $firstEquationVariables->add(new Fraction(2));
+        $firstEquationVariables->add(new Fraction(5));
+        $firstEquation = new Equation($firstEquationVariables, new Sign\LessOrEqual(), new Fraction(30));
+
+        $secondEquationVariables = new FractionsCollection();
+        $secondEquationVariables->add(new Fraction(2));
+        $secondEquationVariables->add(new Fraction(3));
+        $secondEquation = new Equation($secondEquationVariables, new Sign\LessOrEqual(), new Fraction(26));
+
+        $thirdEquationVariables = new FractionsCollection();
+        $thirdEquationVariables->add(new Fraction(0));
+        $thirdEquationVariables->add(new Fraction(3));
+        $thirdEquation = new Equation($thirdEquationVariables, new Sign\LessOrEqual(), new Fraction(15));
+
+        $equationsCollection->add($firstEquation);
+        $equationsCollection->add($secondEquation);
+        $equationsCollection->add($thirdEquation);
+        $solver = new Dantzig($equationsCollection, new FractionsCollection([new Fraction(2), new Fraction(6)]), true);
 //
-//        $variables = [
-//            [
-//                new Fraction(2), new Fraction(5),
-//            ],
-//            [
-//                new Fraction(2), new Fraction(3)
-//            ],
-//            [
-//                new Fraction(0), new Fraction(3)
-//            ],
-//        ];
-//        $signs = new Simplex\SignCollection([new Sign\LessOrEqual(), new Sign\LessOrEqual(), new Sign\LessOrEqual()]);
-//        $boundaries = new Simplex\FractionCollection([new Fraction(30), new Fraction(26), new Fraction(15)]);
-//        $targetFunction = new Simplex\FractionCollection([new Fraction(2), new Fraction(6)]);
-//
-//        $solver = new Dantzig($variables, $signs, $boundaries, $targetFunction);
-//
-//        $simplex = new Simplex($solver);
-//        $simplex->run();
-//    }
+        $simplex = new \pbaczek\simplex\Simplex($solver);
+        $simplex->run();
+    }
 
     public function testOldSimplex()
     {

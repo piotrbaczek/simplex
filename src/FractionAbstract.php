@@ -79,7 +79,7 @@ abstract class FractionAbstract
     /**
      * Set numerator without triggering reduction
      * @param int $numerator
-     * @return FractionAbstract
+     * @return $this
      */
     protected function setNumeratorWithoutReduction(int $numerator): self
     {
@@ -192,22 +192,35 @@ abstract class FractionAbstract
     }
 
     /**
+     * Get real value
+     * @return float
+     */
+    public function getRealValue(): float
+    {
+        $floatValue = round($this->getNumerator() / $this->getDenominator(), 2);
+        return $this->getSign() === Sign::NON_NEGATIVE ? $floatValue : -$floatValue;
+    }
+
+    /**
+     * Print object
+     * @return string
+     */
+    public function __toString(): string
+    {
+        $numeratorPart = $this->isNegative() ? $this->getSign() . $this->getNumerator() : $this->getNumerator();
+
+        if ($this->getDenominator() === 1) {
+            return $numeratorPart;
+        }
+
+        return $numeratorPart . '/' . $this->getDenominator();
+    }
+
+    /**
      * Returns true when FractionAbstract equals Zero
      * @return bool
      */
     abstract public function equalsZero(): bool;
-
-    /**
-     * Return float value of FractionAbstract
-     * @return float
-     */
-    abstract public function getRealValue(): float;
-
-    /**
-     * Return string of FractionAbstract
-     * @return string
-     */
-    abstract public function __toString(): string;
 
     /**
      * Add

@@ -100,29 +100,4 @@ class Fraction extends FractionAbstract
         $this->setDenominatorWithoutReduction($this->getDenominator() * $fractionAbstract->getDenominator());
         $this->reduction();
     }
-
-    /**
-     * Get real value
-     * @return float
-     */
-    public function getRealValue(): float
-    {
-        $floatValue = round($this->getNumerator() / $this->getDenominator(), 2);
-        return $this->getSign() === Sign::NON_NEGATIVE ? $floatValue : -$floatValue;
-    }
-
-    /**
-     * Print object
-     * @return string
-     */
-    public function __toString(): string
-    {
-        $numeratorPart = $this->isNegative() ? $this->getSign() . $this->getNumerator() : $this->getNumerator();
-
-        if ($this->getDenominator() === 1) {
-            return $numeratorPart;
-        }
-
-        return $numeratorPart . '/' . $this->getDenominator();
-    }
 }
