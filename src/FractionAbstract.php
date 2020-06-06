@@ -197,25 +197,25 @@ abstract class FractionAbstract
      * Add
      * @param FractionAbstract $fractionAbstract
      */
-    abstract public function add(FractionAbstract $fractionAbstract): void;
+    abstract public function add($fractionAbstract): void;
 
     /**
      * Subtract
      * @param FractionAbstract $fractionAbstract
      */
-    abstract public function subtract(FractionAbstract $fractionAbstract): void;
+    abstract public function subtract($fractionAbstract): void;
 
     /**
      * Divide
      * @param FractionAbstract $fractionAbstract
      */
-    abstract public function divide(FractionAbstract $fractionAbstract): void;
+    abstract public function divide($fractionAbstract): void;
 
     /**
      * Multiply
      * @param FractionAbstract $fractionAbstract
      */
-    abstract public function multiply(FractionAbstract $fractionAbstract): void;
+    abstract public function multiply($fractionAbstract): void;
 
     /**
      * Perform reduction of parameters

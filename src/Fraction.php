@@ -25,10 +25,10 @@ class Fraction extends FractionAbstract
 
     /**
      * @inheritDoc
-     * @param FractionAbstract $fractionAbstract
+     * @param Fraction $fractionAbstract
      * @return void
      */
-    public function add(FractionAbstract $fractionAbstract): void
+    public function add($fractionAbstract): void
     {
         if ($fractionAbstract instanceof self === false) {
             throw new InvalidArgumentException('Only same class allowed');
@@ -41,10 +41,10 @@ class Fraction extends FractionAbstract
 
     /**
      * @inheritDoc
-     * @param FractionAbstract $fractionAbstract
+     * @param Fraction $fractionAbstract
      * @return void
      */
-    public function subtract(FractionAbstract $fractionAbstract): void
+    public function subtract($fractionAbstract): void
     {
         if ($fractionAbstract instanceof self === false) {
             throw new InvalidArgumentException('Only same class allowed');
@@ -57,10 +57,10 @@ class Fraction extends FractionAbstract
 
     /**
      * @inheritDoc
-     * @param FractionAbstract $fractionAbstract
+     * @param Fraction $fractionAbstract
      * @return void
      */
-    public function divide(FractionAbstract $fractionAbstract): void
+    public function divide($fractionAbstract): void
     {
         if ($fractionAbstract instanceof self === false) {
             throw new InvalidArgumentException('Only same class allowed');
@@ -87,10 +87,10 @@ class Fraction extends FractionAbstract
 
     /**
      * @inheritDoc
-     * @param FractionAbstract $fractionAbstract
+     * @param Fraction $fractionAbstract
      * @return void
      */
-    public function multiply(FractionAbstract $fractionAbstract): void
+    public function multiply($fractionAbstract): void
     {
         if ($fractionAbstract instanceof self === false) {
             throw new InvalidArgumentException('Only same class allowed');

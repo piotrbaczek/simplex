@@ -2,6 +2,7 @@
 
 namespace pbaczek\simplex;
 
+use InvalidArgumentException;
 use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\MFractionMathHelper;
 
@@ -12,6 +13,8 @@ use pbaczek\simplex\Fraction\MFractionMathHelper;
 class MFraction extends FractionAbstract
 {
     use MFractionMathHelper;
+
+    private const M_SIGN = 'M';
 
     /** @var int $mNumerator */
     private $mNumerator;
@@ -96,6 +99,16 @@ class MFraction extends FractionAbstract
     }
 
     /**
+     * @inheritDoc
+     * @return void
+     */
+    public function changeSign(): void
+    {
+        parent::changeSign();
+        $this->mNumerator = -$this->mNumerator;
+    }
+
+    /**
      * Returns true when FractionAbstract equals Zero
      * @return bool
      */
@@ -129,41 +142,53 @@ class MFraction extends FractionAbstract
             return $realPart;
         }
 
-        return $realPart . ($this->mNumerator >= 0 ? Sign::NON_NEGATIVE : Sign::NEGATIVE) . $this->mNumerator . '/' . $this->mDenominator;
+        return $realPart . ($this->mNumerator >= 0 ? Sign::NON_NEGATIVE : '') . $this->mNumerator . '/' . $this->mDenominator . self::M_SIGN;
     }
 
     /**
      * Add
-     * @param FractionAbstract $fractionAbstract
+     * @param MFraction $fractionAbstract
      */
-    public function add(FractionAbstract $fractionAbstract): void
+    public function add($fractionAbstract): void
     {
-        // TODO: Implement add() method.
+        if ($fractionAbstract instanceof self === false) {
+            throw new InvalidArgumentException('Only same class allowed');
+        }
+
+        $this->setNumeratorWithoutReduction($this->getNumerator() * $fractionAbstract->getDenominator() + $this->getDenominator() * $fractionAbstract->getNumerator());
+        $this->setDenominatorWithoutReduction($this->getDenominator() * $fractionAbstract->getDenominator());
+
+        $this->setMNumeratorWithoutReduction($this->getMNumerator() * $fractionAbstract->getMDenominator() + $this->getMDenominator() * $fractionAbstract->getMNumerator());
+        $this->setMDenominatorWithoutReduction($this->getMDenominator() * $fractionAbstract->getMDenominator());
+
+        $this->reduction();
     }
 
     /**
      * Subtract
-     * @param FractionAbstract $fractionAbstract
+     * @param MFraction $fractionAbstract
      */
-    public function subtract(FractionAbstract $fractionAbstract): void
+    public function subtract($fractionAbstract): void
     {
-        // TODO: Implement subtract() method.
+        if ($fractionAbstract instanceof self === false) {
+            throw new InvalidArgumentException('Only same class allowed');
+        }
     }
 
     /**
      * Divide
-     * @param FractionAbstract $fractionAbstract
+     * @param MFraction $fractionAbstract
      */
-    public function divide(FractionAbstract $fractionAbstract): void
+    public function divide($fractionAbstract): void
     {
         // TODO: Implement divide() method.
     }
 
     /**
      * Multiply
-     * @param FractionAbstract $fractionAbstract
+     * @param MFraction $fractionAbstract
      */
-    public function multiply(FractionAbstract $fractionAbstract): void
+    public function multiply($fractionAbstract): void
     {
         // TODO: Implement multiply() method.
     }
