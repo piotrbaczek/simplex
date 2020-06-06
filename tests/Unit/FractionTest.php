@@ -1,6 +1,6 @@
 <?php
 
-namespace pbaczek\simplex\Tests\Unit;
+namespace pbaczek\simplex\tests\Unit;
 
 use InvalidArgumentException;
 use pbaczek\simplex\Fraction;
@@ -14,7 +14,7 @@ use ReflectionException;
 
 /**
  * Class FractionTest
- * @package pbaczek\simplex\Tests\Unit
+ * @package pbaczek\simplex\tests\Unit
  */
 class FractionTest extends TestCase
 {

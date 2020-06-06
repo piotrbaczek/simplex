@@ -1,6 +1,6 @@
 <?php
 
-namespace pbaczek\simplex\Tests\Integration;
+namespace pbaczek\simplex\tests\Integration;
 
 use Exception;
 use pbaczek\simplex\Equation;
@@ -15,7 +15,7 @@ use TextareaProcesser;
 
 /**
  * Class SimplexTest
- * @package pbaczek\simplex\Tests\Integration
+ * @package pbaczek\simplex\tests\Integration
  */
 class SimplexTest extends TestCase
 {

@@ -1,13 +1,20 @@
 {
   "require": {
-    "phpunit/phpunit": "9.0",
     "ramsey/collection": "1.0.1",
     "php": "7.3.*",
     "ext-gmp": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "9.0"
+  },
   "autoload": {
     "psr-4": {
       "pbaczek\\simplex\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "pbaczek\\simplex\\tests\\": "tests/"
     }
   }
 }

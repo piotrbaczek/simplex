@@ -1,13 +1,13 @@
 <?php
 
-namespace pbaczek\simplex\Tests\Unit;
+namespace pbaczek\simplex\tests\Unit;
 
 use pbaczek\simplex\MFraction;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class MFractionTest
- * @package pbaczek\simplex\Tests\Unit
+ * @package pbaczek\simplex\tests\Unit
  */
 class MFractionTest extends TestCase
 {
