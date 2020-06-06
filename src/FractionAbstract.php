@@ -21,9 +21,6 @@ abstract class FractionAbstract
     /** @var int $denominator */
     private $denominator;
 
-    /** @var string $sign */
-    private $sign;
-
     /**
      * FractionAbstract constructor.
      * @param int $numerator
@@ -32,8 +29,6 @@ abstract class FractionAbstract
     public function __construct(int $numerator, int $denominator = 1)
     {
         $this->validateDenominator($denominator);
-
-        $this->sign = $numerator >= 0 ? Sign::NON_NEGATIVE : Sign::NEGATIVE;
 
         $this->numerator = $numerator;
         $this->denominator = $denominator;
@@ -61,7 +56,7 @@ abstract class FractionAbstract
      */
     public function getSign(): string
     {
-        return $this->sign;
+        return $this->numerator >= 0 ? Sign::NON_NEGATIVE : Sign::NEGATIVE;
     }
 
     /**
@@ -114,24 +109,6 @@ abstract class FractionAbstract
     }
 
     /**
-     * @param string $sign
-     * @return $this
-     * @throws ReflectionException
-     * @throws UnknownSign
-     */
-    public function setSign(string $sign): self
-    {
-        $signReflectionClass = new ReflectionClass(new Sign());
-
-        if (in_array($sign, $signReflectionClass->getConstants()) === false) {
-            throw new UnknownSign($sign);
-        }
-
-        $this->sign = $sign;
-        return $this;
-    }
-
-    /**
      * Change sign of fraction
      * @return void
      */
@@ -141,12 +118,7 @@ abstract class FractionAbstract
             return;
         }
 
-        if ($this->sign === Sign::NEGATIVE) {
-            $this->sign = Sign::NON_NEGATIVE;
-            return;
-        }
-
-        $this->sign = Sign::NEGATIVE;
+        $this->numerator = -$this->numerator;
     }
 
     /**
@@ -164,7 +136,7 @@ abstract class FractionAbstract
      */
     public function isNegative(): bool
     {
-        return $this->getSign() === Sign::NEGATIVE;
+        return $this->numerator < 0;
     }
 
     /**
@@ -173,7 +145,7 @@ abstract class FractionAbstract
      */
     public function isNonNegative(): bool
     {
-        return $this->getSign() === Sign::NON_NEGATIVE;
+        return $this->numerator >= 0;
     }
 
     /**
@@ -197,8 +169,7 @@ abstract class FractionAbstract
      */
     public function getRealValue(): float
     {
-        $floatValue = round($this->getNumerator() / $this->getDenominator(), 2);
-        return $this->getSign() === Sign::NON_NEGATIVE ? $floatValue : -$floatValue;
+        return round($this->getNumerator() / $this->getDenominator(), 2);
     }
 
     /**
@@ -207,7 +178,7 @@ abstract class FractionAbstract
      */
     public function __toString(): string
     {
-        $numeratorPart = $this->isNegative() ? $this->getSign() . $this->getNumerator() : $this->getNumerator();
+        $numeratorPart = $this->getNumerator();
 
         if ($this->getDenominator() === 1) {
             return $numeratorPart;

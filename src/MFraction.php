@@ -111,7 +111,7 @@ class MFraction extends FractionAbstract
     public function getRealValue(): float
     {
         if ($this->mNumerator !== 0) {
-            return $this->getSign() === Sign::NON_NEGATIVE ? PHP_INT_MAX : PHP_INT_MIN;
+            return $this->mNumerator >= 0 ? PHP_INT_MAX : PHP_INT_MIN;
         }
 
         return parent::getRealValue();
@@ -129,7 +129,7 @@ class MFraction extends FractionAbstract
             return $realPart;
         }
 
-        return $realPart . ($this->getSign() === Sign::NON_NEGATIVE ? '+' : '-') . $this->mNumerator . '/' . $this->mDenominator;
+        return $realPart . ($this->mNumerator >= 0 ? Sign::NON_NEGATIVE : Sign::NEGATIVE) . $this->mNumerator . '/' . $this->mDenominator;
     }
 
     /**

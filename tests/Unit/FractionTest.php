@@ -72,20 +72,6 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Setting invalid sign
-     * @throws UnknownSign
-     * @throws ReflectionException
-     */
-    public function testSettingInvalidSign(): void
-    {
-        $this->expectException(UnknownSign::class);
-        $this->expectExceptionMessage('SomeOtherSign');
-
-        $this->fraction->setSign(Sign::NEGATIVE);
-        $this->fraction->setSign('SomeOtherSign');
-    }
-
-    /**
      * Test setting numerator runs reduction
      * @return void
      */
