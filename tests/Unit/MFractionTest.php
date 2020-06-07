@@ -25,6 +25,10 @@ class MFractionTest extends TestCase
         $this->mFraction = new MFraction(1, 2, 3, 5);
     }
 
+    /**
+     * Basic functionality test
+     * @return void
+     */
     public function testBasic(): void
     {
         $this->assertEquals(1, $this->mFraction->getNumerator());
@@ -34,8 +38,22 @@ class MFractionTest extends TestCase
         $this->assertEquals(Sign::NON_NEGATIVE, $this->mFraction->getSign());
         $this->assertEquals(PHP_INT_MAX, $this->mFraction->getRealValue());
         $this->assertEquals('1/2+3/5M', $this->mFraction->__toString());
-        $this->mFraction->changeSign();
-        $this->assertEquals('-1/2-3/5M', $this->mFraction->__toString());
         $this->assertTrue($this->mFraction->isFraction());
+    }
+
+    /**
+     * Test sign of a fraction changing
+     * @return void
+     */
+    public function testChangingSign(): void
+    {
+        $this->mFraction->changeSign();
+        $this->assertEquals(Sign::NEGATIVE, $this->mFraction->getSign());
+        $this->mFraction->changeSign();
+        $this->assertEquals(Sign::NON_NEGATIVE, $this->mFraction->getSign());
+
+        $zero = new MFraction(0);
+        $zero->changeSign();
+        $this->assertEquals(Sign::NON_NEGATIVE, $zero->getSign());
     }
 }

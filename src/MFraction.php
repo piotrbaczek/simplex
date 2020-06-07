@@ -60,7 +60,7 @@ class MFraction extends FractionAbstract
     }
 
     /**
-     * Set numerator without triggering reduction
+     * Set M numerator without triggering reduction
      * @param int $mNumerator
      * @return $this
      */
@@ -71,7 +71,7 @@ class MFraction extends FractionAbstract
     }
 
     /**
-     * Set denominator without triggering reduction
+     * Set M denominator without triggering reduction
      * @param int $mDenominator
      * @return $this
      */
@@ -105,6 +105,10 @@ class MFraction extends FractionAbstract
     public function changeSign(): void
     {
         parent::changeSign();
+        if ($this->mNumerator === 0) {
+            return;
+        }
+
         $this->mNumerator = -$this->mNumerator;
     }
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace pbaczek\simplex\Simplex\Sign;
+namespace pbaczek\simplex\Equation\Sign;
 
 /**
- * Class Equal
+ * Class GreaterOrEqual
  * @package pbaczek\simplex\Simplex\Sign
  */
-class Equal extends SignAbstract
+final class GreaterOrEqual extends SignAbstract
 {
     /**
      * Return sign
@@ -14,6 +14,6 @@ class Equal extends SignAbstract
      */
     public static function getSign(): string
     {
-        return '=';
+        return '>=';
     }
 }

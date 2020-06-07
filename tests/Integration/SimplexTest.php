@@ -7,7 +7,6 @@ use pbaczek\simplex\Equation;
 use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\Fraction;
 use pbaczek\simplex\FractionsCollection;
-use pbaczek\simplex\Simplex\Sign;
 use pbaczek\simplex\Simplex\Solver\Dantzig;
 use PHPUnit\Framework\TestCase;
 use Simplex;
@@ -19,53 +18,53 @@ use TextareaProcesser;
  */
 class SimplexTest extends TestCase
 {
-    /**
-     * Test simple functionality
-     * @return void
-     * @throws Exception
-     */
-    public function testBasicFunctionality(): void
-    {
-        // max 2x1+6x2
-        //2x1+5x2<=30
-        //2x1+3x2<=26
-        //0x1+3x2<=15
-
-        $equationsCollection = new EquationsCollection();
-
-        $firstEquationVariables = new FractionsCollection();
-        $firstEquationVariables->add(new Fraction(2));
-        $firstEquationVariables->add(new Fraction(5));
-        $firstEquation = new Equation($firstEquationVariables, new Sign\LessOrEqual(), new Fraction(30));
-
-        $secondEquationVariables = new FractionsCollection();
-        $secondEquationVariables->add(new Fraction(2));
-        $secondEquationVariables->add(new Fraction(3));
-        $secondEquation = new Equation($secondEquationVariables, new Sign\LessOrEqual(), new Fraction(26));
-
-        $thirdEquationVariables = new FractionsCollection();
-        $thirdEquationVariables->add(new Fraction(0));
-        $thirdEquationVariables->add(new Fraction(3));
-        $thirdEquation = new Equation($thirdEquationVariables, new Sign\LessOrEqual(), new Fraction(15));
-
-        $equationsCollection->add($firstEquation);
-        $equationsCollection->add($secondEquation);
-        $equationsCollection->add($thirdEquation);
-        $solver = new Dantzig($equationsCollection, new FractionsCollection([new Fraction(2), new Fraction(6)]), true);
+//    /**
+//     * Test simple functionality
+//     * @return void
+//     * @throws Exception
+//     */
+//    public function testBasicFunctionality(): void
+//    {
+//        // max 2x1+6x2
+//        //2x1+5x2<=30
+//        //2x1+3x2<=26
+//        //0x1+3x2<=15
 //
-        $simplex = new \pbaczek\simplex\Simplex($solver);
-        $simplex->run();
-    }
+//        $equationsCollection = new EquationsCollection();
+//
+//        $firstEquationVariables = new FractionsCollection();
+//        $firstEquationVariables->add(new Fraction(2));
+//        $firstEquationVariables->add(new Fraction(5));
+//        $firstEquation = new Equation($firstEquationVariables, new Sign\LessOrEqual(), new Fraction(30));
+//
+//        $secondEquationVariables = new FractionsCollection();
+//        $secondEquationVariables->add(new Fraction(2));
+//        $secondEquationVariables->add(new Fraction(3));
+//        $secondEquation = new Equation($secondEquationVariables, new Sign\LessOrEqual(), new Fraction(26));
+//
+//        $thirdEquationVariables = new FractionsCollection();
+//        $thirdEquationVariables->add(new Fraction(0));
+//        $thirdEquationVariables->add(new Fraction(3));
+//        $thirdEquation = new Equation($thirdEquationVariables, new Sign\LessOrEqual(), new Fraction(15));
+//
+//        $equationsCollection->add($firstEquation);
+//        $equationsCollection->add($secondEquation);
+//        $equationsCollection->add($thirdEquation);
+//        $solver = new Dantzig($equationsCollection, new FractionsCollection([new Fraction(2), new Fraction(6)]), true);
+////
+//        $simplex = new \pbaczek\simplex\Simplex($solver);
+//        $simplex->run();
+//    }
 
     public function testOldSimplex()
     {
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Signs.class.php';
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Point.class.php';
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Fraction.class.php';
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Simplex.class.php';
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'TextareaProcesser.class.php';
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SimplexTableau.class.php';
-        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'DivisionCoefficient.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\Signs.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\Point.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\Fraction.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\Simplex.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\TextareaProcesser.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\SimplexTableau.class.php';
+        require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src\DivisionCoefficient.class.php';
 
         $css = '<style>table.result td.mainelement {
 	color:white;

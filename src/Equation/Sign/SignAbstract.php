@@ -1,6 +1,6 @@
 <?php
 
-namespace pbaczek\simplex\Simplex\Sign;
+namespace pbaczek\simplex\Equation\Sign;
 
 /**
  * Class SignAbstract
