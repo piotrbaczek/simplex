@@ -2,6 +2,8 @@
 
 namespace pbaczek\simplex\tests\Unit;
 
+use InvalidArgumentException;
+use pbaczek\simplex\Fraction;
 use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
 use pbaczek\simplex\Fraction\Exceptions\ZeroDenominatorException;
@@ -117,5 +119,104 @@ class MFractionTest extends TestCase
         $this->expectExceptionMessage('-4');
 
         $this->mFraction->setMDenominator(-12);
+    }
+
+    /**
+     * Tests adding two MFractions together works
+     * @return void
+     */
+    public function testAddingTwoMFractions(): void
+    {
+        $first = clone $this->mFraction;
+        $second = new MFraction(2, 4, -4, 5);
+        $first->add($second);
+        $this->assertEquals('1-1/5M', $first->__toString());
+    }
+
+    /**
+     * Tests subtracting two MFractions works
+     * @return void
+     */
+    public function testSubtractingTwoMFractions(): void
+    {
+        $first = clone $this->mFraction;
+        $second = new MFraction(1, 2, 6, 5);
+        $first->subtract($second);
+        $this->assertEquals('0-3/5M', $first->__toString());
+    }
+
+    /**
+     * Test multiplying two MFractions works
+     * @return void
+     */
+    public function testMultiplyingTwoMFractions(): void
+    {
+        $first = clone $this->mFraction;
+        $second = new MFraction(2, 1, -5, 3);
+        $first->multiply($second);
+        $this->assertEquals('1-1M', $first->__toString());
+    }
+
+    /**
+     * Tests dividing two MFractions works
+     * @return void
+     */
+    public function testDividingTwoMFractions(): void
+    {
+        $first = clone $this->mFraction;
+        $second = new MFraction(3, 4, 9, 15);
+        $first->divide($second);
+        $this->assertEquals('2/3+1M', $first->__toString());
+    }
+
+    /**
+     * Tests that real value is returned -> PHP_INT_MAX and PHP_INT_MIN when mNumerator present
+     */
+    public function testReturningRealValue(): void
+    {
+        $this->mFraction->setMNumerator(0);
+        $this->assertEquals(0.5, $this->mFraction->getRealValue());
+
+        $this->mFraction->setMNumerator(1);
+        $this->assertEquals(PHP_INT_MAX, $this->mFraction->getRealValue());
+
+        $this->mFraction->setMNumerator(-1);
+        $this->assertEquals(PHP_INT_MIN, $this->mFraction->getRealValue());
+    }
+
+    /**
+     * Defined functions for
+     * @return array
+     */
+    public function definedFunctions(): array
+    {
+        return [
+            [
+                'add'
+            ],
+            [
+                'subtract'
+            ],
+            [
+                'multiply'
+            ],
+            [
+                'divide'
+            ]
+        ];
+    }
+
+    /**
+     * Test that only same type objects can be added
+     * @dataProvider definedFunctions
+     * @param string $function
+     * @return void
+     */
+    public function testAllMathFunctionsWorkOnlyOnSameObject(string $function): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Only same class allowed');
+
+        $this->mFraction->{$function}(new Fraction(2));
     }
 }
