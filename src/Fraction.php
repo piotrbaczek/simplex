@@ -3,8 +3,8 @@
 namespace pbaczek\simplex;
 
 use InvalidArgumentException;
-use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\FractionMathHelper;
+use pbaczek\simplex\Fraction\RealPartDivider;
 
 /**
  * Class Fraction
@@ -12,7 +12,7 @@ use pbaczek\simplex\Fraction\FractionMathHelper;
  */
 class Fraction extends FractionAbstract
 {
-    use FractionMathHelper;
+    use FractionMathHelper, RealPartDivider;
 
     /**
      * Checks if fraction is equal to zero
@@ -66,21 +66,7 @@ class Fraction extends FractionAbstract
             throw new InvalidArgumentException('Only same class allowed');
         }
 
-        $newNumerator = $this->getNumerator() * $fractionAbstract->getDenominator();
-        if ($newNumerator < 0) {
-            $this->changeSign();
-        }
-
-        $this->setNumeratorWithoutReduction(abs($newNumerator));
-
-
-        $newDenominator = $this->getDenominator() * $fractionAbstract->getNumerator();
-
-        if ($newDenominator < 0) {
-            $this->changeSign();
-        }
-
-        $this->setDenominatorWithoutReduction(abs($newDenominator));
+        $this->divideRealPart($fractionAbstract);
 
         $this->reduction();
     }

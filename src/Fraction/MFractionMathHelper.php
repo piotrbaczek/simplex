@@ -23,6 +23,7 @@ trait MFractionMathHelper
         }
 
         if (abs($this->getNumerator()) == 1 || $this->getDenominator() == 1) {
+            $this->reduceMPart();
             return;
         }
 

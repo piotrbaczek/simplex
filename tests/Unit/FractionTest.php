@@ -199,7 +199,10 @@ class FractionTest extends TestCase
         $first->divide(new Fraction(-1, 2));
         $this->assertEquals('-2', $first->__toString());
 
-        $first->divide(new Fraction(0));
+        $zero = new Fraction(0);
+        $this->assertEquals('0', $zero->__toString());
+
+        $first->divide($zero);
     }
 
     /**

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b608e7031f2da75cce2e29648324c4f2",
+    "content-hash": "28ad6d3b799281ffdb0ca9ba37fbee54",
     "packages": [
         {
             "name": "ramsey/collection",

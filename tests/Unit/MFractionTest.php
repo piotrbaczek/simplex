@@ -3,6 +3,8 @@
 namespace pbaczek\simplex\tests\Unit;
 
 use pbaczek\simplex\Fraction\Dictionaries\Sign;
+use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
+use pbaczek\simplex\Fraction\Exceptions\ZeroDenominatorException;
 use pbaczek\simplex\MFraction;
 use PHPUnit\Framework\TestCase;
 
@@ -55,5 +57,65 @@ class MFractionTest extends TestCase
         $zero = new MFraction(0);
         $zero->changeSign();
         $this->assertEquals(Sign::NON_NEGATIVE, $zero->getSign());
+    }
+
+    /**
+     * Test that both real part and M part are being reduced
+     * @return void
+     */
+    public function testMFractionIsBeingReduced(): void
+    {
+        $mFraction = new MFraction(5, 10, 20, 30);
+        $this->assertEquals(1, $mFraction->getNumerator());
+        $this->assertEquals(2, $mFraction->getDenominator());
+        $this->assertEquals(2, $mFraction->getMNumerator());
+        $this->assertEquals(3, $mFraction->getMDenominator());
+    }
+
+    /**
+     * Test after setting numerator, the MFraction is being reduced
+     * @return void
+     */
+    public function testSettingMNumerator(): void
+    {
+        $this->mFraction->setMNumerator(15);
+        $this->assertEquals('1/2+3M', $this->mFraction->__toString());
+
+        $this->mFraction->setMNumerator(-15);
+        $this->assertEquals('1/2-15M', $this->mFraction->__toString());
+    }
+
+    /**
+     * Test after setting denominator, the MFraction is being reduced
+     * @return void
+     */
+    public function testSettingMDenominator(): void
+    {
+        $this->mFraction->setMDenominator(6);
+        $this->assertEquals('1/2+1/2M', $this->mFraction->__toString());
+    }
+
+    /**
+     * Test that attempt to set MDenominator as 0 throws an Exception
+     * @return void
+     */
+    public function testSettingZeroMDenominator(): void
+    {
+        $this->expectException(ZeroDenominatorException::class);
+        $this->expectExceptionMessage('0');
+
+        $this->mFraction->setMDenominator(0);
+    }
+
+    /**
+     * Test that attempt to set negative MDenominator throws an Exception
+     * @return void
+     */
+    public function testSettingNegativeMDenominator(): void
+    {
+        $this->expectException(NegativeDenominatorException::class);
+        $this->expectExceptionMessage('-4');
+
+        $this->mFraction->setMDenominator(-12);
     }
 }
