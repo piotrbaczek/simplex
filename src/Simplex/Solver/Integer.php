@@ -2,10 +2,10 @@
 
 namespace pbaczek\simplex\Simplex\Solver;
 /**
- * Class DantzigGomorry
+ * Class Integer
  * @package pbaczek\simplex\Simplex\Solver
  */
-class DantzigGomorry extends SolverAbstract
+class Integer extends SolverAbstract
 {
     /**
      * Solve the problem

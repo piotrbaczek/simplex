@@ -1,8 +1,8 @@
 <?php
 
-namespace pbaczek\simplex\Simplex;
+namespace pbaczek\simplex\Equation;
 
-use pbaczek\simplex\Simplex\Sign\SignAbstract;
+use pbaczek\simplex\Equation\Sign\SignAbstract;
 use Ramsey\Collection\AbstractCollection;
 
 /**

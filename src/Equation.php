@@ -2,7 +2,7 @@
 
 namespace pbaczek\simplex;
 
-use pbaczek\simplex\Simplex\Sign\SignAbstract;
+use pbaczek\simplex\Equation\Sign\SignAbstract;
 
 /**
  * Class Equation

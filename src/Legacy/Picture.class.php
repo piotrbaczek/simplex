@@ -22,7 +22,7 @@ class Picture
      */
     public function __construct($a = 'r', $b = 2, $c = 3, $d = 4, $e = 5)
     {
-        $this->fontFilePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'Roboto.ttf';
+        $this->fontFilePath = __DIR__ . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'Roboto.ttf';
         $this->countsize($a, $b, $c, $d, $e);
     }
 

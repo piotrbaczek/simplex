@@ -3,10 +3,10 @@
 namespace pbaczek\simplex\Simplex\Solver;
 
 /**
- * Class Dantzig
+ * Class Number
  * @package pbaczek\simplex\Simplex\Solver
  */
-class Dantzig extends SolverAbstract
+class Number extends SolverAbstract
 {
     /**
      * @inheritDoc
@@ -14,7 +14,7 @@ class Dantzig extends SolverAbstract
      */
     protected function solve(): void
     {
-        // TODO: Implement solve() method.
+
     }
 
     /**
