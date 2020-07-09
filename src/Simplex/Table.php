@@ -71,9 +71,9 @@ final class Table
     /**
      * @param Equation $equation
      * @param int $equationsCount
-     * @param $equationKey
+     * @param int $equationKey
      */
-    private function fillSigns(Equation $equation, int $equationsCount, $equationKey): void
+    private function fillSigns(Equation $equation, int $equationsCount, int $equationKey): void
     {
         switch ($equation->getSign()->getSignCharacter()) {
             case Equation\Sign\Dictionary\SignCharacter::LESS_OR_EQUAL:
@@ -97,9 +97,9 @@ final class Table
 
     /**
      * @param Equation $equation
-     * @param $equationKey
+     * @param int $equationKey
      */
-    private function fillBoundary(Equation $equation, $equationKey): void
+    private function fillBoundary(Equation $equation, int $equationKey): void
     {
         $this->table[$equationKey][] = clone $equation->getBoundary();
     }
