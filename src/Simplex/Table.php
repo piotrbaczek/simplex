@@ -6,6 +6,7 @@ use pbaczek\simplex\Equation;
 use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\Fraction;
 use pbaczek\simplex\MFraction;
+use pbaczek\simplex\MFractionCollection;
 
 /**
  * Class Table
@@ -14,7 +15,16 @@ use pbaczek\simplex\MFraction;
 final class Table
 {
     /** @var Fraction[][] */
-    private $table;
+    private $table = [];
+
+    /** @var BaseIndexCollection|BaseIndex[] $basisVariables */
+    private $basisVariables;
+
+    /** @var BaseIndexCollection|BaseIndex[] $nonBasisVariables */
+    private $nonBasisVariables;
+
+    /** @var MFractionCollection|MFraction[] $cCoefficients */
+    private $cCoefficients;
 
     /**
      * Table constructor.
@@ -22,7 +32,9 @@ final class Table
      */
     public function __construct(EquationsCollection $equationsCollection)
     {
-        $this->table = [];
+        $this->cCoefficients = new MFractionCollection();
+        $this->basisVariables = new BaseIndexCollection();
+        $this->nonBasisVariables = new BaseIndexCollection();
 
         $equationsCount = $equationsCollection->count();
 
@@ -72,6 +84,7 @@ final class Table
                         $this->table[$equationKey][] = new MFraction(0);
                     }
                 }
+                $this->cCoefficients[$equationKey] = new MFraction(0);
                 break;
             case Equation\Sign\Dictionary\SignCharacter::EQUAL:
                 //@TODO
@@ -89,5 +102,21 @@ final class Table
     private function fillBoundary(Equation $equation, $equationKey): void
     {
         $this->table[$equationKey][] = clone $equation->getBoundary();
+    }
+
+    /**
+     * @return BaseIndex[]|BaseIndexCollection
+     */
+    public function getBasisVariables()
+    {
+        return $this->basisVariables;
+    }
+
+    /**
+     * @return BaseIndex[]|BaseIndexCollection
+     */
+    public function getNonBasisVariables()
+    {
+        return $this->nonBasisVariables;
     }
 }
