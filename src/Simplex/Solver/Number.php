@@ -12,15 +12,6 @@ class Number extends SolverAbstract
      * @inheritDoc
      * @return void
      */
-    protected function solve(): void
-    {
-
-    }
-
-    /**
-     * @inheritDoc
-     * @return void
-     */
     protected function validate(): void
     {
 //        if ($this->variables->count() === 0) {
@@ -34,5 +25,14 @@ class Number extends SolverAbstract
 //        if ($this->signs->count() === 0) {
 //            throw new InvalidArgumentException('signs count can\'t be 0');
 //        }
+    }
+
+    /**
+     * Solve the problem
+     * @return void
+     */
+    protected function run(): void
+    {
+        // TODO: Implement run() method.
     }
 }

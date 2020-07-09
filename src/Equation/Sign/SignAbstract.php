@@ -9,8 +9,8 @@ namespace pbaczek\simplex\Equation\Sign;
 abstract class SignAbstract
 {
     /**
-     * Return sign
+     * Return sign character
      * @return string
      */
-    abstract public static function getSign(): string;
+    abstract public static function getSignCharacter(): string;
 }

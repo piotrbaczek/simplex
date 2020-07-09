@@ -49,9 +49,11 @@ class SimplexTest extends TestCase
         $equationsCollection->add($secondEquation);
         $equationsCollection->add($thirdEquation);
         $solver = new Number($equationsCollection, new FractionsCollection([new Fraction(2), new Fraction(6)]), true);
-//
+
         $simplex = new Simplex($solver);
-        $simplex->run();
+        $simplex->solve();
+
+        echo $simplex->getConsolePrintableTablesCollection();
     }
 
 //    public function testOldSimplex()

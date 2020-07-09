@@ -11,9 +11,9 @@ class Integer extends SolverAbstract
      * Solve the problem
      * @return void
      */
-    protected function solve(): void
+    protected function run(): void
     {
-        // TODO: Implement solve() method.
+        // TODO: Implement run() method.
     }
 
     /**

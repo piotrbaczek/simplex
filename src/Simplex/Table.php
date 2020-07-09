@@ -5,7 +5,7 @@ namespace pbaczek\simplex\Simplex;
 use pbaczek\simplex\Equation;
 use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\Fraction;
-use pbaczek\simplex\FractionsCollection;
+use pbaczek\simplex\MFraction;
 
 /**
  * Class Table
@@ -16,26 +16,25 @@ final class Table
     /** @var Fraction[][] */
     private $table;
 
-    /** @var FractionsCollection $targetFunction */
-    private $targetFunction;
-
     /**
      * Table constructor.
      * @param EquationsCollection $equationsCollection
-     * @param FractionsCollection $targetFunction
      */
-    public function __construct(EquationsCollection $equationsCollection, FractionsCollection $targetFunction)
+    public function __construct(EquationsCollection $equationsCollection)
     {
+        $this->table = [];
+
+        $equationsCount = $equationsCollection->count();
+
         /**
          * @var int $key
          * @var Equation $equation
          */
-        foreach ($equationsCollection as $key => $equation) {
-
-            var_dump($equation);
-            die();
+        foreach ($equationsCollection as $equationKey => $equation) {
+            $this->fillVariables($equation, $equationKey);
+            $this->fillSigns($equation, $equationsCount, $equationKey);
+            $this->fillBoundary($equation, $equationKey);
         }
-        $this->targetFunction = $targetFunction;
     }
 
     /**
@@ -44,5 +43,51 @@ final class Table
     public function getTable(): array
     {
         return $this->table;
+    }
+
+    /**
+     * @param Equation $equation
+     * @param $equationKey
+     */
+    private function fillVariables(Equation $equation, $equationKey): void
+    {
+        foreach ($equation->getVariables() as $variable) {
+            $this->table[$equationKey][] = clone $variable;
+        }
+    }
+
+    /**
+     * @param Equation $equation
+     * @param int $equationsCount
+     * @param $equationKey
+     */
+    private function fillSigns(Equation $equation, int $equationsCount, $equationKey): void
+    {
+        switch ($equation->getSign()->getSignCharacter()) {
+            case Equation\Sign\Dictionary\SignCharacter::LESS_OR_EQUAL:
+                for ($i = 0; $i < $equationsCount; $i++) {
+                    if ($i === $equationKey) {
+                        $this->table[$equationKey][] = new MFraction(1);
+                    } else {
+                        $this->table[$equationKey][] = new MFraction(0);
+                    }
+                }
+                break;
+            case Equation\Sign\Dictionary\SignCharacter::EQUAL:
+                //@TODO
+                break;
+            case Equation\Sign\Dictionary\SignCharacter::GREATER_OR_EQUAL:
+                //@TODO
+                break;
+        }
+    }
+
+    /**
+     * @param Equation $equation
+     * @param $equationKey
+     */
+    private function fillBoundary(Equation $equation, $equationKey): void
+    {
+        $this->table[$equationKey][] = clone $equation->getBoundary();
     }
 }

@@ -26,7 +26,7 @@ abstract class SolverAbstract
     {
         $this->tableCollection = new TableCollection();
 
-        $table = new Table($equationsCollection, $targetFunction);
+        $table = new Table($equationsCollection);
         $this->tableCollection->add($table);
     }
 
@@ -34,21 +34,29 @@ abstract class SolverAbstract
      * Solve the problem
      * @return void
      */
-    public function run(): void
+    public function solve(): void
     {
         $this->validate();
-        $this->solve();
+        $this->run();
     }
 
     /**
      * Solve the problem
      * @return void
      */
-    protected abstract function solve(): void;
+    protected abstract function run(): void;
 
     /**
      * Validate parameters
      * @return void
      */
     protected abstract function validate(): void;
+
+    /**
+     * @return TableCollection
+     */
+    public function getTableCollection(): TableCollection
+    {
+        return $this->tableCollection;
+    }
 }
