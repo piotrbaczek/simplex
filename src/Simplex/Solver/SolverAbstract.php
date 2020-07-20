@@ -5,7 +5,7 @@ namespace pbaczek\simplex\Simplex\Solver;
 use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\FractionsCollection;
 use pbaczek\simplex\Simplex\Table;
-use pbaczek\simplex\Simplex\TableCollection;
+use pbaczek\simplex\Simplex\TablesCollection;
 
 /**
  * Class SolverAbstract
@@ -13,7 +13,7 @@ use pbaczek\simplex\Simplex\TableCollection;
  */
 abstract class SolverAbstract
 {
-    /** @var TableCollection $tableCollection */
+    /** @var TablesCollection $tableCollection */
     private $tableCollection;
 
     /**
@@ -24,7 +24,7 @@ abstract class SolverAbstract
      */
     public function __construct(EquationsCollection $equationsCollection, FractionsCollection $targetFunction, bool $maximize = true)
     {
-        $this->tableCollection = new TableCollection();
+        $this->tableCollection = new TablesCollection();
 
         $table = new Table($equationsCollection);
         $this->tableCollection->add($table);
@@ -53,9 +53,9 @@ abstract class SolverAbstract
     protected abstract function validate(): void;
 
     /**
-     * @return TableCollection
+     * @return TablesCollection
      */
-    public function getTableCollection(): TableCollection
+    public function getTableCollection(): TablesCollection
     {
         return $this->tableCollection;
     }

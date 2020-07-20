@@ -6,7 +6,7 @@ use pbaczek\simplex\Simplex\Exceptions\Printer\InvalidPrinterException;
 use pbaczek\simplex\Simplex\Printer\PrinterAbstract;
 use pbaczek\simplex\Simplex\Solver\SolverAbstract;
 use pbaczek\simplex\Simplex\Table;
-use pbaczek\simplex\Simplex\TableCollection;
+use pbaczek\simplex\Simplex\TablesCollection;
 
 /**
  * Class Simplex
@@ -37,9 +37,9 @@ class Simplex
 
     /**
      * Get Tables
-     * @return TableCollection|Table[]
+     * @return TablesCollection|Table[]
      */
-    public function getTableCollection(): TableCollection
+    public function getTableCollection(): TablesCollection
     {
         return $this->solver->getTableCollection();
     }

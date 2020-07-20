@@ -5,16 +5,17 @@ namespace pbaczek\simplex\Simplex;
 use Ramsey\Collection\AbstractCollection;
 
 /**
- * Class BaseIndexCollection
+ * Class TablesCollection
  * @package pbaczek\simplex\Simplex
  */
-class BaseIndexCollection extends AbstractCollection
+class TablesCollection extends AbstractCollection
 {
+
     /**
      * Returns the type associated with this collection.
      */
     public function getType(): string
     {
-        return BaseIndex::class;
+        return Table::class;
     }
 }

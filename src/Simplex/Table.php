@@ -5,8 +5,8 @@ namespace pbaczek\simplex\Simplex;
 use pbaczek\simplex\Equation;
 use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\Fraction;
+use pbaczek\simplex\FractionsCollection;
 use pbaczek\simplex\MFraction;
-use pbaczek\simplex\MFractionCollection;
 
 /**
  * Class Table
@@ -17,14 +17,20 @@ final class Table
     /** @var Fraction[][] */
     private $table = [];
 
-    /** @var BaseIndexCollection|BaseIndex[] $basisVariables */
+    /** @var BaseIndexesCollection|BaseIndex[] $basisVariables */
     private $basisVariables;
 
-    /** @var BaseIndexCollection|BaseIndex[] $nonBasisVariables */
+    /** @var BaseIndexesCollection|BaseIndex[] $nonBasisVariables */
     private $nonBasisVariables;
 
-    /** @var MFractionCollection|MFraction[] $cCoefficients */
+    /** @var FractionsCollection|Fraction[] $cCoefficients */
     private $cCoefficients;
+
+    /** @var int $pivotRow */
+    private $pivotRow = -1;
+
+    /** @var int $pivotColumn */
+    private $pivotColumn = -1;
 
     /**
      * Table constructor.
@@ -32,9 +38,9 @@ final class Table
      */
     public function __construct(EquationsCollection $equationsCollection)
     {
-        $this->cCoefficients = new MFractionCollection();
-        $this->basisVariables = new BaseIndexCollection();
-        $this->nonBasisVariables = new BaseIndexCollection();
+        $this->cCoefficients = new FractionsCollection();
+        $this->basisVariables = new BaseIndexesCollection();
+        $this->nonBasisVariables = new BaseIndexesCollection();
 
         $equationsCount = $equationsCollection->count();
 
@@ -84,7 +90,7 @@ final class Table
                         $this->table[$equationKey][] = new MFraction(0);
                     }
                 }
-                $this->cCoefficients[$equationKey] = new MFraction(0);
+                $this->cCoefficients[$equationKey] = new Fraction(0);
                 break;
             case Equation\Sign\Dictionary\SignCharacter::EQUAL:
                 //@TODO
@@ -105,7 +111,7 @@ final class Table
     }
 
     /**
-     * @return BaseIndex[]|BaseIndexCollection
+     * @return BaseIndex[]|BaseIndexesCollection
      */
     public function getBasisVariables()
     {
@@ -113,7 +119,7 @@ final class Table
     }
 
     /**
-     * @return BaseIndex[]|BaseIndexCollection
+     * @return BaseIndex[]|BaseIndexesCollection
      */
     public function getNonBasisVariables()
     {

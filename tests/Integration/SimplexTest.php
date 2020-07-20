@@ -23,6 +23,7 @@ class SimplexTest extends TestCase
     /**
      * Test simple functionality
      * @return void
+     * @throws Simplex\Exceptions\Printer\InvalidPrinterException
      */
     public function testBasicFunctionality(): void
     {
