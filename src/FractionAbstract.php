@@ -4,10 +4,7 @@ namespace pbaczek\simplex;
 
 use pbaczek\simplex\Fraction\Dictionaries\Sign;
 use pbaczek\simplex\Fraction\Exceptions\NegativeDenominatorException;
-use pbaczek\simplex\Fraction\Exceptions\UnknownSign;
 use pbaczek\simplex\Fraction\Exceptions\ZeroDenominatorException;
-use ReflectionClass;
-use ReflectionException;
 
 /**
  * Class FractionAbstract

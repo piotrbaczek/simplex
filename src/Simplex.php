@@ -2,8 +2,6 @@
 
 namespace pbaczek\simplex;
 
-use Laminas\Text\Table\Column;
-use Laminas\Text\Table\Row;
 use pbaczek\simplex\Simplex\Exceptions\Printer\InvalidPrinterException;
 use pbaczek\simplex\Simplex\Printer\PrinterAbstract;
 use pbaczek\simplex\Simplex\Solver\SolverAbstract;
