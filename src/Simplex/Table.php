@@ -2,6 +2,7 @@
 
 namespace pbaczek\simplex\Simplex;
 
+use Exception;
 use pbaczek\simplex\Equation;
 use pbaczek\simplex\EquationsCollection;
 use pbaczek\simplex\Fraction;
@@ -35,6 +36,7 @@ final class Table
     /**
      * Table constructor.
      * @param EquationsCollection $equationsCollection
+     * @throws Exception
      */
     public function __construct(EquationsCollection $equationsCollection)
     {
@@ -50,7 +52,7 @@ final class Table
          */
         foreach ($equationsCollection as $equationKey => $equation) {
             $this->fillVariables($equation, $equationKey);
-            $this->fillSigns($equation, $equationsCount, $equationKey);
+            $this->fillArtificialVariables($equation, $equationsCount, $equationKey);
             $this->fillBoundary($equation, $equationKey);
         }
     }
@@ -78,8 +80,9 @@ final class Table
      * @param Equation $equation
      * @param int $equationsCount
      * @param int $equationKey
+     * @throws Exception
      */
-    private function fillSigns(Equation $equation, int $equationsCount, int $equationKey): void
+    private function fillArtificialVariables(Equation $equation, int $equationsCount, int $equationKey): void
     {
         switch ($equation->getSign()->getSignCharacter()) {
             case Equation\Sign\Dictionary\SignCharacter::LESS_OR_EQUAL:
@@ -94,10 +97,10 @@ final class Table
                 break;
             case Equation\Sign\Dictionary\SignCharacter::EQUAL:
                 //@TODO
-                break;
+                throw new Exception('TODO');
             case Equation\Sign\Dictionary\SignCharacter::GREATER_OR_EQUAL:
                 //@TODO
-                break;
+                throw new Exception('TODO');
         }
     }
 
