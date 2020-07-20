@@ -4,6 +4,8 @@ namespace pbaczek\simplex;
 
 use Laminas\Text\Table\Column;
 use Laminas\Text\Table\Row;
+use pbaczek\simplex\Simplex\Exceptions\Printer\InvalidPrinterException;
+use pbaczek\simplex\Simplex\Printer\PrinterAbstract;
 use pbaczek\simplex\Simplex\Solver\SolverAbstract;
 use pbaczek\simplex\Simplex\Table;
 use pbaczek\simplex\Simplex\TableCollection;
@@ -45,28 +47,18 @@ class Simplex
     }
 
     /**
+     * @param string $printerAbstractClassName
      * @return \Laminas\Text\Table\Table
+     * @throws InvalidPrinterException
      */
-    public function getConsolePrintableTablesCollection(): \Laminas\Text\Table\Table
+    public function print(string $printerAbstractClassName): string
     {
-        $table = new \Laminas\Text\Table\Table([
-            'columnWidths' => array_fill(0, count(current($this->getTableCollection()->first()->getTable())), 10)
-        ]);
-
-        foreach ($this->getTableCollection() as $simplexTable) {
-
-            foreach ($simplexTable->getTable() as $rowIndex => $rowValues) {
-                $row = new Row();
-
-                /** @var FractionAbstract $rowValue */
-                foreach ($rowValues as $rowValue) {
-                    $row->appendColumn(new Column((string)$rowValue));
-                }
-
-                $table->appendRow($row);
-            }
+        /** @var PrinterAbstract $printer */
+        $printer = new $printerAbstractClassName($this);
+        if ($printer instanceof PrinterAbstract === false) {
+            throw new InvalidPrinterException();
         }
 
-        return $table;
+        return $printer->print();
     }
 }

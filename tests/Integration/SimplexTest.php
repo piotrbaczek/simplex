@@ -56,7 +56,7 @@ class SimplexTest extends TestCase
         $simplex = new Simplex($solver);
         $simplex->solve();
 
-        echo $simplex->getConsolePrintableTablesCollection();
+        echo $simplex->print(Simplex\Printer\ConsolePrinter::class);
     }
 
     public function testOldSimplex()
