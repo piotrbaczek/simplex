@@ -1,5 +1,7 @@
 <?php
 
+use tests\RandomClass;
+
 include_once 'RandomClass.php';
 
 $class = new RandomClass();
