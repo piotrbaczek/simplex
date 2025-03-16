@@ -21,9 +21,7 @@ class SimplexTable
     {
         $internalTableHeight = $problem->getProblemEquations()->count();
 
-        /** @var Problem\ProblemEquation $firstEquation */
-        $firstEquation = $problem->getProblemEquations()->first();
-        $internalTableWidth = $firstEquation->getEquation()->count();
+        $internalTableWidth = $problem->getProblemEquations()->first()->getEquation()->count();
 
         $this->setEquationVariables($internalTableHeight, $problem, $internalTableWidth);
 
