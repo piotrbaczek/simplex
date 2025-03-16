@@ -4,6 +4,7 @@ namespace pbaczek\simplex\Solver\Engines;
 
 use Override;
 use pbaczek\fraction\Fraction;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
@@ -29,14 +30,8 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     #[Override] public function solve(): SimplexSolutionInterface
     {
-        return new Solution(
-            new Solution\FractionsCollection(
-                [
-                    new Fraction(0),
-                    new Fraction(0)
-                ]
-            ),
-            new Fraction(0)
-        );
+        $table = SimplexTable::fromProblem($this->problem);
+
+        return new Solution\TestEmptySolution();
     }
 }

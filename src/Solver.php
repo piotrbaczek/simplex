@@ -10,8 +10,6 @@ use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
 
 class Solver
 {
-    private SimplexEngineInterface $simplexEngine;
-
     private SimplexProblemInterface $problem;
     private string $simplexEngineClassName;
 
@@ -50,9 +48,10 @@ class Solver
             throw new InvalidEngineException(sprintf('Engine %s must implement %s interface.', $this->simplexEngineClassName, SimplexEngineInterface::class));
         }
 
-        $this->simplexEngine = $engine;
+        $simplexEngine = $engine;
 
-        $this->simplexEngine->setProblem($this->problem);
-        return $this->simplexEngine->solve();
+        $simplexEngine->setProblem($this->problem);
+
+        return $simplexEngine->solve();
     }
 }
