@@ -2,8 +2,6 @@
 
 namespace pbaczek\simplex\Solver\Engines;
 
-use Override;
-use pbaczek\fraction\Fraction;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
@@ -28,10 +26,21 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         return $this;
     }
 
-    #[Override] public function solve(): SimplexSolutionInterface
+    public function solve(): SimplexSolutionInterface
     {
         $table = SimplexTable::fromProblem($this->problem);
 
-        return new Solution\TestEmptySolution();
+        $this->simplexTables->add($table);
+
+        $solution = new Solution($table->getSolutionPoints(), $table->getSolutionValue(), clone $this->simplexTables);
+
+        $this->clearAfterSolving();
+
+        return $solution;
+    }
+
+    protected function clearAfterSolving(): void
+    {
+        $this->simplexTables->clear();
     }
 }
