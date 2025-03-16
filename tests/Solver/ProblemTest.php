@@ -5,15 +5,17 @@ namespace pbaczek\simplex\tests\Solver;
 use pbaczek\fraction\Fraction;
 use pbaczek\simplex\Solver;
 use pbaczek\simplex\Solver\Equation;
+use pbaczek\simplex\Solver\Exceptions\InvalidEngineException;
 use pbaczek\simplex\Solver\Exceptions\ProblemInvalidException;
 use PHPUnit\Framework\TestCase;
-use pbaczek\simplex\Solver\Engines\SimplexIntegerSolutionEngine;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
 
 class ProblemTest extends TestCase
 {
     /**
      * @throws ProblemInvalidException
+     * @throws InvalidEngineException
      */
     public function testBasicThesisExample(): void
     {
@@ -27,7 +29,7 @@ class ProblemTest extends TestCase
             ->addEquation(new Equation([new Fraction(0), new Fraction(3)]), Sign::LEQ, new Fraction(15));
 
         $solver = (new Solver())
-            ->setSimplexEngine(new SimplexIntegerSolutionEngine())
+            ->setSimplexEngineClassName(SimplexDefaultEngine::class)
             ->setProblem($problem);
 
         $this->assertEquals($problem, $solver->getProblem());

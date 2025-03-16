@@ -2,6 +2,7 @@
 
 namespace pbaczek\simplex;
 
+use pbaczek\simplex\Solver\Exceptions\InvalidEngineException;
 use pbaczek\simplex\Solver\Exceptions\ProblemInvalidException;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Interfaces\SimplexProblemInterface;
@@ -12,10 +13,11 @@ class Solver
     private SimplexEngineInterface $simplexEngine;
 
     private SimplexProblemInterface $problem;
+    private string $simplexEngineClassName;
 
-    public function setSimplexEngine(SimplexEngineInterface $simplexEngine): static
+    public function setSimplexEngineClassName(string $class): static
     {
-        $this->simplexEngine = $simplexEngine;
+        $this->simplexEngineClassName = $class;
 
         return $this;
     }
@@ -34,6 +36,7 @@ class Solver
 
     /**
      * @throws ProblemInvalidException
+     * @throws InvalidEngineException
      */
     public function solve(): SimplexSolutionInterface
     {
@@ -41,6 +44,15 @@ class Solver
             throw new ProblemInvalidException('Problem is invalid: ' . join(', ', $this->problem->getErrors()));
         }
 
+        $engine = new $this->simplexEngineClassName();
+
+        if (!$engine instanceof SimplexEngineInterface) {
+            throw new InvalidEngineException(sprintf('Engine %s must implement %s interface.', $this->simplexEngineClassName, SimplexEngineInterface::class));
+        }
+
+        $this->simplexEngine = $engine;
+
+        $this->simplexEngine->setProblem($this->problem);
         return $this->simplexEngine->solve();
     }
 }
