@@ -28,15 +28,29 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     public function solve(): SimplexSolutionInterface
     {
-        $table = SimplexTable::fromProblem($this->problem);
+        $initialSimplexTable = new SimplexTable();
+        $initialSimplexTable->fromProblem($this->problem);
 
-        $this->simplexTables->add($table);
+        $this->simplexTables->add($initialSimplexTable);
 
-        $solution = new Solution($table->getSolutionPoints(), $table->getSolutionValue(), clone $this->simplexTables);
+        do {
+            /** @var SimplexTable $iterationSimplexTable */
+            $iterationSimplexTable = clone $this->simplexTables->last();
+
+            break;
+        } while ($this->isFinishReached($iterationSimplexTable));
+
+        $solution = new Solution($initialSimplexTable->getSolutionPoints(), $initialSimplexTable->getSolutionValue(), clone $this->simplexTables);
 
         $this->clearAfterSolving();
 
         return $solution;
+    }
+
+    private function isFinishReached(SimplexTable $currentTable): bool
+    {
+        // @TODO implement
+        return true;
     }
 
     protected function clearAfterSolving(): void
