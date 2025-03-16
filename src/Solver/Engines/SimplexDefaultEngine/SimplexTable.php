@@ -54,24 +54,32 @@ class SimplexTable
     public function __toString(): string
     {
         $data = $this->internalTable->toArray();
+        $limits = $this->limits->toArray();
+        $objectiveFunction = $this->objectiveFunction->toArray(); // Bottom row
+
+        // Add the $limits column to $data
+        foreach ($data as $index => &$row) {
+            $row[] = $limits[$index] ?? ''; // Append limit column
+        }
+
+        // Append the bottom row
+        $data[] = $objectiveFunction;
 
         // Calculate column widths
-        $columnWidths = array_map(function ($col) {
+        $col_widths = array_map(function ($col) {
             return max(array_map('strlen', $col));
         }, array_map(null, ...$data));
 
         // Create border
-        $border = "+-" . implode("-+-", array_map(fn($w) => str_repeat("-", $w), $columnWidths)) . "-+";
+        $border = "+-" . implode("-+-", array_map(fn($w) => str_repeat("-", $w), $col_widths)) . "-+";
 
         $return = $border . PHP_EOL;
-
         foreach ($data as $row) {
             $return .= "| " . implode(" | ", array_map(function ($item, $w) {
                     return str_pad($item, $w);
-                }, $row, $columnWidths)) . " |" . PHP_EOL;
+                }, $row, $col_widths)) . ' |' . PHP_EOL;
         }
-
-        $return .= $border . "\n";
+        $return .= $border . PHP_EOL;
 
         return $return;
     }
@@ -82,7 +90,7 @@ class SimplexTable
      * @param int $internalTableWidth
      * @return void
      */
-    public function setBasicVariables(int $internalTableHeight, Problem $problem, int $internalTableWidth): void
+    private function setBasicVariables(int $internalTableHeight, Problem $problem, int $internalTableWidth): void
     {
         for ($row = 0; $row < $internalTableHeight; $row++) {
             /** @var Problem\ProblemEquation $element */
@@ -100,7 +108,7 @@ class SimplexTable
      * @param $internalTableWidth
      * @return void
      */
-    public function setNonBasicVariables(int $internalTableHeight, Problem $problem, $internalTableWidth): void
+    private function setNonBasicVariables(int $internalTableHeight, Problem $problem, $internalTableWidth): void
     {
         for ($row = 0; $row < $internalTableHeight; $row++) {
             /** @var Problem\ProblemEquation $element */
@@ -127,7 +135,7 @@ class SimplexTable
      * @param Problem $problem
      * @return void
      */
-    public function setLimits(Problem $problem): void
+    private function setLimits(Problem $problem): void
     {
         /** @var Problem\ProblemEquation $problemEquation */
         foreach ($problem->getProblemEquations() as $problemEquation) {
@@ -139,8 +147,13 @@ class SimplexTable
      * @param Problem $problem
      * @return void
      */
-    public function setObjectiveFunction(Problem $problem): void
+    private function setObjectiveFunction(Problem $problem): void
     {
         $this->objectiveFunction = $problem->getObjectiveFunction();
+
+        // Fill with zeros
+        foreach ($problem->getProblemEquations() as $ignored) {
+            $this->objectiveFunction->add(new Fraction(0));
+        }
     }
 }
