@@ -9,6 +9,7 @@ use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTab
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Problem;
 use pbaczek\simplex\Solver\Solution\FractionsCollection;
+use Ramsey\Collection\Sort;
 
 class SimplexTable
 {
@@ -41,9 +42,9 @@ class SimplexTable
     {
         $sortedCollection = $this->objectiveFunction
             ->filter(function (Fraction $element) {
-                return $element->getNumerator() !== 0;
+                return $element->getRealValue() < 0;
             })
-            ->sort('getRealValue');
+            ->sort('getRealValue', Sort::Ascending);
 
         /** @var Fraction $lowestValue */
         $lowestValue = $sortedCollection->first();
