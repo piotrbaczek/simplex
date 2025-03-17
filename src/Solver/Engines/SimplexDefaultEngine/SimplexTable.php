@@ -6,6 +6,8 @@ use pbaczek\fraction\Fraction;
 use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Problem;
 use pbaczek\simplex\Solver\Solution\FractionsCollection;
@@ -38,7 +40,7 @@ class SimplexTable
         $this->setLimits($problem);
     }
 
-    public function findPivotColumn(): int
+    public function findPivotColumn(): PivotColumnSearchResult
     {
         $sortedCollection = $this->objectiveFunction
             ->filter(function (Fraction $element) {
@@ -49,13 +51,32 @@ class SimplexTable
         /** @var Fraction $lowestValue */
         $lowestValue = $sortedCollection->first();
 
-        foreach ($this->objectiveFunction->getIterator() as $index => $parameter) {
-            if ($lowestValue->equals($parameter)) {
-                return $index;
+        foreach ($this->objectiveFunction->getIterator() as $index => $objectiveFunctionParameter) {
+            if ($lowestValue->equals($objectiveFunctionParameter)) {
+                return new PivotColumnSearchResult($lowestValue, $index);
             }
         }
 
-        return -1;
+        return new PivotColumnSearchResult(new Fraction(-1), -1);
+    }
+
+    public function findPivotRow(PivotColumnSearchResult $pivotColumnSearchResult): PivotRowSearchResult
+    {
+        $initialIndex = -1;
+        $initialValue = new Fraction(PHP_INT_MAX);
+
+        foreach ($this->internalTable->toArray() as $rowIndex => $row) {
+            /** @var Fraction $limitForRow */
+            $limitForRow = clone $this->limits[$rowIndex];
+            $limitForRow->divide($row[$pivotColumnSearchResult->getColumnIndex()]);
+
+            if ($limitForRow->getRealValue() < $initialValue->getRealValue()) {
+                $initialValue = $limitForRow;
+                $initialIndex = $rowIndex;
+            }
+        }
+
+        return new PivotRowSearchResult($initialValue, $initialIndex);
     }
 
     public function getSolutionPoints(): FractionsCollection
@@ -77,8 +98,8 @@ class SimplexTable
         $objectiveFunction = $this->objectiveFunction->toArray(); // Bottom row
 
         // Add the $limits column to $data
-        foreach ($data as $index => &$row) {
-            $row[] = $limits[$index] ?? ''; // Append limit column
+        foreach ($data as $index => $row) {
+            $data[$index][] = $limits[$index] ?? ''; // Append limit column
         }
 
         // Append the bottom row
@@ -116,7 +137,7 @@ class SimplexTable
             $element = $problem->getProblemEquations()->offsetGet($row);
 
             for ($column = 0; $column < $internalTableWidth; $column++) {
-                $this->internalTable->setKey($row, $column, $element->getEquation()->offsetGet($column));
+                $this->internalTable->setKey($row, $column, clone $element->getEquation()->offsetGet($column));
             }
         }
     }
@@ -166,7 +187,7 @@ class SimplexTable
     {
         /** @var Problem\ProblemEquation $problemEquation */
         foreach ($problem->getProblemEquations() as $problemEquation) {
-            $this->limits->add($problemEquation->getLimit());
+            $this->limits->add(clone $problemEquation->getLimit());
         }
     }
 
@@ -176,7 +197,7 @@ class SimplexTable
      */
     private function setObjectiveFunction(Problem $problem): void
     {
-        $this->objectiveFunction = $problem->getObjectiveFunction();
+        $this->objectiveFunction = clone $problem->getObjectiveFunction();
 
         /** @var Fraction $objectiveFunctionParameter */
         foreach ($this->objectiveFunction as $objectiveFunctionParameter) {
