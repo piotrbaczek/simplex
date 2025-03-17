@@ -2,7 +2,7 @@
 
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\FractionAbstract;
 
 class InternalTable
 {
@@ -13,12 +13,12 @@ class InternalTable
         $this->table = [];
     }
 
-    public function getKey(int $row, int $column): Fraction
+    public function getKey(int $row, int $column): FractionAbstract
     {
         return $this->table[$row][$column];
     }
 
-    public function setKey(int $row, int $column, Fraction $fraction): void
+    public function setKey(int $row, int $column, FractionAbstract $fraction): void
     {
         $this->table[$row][$column] = $fraction;
     }

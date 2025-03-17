@@ -41,6 +41,8 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             $iterationSimplexTable = clone $this->simplexTables->last();
 
             // @TODO simplex operations
+            $pivotColumn = $iterationSimplexTable->findPivotColumn();
+
             $this->simplexTables->add($iterationSimplexTable);
 
             // @TODO remove
