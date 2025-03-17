@@ -12,7 +12,7 @@ use pbaczek\simplex\Solver\Solution;
 class SimplexDefaultEngine implements SimplexEngineInterface
 {
     private SimplexTableCollection $simplexTables;
-    private Problem $problem;
+    private ?Problem $problem;
 
     public function __construct()
     {
@@ -33,14 +33,26 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
         $this->simplexTables->add($initialSimplexTable);
 
+        // @TODO remove
+        echo $initialSimplexTable;
+
         do {
             /** @var SimplexTable $iterationSimplexTable */
             $iterationSimplexTable = clone $this->simplexTables->last();
 
-            break;
-        } while ($this->isFinishReached($iterationSimplexTable));
+            // @TODO simplex operations
+            $this->simplexTables->add($iterationSimplexTable);
 
-        $solution = new Solution($initialSimplexTable->getSolutionPoints(), $initialSimplexTable->getSolutionValue(), clone $this->simplexTables);
+            // @TODO remove
+            echo $iterationSimplexTable;
+
+        } while (!$this->isFinishReached($iterationSimplexTable));
+
+        $solution = new Solution(
+            $initialSimplexTable->getSolutionPoints(),
+            $initialSimplexTable->getSolutionValue(),
+            clone $this->simplexTables
+        );
 
         $this->clearAfterSolving();
 
@@ -56,5 +68,6 @@ class SimplexDefaultEngine implements SimplexEngineInterface
     protected function clearAfterSolving(): void
     {
         $this->simplexTables->clear();
+        $this->problem = null;
     }
 }

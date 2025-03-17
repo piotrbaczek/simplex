@@ -27,16 +27,13 @@ class SimplexTable
 
         $internalTableWidth = $problem->getProblemEquations()->first()->getEquation()->count();
 
-        $this->setBasicVariables($internalTableHeight, $problem, $internalTableWidth);
+        $this->setBasicVariables($internalTableHeight, $internalTableWidth, $problem);
 
-        $this->setNonBasicVariables($internalTableHeight, $problem, $internalTableWidth);
+        $this->setNonBasicVariables($internalTableHeight, $internalTableWidth, $problem);
 
         $this->setObjectiveFunction($problem);
 
         $this->setLimits($problem);
-
-        // @TODO remove
-        echo $this;
     }
 
     public function getSolutionPoints(): FractionsCollection
@@ -90,7 +87,7 @@ class SimplexTable
      * @param int $internalTableWidth
      * @return void
      */
-    private function setBasicVariables(int $internalTableHeight, Problem $problem, int $internalTableWidth): void
+    private function setBasicVariables(int $internalTableHeight, int $internalTableWidth, Problem $problem): void
     {
         for ($row = 0; $row < $internalTableHeight; $row++) {
             /** @var Problem\ProblemEquation $element */
@@ -104,11 +101,11 @@ class SimplexTable
 
     /**
      * @param int $internalTableHeight
+     * @param int $internalTableWidth
      * @param Problem $problem
-     * @param $internalTableWidth
      * @return void
      */
-    private function setNonBasicVariables(int $internalTableHeight, Problem $problem, $internalTableWidth): void
+    private function setNonBasicVariables(int $internalTableHeight, int $internalTableWidth, Problem $problem): void
     {
         for ($row = 0; $row < $internalTableHeight; $row++) {
             /** @var Problem\ProblemEquation $element */
