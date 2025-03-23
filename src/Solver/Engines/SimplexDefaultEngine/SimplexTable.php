@@ -56,7 +56,7 @@ class SimplexTable
             ->filter(function (Fraction $element) {
                 return $element->getRealValue() < 0;
             })
-            ->sort('getRealValue', Sort::Ascending);
+            ->sort('getValue', Sort::Ascending);
 
         /** @var Fraction $lowestValue */
         $lowestValue = $sortedCollection->first();
@@ -99,7 +99,7 @@ class SimplexTable
             /** @var Fraction $limitForRow */
             $limitForRow = clone $this->limits[$rowIndex];
 
-            if ($row[$pivotColumnSearchResult->getColumnIndex()]->getNumerator() === 0) {
+            if ($row[$pivotColumnSearchResult->getColumnIndex()]->equals(0)) {
                 continue;
             }
 
