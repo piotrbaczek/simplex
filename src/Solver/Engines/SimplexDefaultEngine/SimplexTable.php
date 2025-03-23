@@ -28,6 +28,13 @@ class SimplexTable
         $this->limits = new FractionsCollection();
     }
 
+    public function __clone()
+    {
+        $this->internalTable = clone $this->internalTable;
+        $this->objectiveFunction = clone $this->objectiveFunction;
+        $this->limits = clone $this->limits;
+    }
+
     public function fromProblem(Problem $problem): void
     {
         $internalTableHeight = $problem->getProblemEquations()->count();

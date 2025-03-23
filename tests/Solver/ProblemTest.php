@@ -37,6 +37,10 @@ class ProblemTest extends TestCase
 
         $solution = $solver->solve();
 
+        foreach ($solution->getSimplexTables()->getIterator() as $table) {
+            echo $table;
+        }
+
 //        $expectedSolution = new Solver\Solution(
 //            new FractionsCollection(
 //                [

@@ -23,6 +23,11 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         $this->simplexTables = new SimplexTableCollection();
     }
 
+    public function __clone()
+    {
+        $this->simplexTables = clone $this->simplexTables;
+    }
+
     public function setProblem(Problem $problem): static
     {
         $this->problem = $problem;
@@ -36,9 +41,6 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         $initialSimplexTable->fromProblem($this->problem);
 
         $this->simplexTables->add($initialSimplexTable);
-
-        // @TODO remove
-        echo $initialSimplexTable;
 
         do {
             /** @var SimplexTable $iterationSimplexTable */
@@ -76,20 +78,13 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
             $this->simplexTables->add($iterationSimplexTable);
 
-            // @TODO remove
-            echo $iterationSimplexTable;
-
         } while (!$this->isFinishReached($iterationSimplexTable));
 
-        $solution = new Solution(
-            $initialSimplexTable->getSolutionPoints(),
-            $initialSimplexTable->getSolutionValue(),
-            clone $this->simplexTables
+        return new Solution(
+            clone($initialSimplexTable->getSolutionPoints()),
+            clone($initialSimplexTable->getSolutionValue()),
+            $this->simplexTables
         );
-
-        $this->clearAfterSolving();
-
-        return $solution;
     }
 
     private function isFinishReached(SimplexTable $currentTable): bool
@@ -102,12 +97,6 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             }, new Fraction(0));
 
         return $objectiveFunctionParametersSum->equals(new Fraction(0));
-    }
-
-    protected function clearAfterSolving(): void
-    {
-        $this->simplexTables->clear();
-        $this->problem = null;
     }
 
     /**
