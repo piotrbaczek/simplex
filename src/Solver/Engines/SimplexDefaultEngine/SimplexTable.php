@@ -3,12 +3,15 @@
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 
 use pbaczek\fraction\Fraction;
+use pbaczek\fraction\FractionAbstract;
 use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
 use pbaczek\simplex\Solver\Equation;
+use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Problem;
 use pbaczek\simplex\Solver\Solution\FractionsCollection;
 use Ramsey\Collection\Sort;
@@ -35,9 +38,9 @@ class SimplexTable
 
         $this->setNonBasicVariables($internalTableHeight, $internalTableWidth, $problem);
 
-        $this->setObjectiveFunction($problem);
+        $this->setObjectiveFunctionFromProblem($problem);
 
-        $this->setLimits($problem);
+        $this->setLimitsFromProblem($problem);
     }
 
     public function findPivotColumn(): PivotColumnSearchResult
@@ -57,7 +60,27 @@ class SimplexTable
             }
         }
 
-        return new PivotColumnSearchResult(new Fraction(-1), -1);
+        return new PivotColumnSearchResult(new Fraction(-1), SimplexEngineInterface::NO_COLUMN_FOUND);
+    }
+
+    public function getObjectiveFunction(): Equation
+    {
+        return $this->objectiveFunction;
+    }
+
+    public function setObjectiveFunction(Equation $objectiveFunction): void
+    {
+        $this->objectiveFunction = $objectiveFunction;
+    }
+
+    public function getLimits(): FractionsCollection
+    {
+        return $this->limits;
+    }
+
+    public function setLimits(FractionsCollection $limits): void
+    {
+        $this->limits = $limits;
     }
 
     public function findPivotRow(PivotColumnSearchResult $pivotColumnSearchResult): PivotRowSearchResult
@@ -89,6 +112,27 @@ class SimplexTable
     {
         // @TODO implement
         return new Fraction(0);
+    }
+
+    public function getRowsCount(): int
+    {
+        return count($this->internalTable->toArray());
+    }
+
+    public function getColumnsCount(): int
+    {
+        $internalTableArray = $this->internalTable->toArray();
+        return count($internalTableArray[0]);
+    }
+
+    public function getKey(int $row, int $column): FractionAbstract
+    {
+        return $this->internalTable->getKey($row, $column);
+    }
+
+    public function setKey(int $row, int $column, FractionAbstract $fractionAbstract): void
+    {
+        $this->internalTable->setKey($row, $column, $fractionAbstract);
     }
 
     public function __toString(): string
@@ -183,7 +227,7 @@ class SimplexTable
      * @param Problem $problem
      * @return void
      */
-    private function setLimits(Problem $problem): void
+    private function setLimitsFromProblem(Problem $problem): void
     {
         /** @var Problem\ProblemEquation $problemEquation */
         foreach ($problem->getProblemEquations() as $problemEquation) {
@@ -195,7 +239,7 @@ class SimplexTable
      * @param Problem $problem
      * @return void
      */
-    private function setObjectiveFunction(Problem $problem): void
+    private function setObjectiveFunctionFromProblem(Problem $problem): void
     {
         $this->objectiveFunction = clone $problem->getObjectiveFunction();
 
