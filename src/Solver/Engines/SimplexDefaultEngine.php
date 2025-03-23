@@ -64,17 +64,33 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 die();
             }
 
-
             /** @var SimplexTable $previousStepTable */
             $previousStepTable = clone($this->simplexTables->last());
 
-            $previousPivotValue = clone($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $pivotColumnSearchResult->getColumnIndex()));
+            $previousPivotValue = clone(
+            $previousStepTable->getKey(
+                $pivotRowSearchResult->getRowIndex(),
+                $pivotColumnSearchResult->getColumnIndex()
+            )
+            );
 
             $this->pivotObjectiveFunction($iterationSimplexTable, $pivotColumnSearchResult);
 
-            $this->pivotLimits($iterationSimplexTable, $pivotRowSearchResult, $previousPivotValue, $previousStepTable, $pivotColumnSearchResult);
+            $this->pivotLimits(
+                $iterationSimplexTable,
+                $pivotRowSearchResult,
+                $previousPivotValue,
+                $previousStepTable,
+                $pivotColumnSearchResult
+            );
 
-            $this->pivotSimplexTable($iterationSimplexTable, $pivotRowSearchResult, $pivotColumnSearchResult, $previousPivotValue, $previousStepTable);
+            $this->pivotSimplexTable(
+                $iterationSimplexTable,
+                $pivotRowSearchResult,
+                $pivotColumnSearchResult,
+                $previousPivotValue,
+                $previousStepTable
+            );
 
             $this->simplexTables->add($iterationSimplexTable);
 
@@ -89,7 +105,7 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     private function isFinishReached(SimplexTable $currentTable): bool
     {
-        $objectiveFunctionParametersSum = clone ($currentTable
+        $objectiveFunctionParametersSum = clone($currentTable
             ->getObjectiveFunction())
             ->reduce(function (Fraction $carry, Fraction $objectiveFunctionParam) {
                 $carry->add($objectiveFunctionParam);
@@ -164,11 +180,11 @@ class SimplexDefaultEngine implements SimplexEngineInterface
      * @return void
      */
     public function pivotSimplexTable(
-        SimplexTable $iterationSimplexTable,
-        PivotRowSearchResult $pivotRowSearchResult,
+        SimplexTable            $iterationSimplexTable,
+        PivotRowSearchResult    $pivotRowSearchResult,
         PivotColumnSearchResult $pivotColumnSearchResult,
-        FractionAbstract $previousPivotValue,
-        SimplexTable $previousStepTable
+        FractionAbstract        $previousPivotValue,
+        SimplexTable            $previousStepTable
     ): void
     {
         for ($row = 0; $row < $iterationSimplexTable->getRowsCount(); $row++) {
@@ -185,10 +201,10 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 } else {
                     $currentValue = clone($iterationSimplexTable->getKey($row, $column));
                     $previousValueAtRow = clone(
-                        $previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column)
+                    $previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column)
                     );
                     $previousValueAtColumn = clone(
-                        $previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex())
+                    $previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex())
                     );
                     $previousValueAtRow->multiply($previousValueAtColumn);
                     $previousValueAtRow->divide($previousPivotValue);
