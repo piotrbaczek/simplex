@@ -105,7 +105,7 @@ class SimplexTable
 
             $limitForRow->divide($row[$pivotColumnSearchResult->getColumnIndex()]);
 
-            if ($limitForRow->getRealValue() < $initialValue->getRealValue()) {
+            if ($limitForRow->getValue() < $initialValue->getValue()) {
                 $initialValue = $limitForRow;
                 $initialIndex = $rowIndex;
             }
