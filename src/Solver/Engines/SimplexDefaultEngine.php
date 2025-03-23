@@ -61,14 +61,32 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
 
             /** @var SimplexTable $previousStepTable */
-            $previousStepTable = $this->simplexTables->last();
+            $previousStepTable = clone($this->simplexTables->last());
 
-//            $currentObjectiveFunction = $iterationSimplexTable->getObjectiveFunction();
-//            $currentObjectiveFunction->offsetSet($pivotRowSearchResult->getRowIndex());
-//            $iterationSimplexTable->setObjectiveFunction($currentObjectiveFunction);
+            $previousPivotValue = clone($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $pivotColumnSearchResult->getColumnIndex()));
 
-            $previousMainValue = clone($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $pivotColumnSearchResult->getColumnIndex()));
+            $iterationSimplexTable->getObjectiveFunction()->offsetSet($pivotColumnSearchResult->getColumnIndex(), new Fraction(0));
 
+            $newLimits = clone($iterationSimplexTable->getLimits());
+
+            foreach ($iterationSimplexTable->getLimits() as $limitKey => $limitValue) {
+                /** @var Fraction $limitAtRow */
+                $limitAtRow = clone($limitValue);
+
+                if ($limitKey === $pivotRowSearchResult->getRowIndex()) {
+                    $limitAtRow->divide($previousPivotValue);
+                } else {
+                    $rowElement = clone($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
+                    $columnElement = clone($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
+                    $rowElement->multiply($columnElement);
+                    $rowElement->divide($previousPivotValue);
+                    $limitAtRow->subtract($rowElement);
+                }
+
+                $newLimits->offsetSet($limitKey, clone($limitAtRow));
+            }
+
+            $iterationSimplexTable->setLimits($newLimits);
 
             for ($row = 0; $row < $iterationSimplexTable->getRowsCount(); $row++) {
                 for ($column = 0; $column < $iterationSimplexTable->getColumnsCount(); $column++) {
@@ -76,8 +94,8 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                         $iterationSimplexTable->setKey($row, $column, new Fraction(1));
                     } else if ($row === $pivotRowSearchResult->getRowIndex()) {
                         $currentValue = clone($iterationSimplexTable->getKey($row, $column));
-                        $currentValue->divide($previousMainValue);
-                        $iterationSimplexTable->setKey($row, $column, $currentValue);
+                        $currentValue->divide($previousPivotValue);
+                        $iterationSimplexTable->setKey($row, $column, clone($currentValue));
                     } else if ($column === $pivotColumnSearchResult->getColumnIndex()) {
                         $iterationSimplexTable->setKey($row, $column, new Fraction(0));
                     } else {
@@ -85,9 +103,9 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                         $previousValueAtRow = clone($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column));
                         $previousValueAtColumn = clone($previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex()));
                         $previousValueAtRow->multiply($previousValueAtColumn);
-                        $previousValueAtRow->divide($previousMainValue);
+                        $previousValueAtRow->divide($previousPivotValue);
                         $currentValue->subtract($previousValueAtRow);
-                        $iterationSimplexTable->setKey($row, $column, $currentValue);
+                        $iterationSimplexTable->setKey($row, $column, clone($currentValue));
                     }
                 }
             }
@@ -112,8 +130,14 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     private function isFinishReached(SimplexTable $currentTable): bool
     {
-        // @TODO implement
-        return true;
+        $objectiveFunctionParametersSum = clone ($currentTable
+            ->getObjectiveFunction())
+            ->reduce(function (Fraction $carry, Fraction $objectiveFunctionParam) {
+                $carry->add($objectiveFunctionParam);
+                return $carry;
+            }, new Fraction(0));
+
+        return $objectiveFunctionParametersSum->equals(new Fraction(0));
     }
 
     protected function clearAfterSolving(): void

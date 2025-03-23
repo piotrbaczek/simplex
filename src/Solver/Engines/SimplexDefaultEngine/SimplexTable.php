@@ -91,6 +91,11 @@ class SimplexTable
         foreach ($this->internalTable->toArray() as $rowIndex => $row) {
             /** @var Fraction $limitForRow */
             $limitForRow = clone $this->limits[$rowIndex];
+
+            if ($row[$pivotColumnSearchResult->getColumnIndex()]->getNumerator() === 0) {
+                continue;
+            }
+
             $limitForRow->divide($row[$pivotColumnSearchResult->getColumnIndex()]);
 
             if ($limitForRow->getRealValue() < $initialValue->getRealValue()) {
