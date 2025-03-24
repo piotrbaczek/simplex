@@ -46,10 +46,9 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             /** @var SimplexTable $iterationSimplexTable */
             $iterationSimplexTable = clone $this->simplexTables->last();
 
-            // @TODO simplex operations
             $pivotColumnSearchResult = $iterationSimplexTable->findPivotColumn();
 
-            if ($pivotColumnSearchResult->getColumnIndex() === self::NO_COLUMN_FOUND) {
+            if ($pivotColumnSearchResult->getColumnIndex() === self::NOT_FOUND) {
                 // @TODO write logic
                 echo 123;
                 die();
@@ -57,7 +56,7 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
             $pivotRowSearchResult = $iterationSimplexTable->findPivotRow($pivotColumnSearchResult);
 
-            if ($pivotRowSearchResult->getRowIndex() === self::NO_COLUMN_FOUND) {
+            if ($pivotRowSearchResult->getRowIndex() === self::NOT_FOUND) {
                 // @TODO write logic
 
                 echo 234;
@@ -65,13 +64,11 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             }
 
             /** @var SimplexTable $previousStepTable */
-            $previousStepTable = clone($this->simplexTables->last());
+            $previousStepTable = clone $this->simplexTables->last();
 
-            $previousPivotValue = clone(
-            $previousStepTable->getKey(
+            $previousPivotValue = clone $previousStepTable->getKey(
                 $pivotRowSearchResult->getRowIndex(),
                 $pivotColumnSearchResult->getColumnIndex()
-            )
             );
 
             $this->pivotObjectiveFunction($iterationSimplexTable, $pivotColumnSearchResult);
@@ -92,27 +89,29 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 $previousStepTable
             );
 
+            $iterationSimplexTable->setBasis($pivotRowSearchResult);
+
             $this->simplexTables->add($iterationSimplexTable);
 
         } while (!$this->isFinishReached($iterationSimplexTable));
 
         return new Solution(
-            clone($initialSimplexTable->getSolutionPoints()),
-            clone($initialSimplexTable->getSolutionValue()),
-            $this->simplexTables
+            clone $iterationSimplexTable->getSolutionPoints(),
+            clone $iterationSimplexTable->getSolutionValue($this->simplexTables->first()),
+            clone $this->simplexTables
         );
     }
 
     private function isFinishReached(SimplexTable $currentTable): bool
     {
-        $objectiveFunctionParametersSum = clone($currentTable
+        $objectiveFunctionParametersSum = clone ($currentTable
             ->getObjectiveFunction())
             ->reduce(function (Fraction $carry, Fraction $objectiveFunctionParam) {
                 $carry->add($objectiveFunctionParam);
                 return $carry;
             }, new Fraction(0));
 
-        return $objectiveFunctionParametersSum->equals(new Fraction(0));
+        return $objectiveFunctionParametersSum->equals(0);
     }
 
     /**

@@ -6,7 +6,7 @@ use pbaczek\simplex\Solver\Problem;
 
 interface SimplexEngineInterface
 {
-    public const int NO_COLUMN_FOUND = -1;
+    public const int NOT_FOUND = -1;
 
     public function solve(): SimplexSolutionInterface;
 

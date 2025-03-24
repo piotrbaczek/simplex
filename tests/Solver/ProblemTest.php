@@ -41,18 +41,12 @@ class ProblemTest extends TestCase
             echo $table;
         }
 
-//        $expectedSolution = new Solver\Solution(
-//            new FractionsCollection(
-//                [
-//                    new Fraction(5, 2),
-//                    new Fraction(5)
-//                ]
-//            ),
-//            new Fraction(35)
-//        );
-
-        //$this->assertEquals($expectedSolution, $solution);
-
         $this->assertInstanceOf(Solver\Solution::class, $solution);
+
+        $points = $solution->getPointCoordinates();
+        $this->assertTrue($points->count() === 2);
+        $this->assertEquals(new Fraction(5,2), $points->offsetGet(0));
+        $this->assertEquals(new Fraction(5), $points->offsetGet(1));
+        // $this->assertEquals(35, $solution->getSolutionValue()->getValue());
     }
 }
