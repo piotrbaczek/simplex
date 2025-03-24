@@ -129,7 +129,7 @@ class SimplexTable
 
         /** @var PivotRowSearchResult $value */
         foreach ($this->base->sort()->getIterator() as $value) {
-            $points->add($this->limits->offsetGet($value->getRowIndex()));
+            $points->offsetSet($value->getRowIndex(), $this->limits->offsetGet($value->getRowIndex()));
         }
 
         return $points;
