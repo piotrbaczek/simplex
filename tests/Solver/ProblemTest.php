@@ -24,9 +24,36 @@ class ProblemTest extends TestCase
         $problem
             ->calculateMaximum()
             ->setObjectiveFunction(new Equation([new Fraction(2), new Fraction(6)]))
-            ->addEquation(new Equation([new Fraction(2), new Fraction(5)]), Sign::LEQ, new Fraction(30))
-            ->addEquation(new Equation([new Fraction(2), new Fraction(3)]), Sign::LEQ, new Fraction(26))
-            ->addEquation(new Equation([new Fraction(0), new Fraction(3)]), Sign::LEQ, new Fraction(15));
+            ->addEquation(
+                new Equation(
+                    [
+                        new Fraction(2),
+                        new Fraction(5),
+                    ]
+                ),
+                Sign::LEQ,
+                new Fraction(30)
+            )
+            ->addEquation(
+                new Equation(
+                    [
+                        new Fraction(2),
+                        new Fraction(3),
+                    ]
+                ),
+                Sign::LEQ,
+                new Fraction(26)
+            )
+            ->addEquation(
+                new Equation(
+                    [
+                        new Fraction(0),
+                        new Fraction(3)
+                    ]
+                ),
+                Sign::LEQ,
+                new Fraction(15)
+            );
 
         $solver = (new Solver())
             ->setSimplexEngineClassName(SimplexDefaultEngine::class)
@@ -46,7 +73,7 @@ class ProblemTest extends TestCase
         $points = $solution->getPointCoordinates();
 
         $this->assertTrue($points->count() === 2);
-        $this->assertEquals(new Fraction(5,2), $points->offsetGet(0));
+        $this->assertEquals(new Fraction(5, 2), $points->offsetGet(0));
         $this->assertEquals(new Fraction(5), $points->offsetGet(2));
         // $this->assertEquals(35, $solution->getSolutionValue()->getValue());
     }
