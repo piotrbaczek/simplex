@@ -72,6 +72,10 @@ class ProblemTest extends TestCase
 
         $points = $solution->getPointCoordinates();
 
+        foreach ($points as $pointIndex => $point) {
+            echo sprintf('x%s = %s' . PHP_EOL, $pointIndex, $point->getValue());
+        }
+
         $this->assertTrue($points->count() === 2);
         $this->assertEquals(new Fraction(5, 2), $points->offsetGet(0));
         $this->assertEquals(new Fraction(5), $points->offsetGet(1));
