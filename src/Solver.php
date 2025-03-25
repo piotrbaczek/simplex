@@ -11,11 +11,11 @@ use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
 class Solver
 {
     private SimplexProblemInterface $problem;
-    private string $simplexEngineClassName;
+    private SimplexEngineInterface $simplexEngineInterface;
 
-    public function setSimplexEngineClassName(string $class): static
+    public function setEngine(SimplexEngineInterface $simplexEngineInterface): static
     {
-        $this->simplexEngineClassName = $class;
+        $this->simplexEngineInterface = $simplexEngineInterface;
 
         return $this;
     }
@@ -42,13 +42,7 @@ class Solver
             throw new ProblemInvalidException('Problem is invalid: ' . join(', ', $this->problem->getErrors()));
         }
 
-        $engine = new $this->simplexEngineClassName();
-
-        if (!$engine instanceof SimplexEngineInterface) {
-            throw new InvalidEngineException(sprintf('Engine %s must implement %s interface.', $this->simplexEngineClassName, SimplexEngineInterface::class));
-        }
-
-        $simplexEngine = $engine;
+        $simplexEngine = $this->simplexEngineInterface;
 
         $simplexEngine->setProblem($this->problem);
 

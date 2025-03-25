@@ -56,7 +56,7 @@ class ProblemTest extends TestCase
             );
 
         $solver = (new Solver())
-            ->setSimplexEngineClassName(SimplexDefaultEngine::class)
+            ->setEngine(new SimplexDefaultEngine())
             ->setProblem($problem);
 
         $this->assertEquals($problem, $solver->getProblem());
