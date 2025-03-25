@@ -6,12 +6,16 @@ use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
+use pbaczek\simplex\Solver\Exceptions\OutOfBoundsException;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
 use pbaczek\simplex\Solver\Problem;
 use pbaczek\simplex\Solver\Solution;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
+use pbaczek\simplex\Solver\Solution\FractionsCollection;
+use Ramsey\Collection\Sort;
 
 class SimplexDefaultEngine implements SimplexEngineInterface
 {
@@ -35,6 +39,9 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         return $this;
     }
 
+    /**
+     * @throws OutOfBoundsException
+     */
     public function solve(): SimplexSolutionInterface
     {
         $initialSimplexTable = new SimplexTable();
@@ -49,18 +56,16 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             $pivotColumnSearchResult = $iterationSimplexTable->findPivotColumn();
 
             if ($pivotColumnSearchResult->getColumnIndex() === self::NOT_FOUND) {
-                // @TODO write logic
-                echo 123;
-                die();
+                throw new OutOfBoundsException(
+                    'Pivot column not found',
+                    $pivotColumnSearchResult->getColumnIndex()
+                );
             }
 
             $pivotRowSearchResult = $iterationSimplexTable->findPivotRow($pivotColumnSearchResult);
 
             if ($pivotRowSearchResult->getRowIndex() === self::NOT_FOUND) {
-                // @TODO write logic
-
-                echo 234;
-                die();
+                throw new OutOfBoundsException('Pivot row not found', $pivotRowSearchResult->getRowIndex());
             }
 
             /** @var SimplexTable $previousStepTable */
@@ -89,17 +94,42 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 $previousStepTable
             );
 
-            $iterationSimplexTable->setBasis($pivotRowSearchResult);
+            $iterationSimplexTable->addPivotHistory(new PivotHistory($pivotRowSearchResult, $pivotColumnSearchResult));
 
             $this->simplexTables->add($iterationSimplexTable);
 
         } while (!$this->isFinishReached($iterationSimplexTable));
 
-        return new Solution(
-            clone $iterationSimplexTable->getSolutionPoints(),
-            clone $iterationSimplexTable->getSolutionValue($this->simplexTables->first()),
-            clone $this->simplexTables
-        );
+        return new Solution($this->getSolutionPoints(), $this->getSolutionValue(), $this->simplexTables);
+    }
+
+    public function getSolutionPoints(): FractionsCollection
+    {
+        $points = new FractionsCollection();
+
+        $history = $this->simplexTables->last()->getPivotHistory()->sort(null, Sort::Descending);
+
+        /** @var PivotHistory $pivotHistory */
+        foreach ($history as $pivotHistory) {
+            $points->add(
+                $this->simplexTables->last()->getLimits()->offsetGet(
+                    $pivotHistory->getRowSearchResult()->getRowIndex()
+                )
+            );
+        }
+
+        return $points;
+    }
+
+    public function getSolutionValue(): Fraction
+    {
+        $value = new Fraction(0);
+
+        $history = $this->simplexTables->last()->getPivotHistory()->sort(null, Sort::Descending);
+
+        // @TODO write logic
+
+        return $value;
     }
 
     private function isFinishReached(SimplexTable $currentTable): bool

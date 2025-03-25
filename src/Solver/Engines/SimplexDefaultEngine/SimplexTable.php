@@ -2,12 +2,12 @@
 
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 
-use Exception;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\BaseTable;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistoryTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
@@ -22,13 +22,13 @@ class SimplexTable
     private InternalTable $internalTable;
     private Equation $objectiveFunction;
     private FractionsCollection $limits;
-    private BaseTable $base;
+    private PivotHistoryTable $pivotHistory;
 
     public function __construct()
     {
         $this->internalTable = new InternalTable();
         $this->limits = new FractionsCollection();
-        $this->base = new BaseTable();
+        $this->pivotHistory = new PivotHistoryTable();
     }
 
     public function __clone()
@@ -36,7 +36,7 @@ class SimplexTable
         $this->internalTable = clone $this->internalTable;
         $this->objectiveFunction = clone $this->objectiveFunction;
         $this->limits = clone $this->limits;
-        $this->base = clone $this->base;
+        $this->pivotHistory = clone $this->pivotHistory;
     }
 
     public function fromProblem(Problem $problem): void
@@ -118,61 +118,14 @@ class SimplexTable
         return new PivotRowSearchResult($initialValue, $initialIndex);
     }
 
-    /**
-     * @TODO move to engine
-     * @return FractionsCollection
-     * @throws Exception
-     */
-    public function getSolutionPoints(): FractionsCollection
+    public function addPivotHistory(PivotHistory $pivotHistory): void
     {
-        $points = new FractionsCollection();
-
-        /** @var PivotRowSearchResult $value */
-        foreach ($this->base->sort()->getIterator() as $value) {
-            $points->offsetSet($value->getRowIndex(), $this->limits->offsetGet($value->getRowIndex()));
-        }
-
-        return $points;
+        $this->pivotHistory->add($pivotHistory);
     }
 
-    public function setBasis(PivotRowSearchResult $pivotRowSearchResult): void
+    public function getPivotHistory(): PivotHistoryTable
     {
-        $this->base->offsetSet($pivotRowSearchResult->getRowIndex(), $pivotRowSearchResult);
-    }
-
-    /**
-     * @TODO move to engine
-     * @param SimplexTable $firstSimplexTable
-     * @return Fraction
-     */
-    public function getSolutionValue(SimplexTable $firstSimplexTable): Fraction
-    {
-        $value = new Fraction(0);
-
-        // @TODO write logic
-//        $points = $this->getSolutionPoints();
-//        $firstTableObjectiveFunction = $firstSimplexTable->objectiveFunction;
-//
-//        /**
-//         * @var int $key
-//         * @var Fraction $objectiveFunctionValue
-//         * */
-//        foreach ($firstTableObjectiveFunction->getIterator() as $key => $objectiveFunctionValue) {
-//            if ($objectiveFunctionValue->equals(0)) {
-//                continue;
-//            }
-//
-//            if ($this->base->offsetGet($key) === false) {
-//                continue;
-//            }
-//
-//            $pointValue = clone $objectiveFunctionValue;
-//            $pointValue->multiply($points->offsetGet($key));
-//
-//            $value->add($pointValue);
-//        }
-
-        return $value;
+        return $this->pivotHistory;
     }
 
     public function getRowsCount(): int

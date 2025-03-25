@@ -74,7 +74,7 @@ class ProblemTest extends TestCase
 
         $this->assertTrue($points->count() === 2);
         $this->assertEquals(new Fraction(5, 2), $points->offsetGet(0));
-        $this->assertEquals(new Fraction(5), $points->offsetGet(2));
+        $this->assertEquals(new Fraction(5), $points->offsetGet(1));
         // $this->assertEquals(35, $solution->getSolutionValue()->getValue());
     }
 }
