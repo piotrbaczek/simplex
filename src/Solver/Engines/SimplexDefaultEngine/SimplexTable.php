@@ -4,8 +4,6 @@ namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
-use pbaczek\fraction\MFraction;
-use pbaczek\simplex\Solver\Dictionaries\Sign;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistoryTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
@@ -14,6 +12,7 @@ use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSea
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Problem;
+use pbaczek\simplex\Solver\ProblemProcessor;
 use pbaczek\simplex\Solver\Solution\FractionsCollection;
 use Ramsey\Collection\Sort;
 
@@ -41,17 +40,13 @@ class SimplexTable
 
     public function fromProblem(Problem $problem): void
     {
-        $internalTableHeight = $problem->getProblemEquations()->count();
+        $problemProcessor = new ProblemProcessor();
 
-        $internalTableWidth = $problem->getProblemEquations()->first()->getEquation()->count();
+        list($simplexTable, $internalTable) = $problemProcessor->process($problem);
 
-        $this->setBasicVariables($internalTableHeight, $internalTableWidth, $problem);
-
-        $this->setNonBasicVariables($internalTableHeight, $internalTableWidth, $problem);
-
-        $this->setObjectiveFunctionFromProblem($problem);
-
-        $this->setLimitsFromProblem($problem);
+        $this->internalTable = $internalTable;
+        $this->objectiveFunction = $simplexTable->getObjectiveFunction();
+        $this->limits = $simplexTable->getLimits();
     }
 
     public function findPivotColumn(): PivotColumnSearchResult
@@ -180,91 +175,5 @@ class SimplexTable
         $return .= $border . PHP_EOL;
 
         return $return;
-    }
-
-    /**
-     * @param int $internalTableHeight
-     * @param Problem $problem
-     * @param int $internalTableWidth
-     * @return void
-     */
-    private function setBasicVariables(int $internalTableHeight, int $internalTableWidth, Problem $problem): void
-    {
-        for ($row = 0; $row < $internalTableHeight; $row++) {
-            /** @var Problem\ProblemEquation $element */
-            $element = $problem->getProblemEquations()->offsetGet($row);
-
-            for ($column = 0; $column < $internalTableWidth; $column++) {
-                $this->internalTable->setKey($row, $column, clone $element->getEquation()->offsetGet($column));
-            }
-        }
-    }
-
-    /**
-     * @param int $internalTableHeight
-     * @param int $internalTableWidth
-     * @param Problem $problem
-     * @return void
-     */
-    private function setNonBasicVariables(int $internalTableHeight, int $internalTableWidth, Problem $problem): void
-    {
-        for ($row = 0; $row < $internalTableHeight; $row++) {
-
-            /** @var Problem\ProblemEquation $element */
-            $element = $problem->getProblemEquations()->offsetGet($row);
-
-            switch ($element->getSign()) {
-                case Sign::LEQ:
-                    for ($column = 0; $column < $internalTableHeight; $column++) {
-                        if ($column === $row) {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new Fraction(1));
-                        } else {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new Fraction(0));
-                        }
-                    }
-                    break;
-                case Sign::GEQ:
-                case Sign::EQ:
-                    for ($column = 0; $column < $internalTableHeight; $column++) {
-                        if ($column === $row) {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new MFraction(0, 1, -1, 1));
-                        } else {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new Fraction(0));
-                        }
-                    }
-                    break;
-            }
-        }
-    }
-
-    /**
-     * @param Problem $problem
-     * @return void
-     */
-    private function setLimitsFromProblem(Problem $problem): void
-    {
-        /** @var Problem\ProblemEquation $problemEquation */
-        foreach ($problem->getProblemEquations() as $problemEquation) {
-            $this->limits->add(clone $problemEquation->getLimit());
-        }
-    }
-
-    /**
-     * @param Problem $problem
-     * @return void
-     */
-    private function setObjectiveFunctionFromProblem(Problem $problem): void
-    {
-        $this->objectiveFunction = clone $problem->getObjectiveFunction();
-
-        /** @var Fraction $objectiveFunctionParameter */
-        foreach ($this->objectiveFunction as $objectiveFunctionParameter) {
-            $objectiveFunctionParameter->changeSign();
-        }
-
-        // Fill with zeros
-        foreach ($problem->getProblemEquations() as $ignored) {
-            $this->objectiveFunction->add(new Fraction(0));
-        }
     }
 }
