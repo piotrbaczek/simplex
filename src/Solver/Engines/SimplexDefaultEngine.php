@@ -107,14 +107,14 @@ class SimplexDefaultEngine implements SimplexEngineInterface
     {
         $points = new FractionsCollection();
 
-        $history = $this->simplexTables->last()->getPivotHistory()->sort(null, Sort::Descending);
+        /** @var SimplexTable $lastSimplexTable */
+        $lastSimplexTable = $this->simplexTables->last();
+        $history = $lastSimplexTable->getPivotHistory()->sort(null, Sort::Descending);
 
         /** @var PivotHistory $pivotHistory */
         foreach ($history as $pivotHistory) {
             $points->add(
-                $this->simplexTables->last()->getLimits()->offsetGet(
-                    $pivotHistory->getRowSearchResult()->getRowIndex()
-                )
+                $lastSimplexTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex())
             );
         }
 
