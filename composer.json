@@ -1,6 +1,6 @@
 {
   "name": "pbaczek/simplex",
-  "description": "Library that handles fractions as nominator/denominator",
+  "description": "Library that solves Simplex problems using Dantzig's BigM Simplex algorithm",
   "license": "MIT",
   "require": {
     "php": "8.3.*",
