@@ -58,7 +58,7 @@ class SimplexTable
     {
         $sortedCollection = $this->objectiveFunction
             ->filter(function (Fraction $element) {
-                return $element->getRealValue() < 0;
+                return $element->getValue() < 0;
             })
             ->sort('getValue', Sort::Ascending);
 
