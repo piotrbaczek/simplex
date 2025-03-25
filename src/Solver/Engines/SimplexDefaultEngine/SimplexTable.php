@@ -4,10 +4,10 @@ namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistoryTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistoryTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;

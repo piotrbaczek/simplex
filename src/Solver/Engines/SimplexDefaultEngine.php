@@ -5,15 +5,15 @@ namespace pbaczek\simplex\Solver\Engines;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
 use pbaczek\simplex\Solver\Exceptions\OutOfBoundsException;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
 use pbaczek\simplex\Solver\Problem;
 use pbaczek\simplex\Solver\Solution;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
 use pbaczek\simplex\Solver\Solution\FractionsCollection;
 use Ramsey\Collection\Sort;
 

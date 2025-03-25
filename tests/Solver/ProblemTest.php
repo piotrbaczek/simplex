@@ -7,6 +7,7 @@ use pbaczek\simplex\Solver;
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Exceptions\InvalidEngineException;
 use pbaczek\simplex\Solver\Exceptions\ProblemInvalidException;
+use pbaczek\simplex\Solver\Solution;
 use PHPUnit\Framework\TestCase;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
@@ -68,7 +69,7 @@ class ProblemTest extends TestCase
             echo $table;
         }
 
-        $this->assertInstanceOf(Solver\Solution::class, $solution);
+        $this->assertInstanceOf(Solution::class, $solution);
 
         $points = $solution->getPointCoordinates();
 
