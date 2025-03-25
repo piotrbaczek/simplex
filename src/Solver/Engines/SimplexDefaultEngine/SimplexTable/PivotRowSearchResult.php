@@ -7,11 +7,11 @@ use pbaczek\fraction\Fraction;
 final class PivotRowSearchResult
 {
     private int $rowIndex;
-    private Fraction $value;
+    private Fraction $ratio;
 
-    public function __construct(Fraction $value, int $rowIndex)
+    public function __construct(Fraction $ratio, int $rowIndex)
     {
-        $this->value = $value;
+        $this->ratio = $ratio;
         $this->rowIndex = $rowIndex;
     }
 
@@ -20,8 +20,8 @@ final class PivotRowSearchResult
         return $this->rowIndex;
     }
 
-    public function getValue(): Fraction
+    public function getRatio(): Fraction
     {
-        return $this->value;
+        return $this->ratio;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 
+use BadFunctionCallException;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
@@ -49,6 +50,9 @@ class SimplexTable
         $this->limits = $simplexTable->getLimits();
     }
 
+    /**
+     * @return PivotColumnSearchResult
+     */
     public function findPivotColumn(): PivotColumnSearchResult
     {
         $sortedCollection = $this->objectiveFunction
@@ -57,16 +61,20 @@ class SimplexTable
             })
             ->sort('getValue', Sort::Ascending);
 
+        if ($sortedCollection->count() === 0) {
+            return new PivotColumnSearchResult(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
+        }
+
         /** @var Fraction $lowestValue */
         $lowestValue = $sortedCollection->first();
 
-        foreach ($this->objectiveFunction->getIterator() as $index => $objectiveFunctionParameter) {
+        foreach ($this->objectiveFunction->getIterator() as $objectiveFunctionIndex => $objectiveFunctionParameter) {
             if ($lowestValue->equals($objectiveFunctionParameter)) {
-                return new PivotColumnSearchResult($lowestValue, $index);
+                return new PivotColumnSearchResult($lowestValue, $objectiveFunctionIndex);
             }
         }
 
-        return new PivotColumnSearchResult(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
+        throw new BadFunctionCallException('Lowest element not found in collection');
     }
 
     public function getObjectiveFunction(): Equation
@@ -91,8 +99,8 @@ class SimplexTable
 
     public function findPivotRow(PivotColumnSearchResult $pivotColumnSearchResult): PivotRowSearchResult
     {
-        $initialIndex = -1;
-        $initialValue = new Fraction(PHP_INT_MAX);
+        $pivotIndex = SimplexEngineInterface::NOT_FOUND;
+        $pivotRatio = new Fraction(PHP_INT_MAX);
 
         foreach ($this->internalTable->toArray() as $rowIndex => $row) {
             /** @var Fraction $limitForRow */
@@ -104,13 +112,13 @@ class SimplexTable
 
             $limitForRow->divide($row[$pivotColumnSearchResult->getColumnIndex()]);
 
-            if ($limitForRow->getValue() < $initialValue->getValue()) {
-                $initialValue = $limitForRow;
-                $initialIndex = $rowIndex;
+            if ($limitForRow->getValue() < $pivotRatio->getValue()) {
+                $pivotRatio = $limitForRow;
+                $pivotIndex = $rowIndex;
             }
         }
 
-        return new PivotRowSearchResult($initialValue, $initialIndex);
+        return new PivotRowSearchResult($pivotRatio, $pivotIndex);
     }
 
     public function addPivotHistory(PivotHistory $pivotHistory): void
