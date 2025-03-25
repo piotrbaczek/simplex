@@ -9,18 +9,19 @@ use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
+use pbaczek\simplex\Solver\Engines\Traits\SetProblemTrait;
 use pbaczek\simplex\Solver\Exceptions\OutOfBoundsException;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
-use pbaczek\simplex\Solver\Problem;
 use pbaczek\simplex\Solver\Solution;
 use pbaczek\simplex\Solver\Solution\FractionsCollection;
 use Ramsey\Collection\Sort;
 
 class SimplexDefaultEngine implements SimplexEngineInterface
 {
+    use SetProblemTrait;
+
     private SimplexTableCollection $simplexTables;
-    private ?Problem $problem;
 
     public function __construct()
     {
@@ -30,13 +31,6 @@ class SimplexDefaultEngine implements SimplexEngineInterface
     public function __clone()
     {
         $this->simplexTables = clone $this->simplexTables;
-    }
-
-    public function setProblem(Problem $problem): static
-    {
-        $this->problem = $problem;
-
-        return $this;
     }
 
     /**
