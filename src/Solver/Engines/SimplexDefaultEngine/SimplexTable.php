@@ -6,10 +6,10 @@ use BadFunctionCallException;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistoryTable;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRow;
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Problem;
@@ -53,9 +53,9 @@ class SimplexTable
     }
 
     /**
-     * @return PivotColumnSearchResult
+     * @return PivotColumn
      */
-    public function findPivotColumn(): PivotColumnSearchResult
+    public function findPivotColumn(): PivotColumn
     {
         $sortedCollection = $this->objectiveFunction
             ->filter(function (Fraction $element) {
@@ -64,7 +64,7 @@ class SimplexTable
             ->sort('getValue', Sort::Ascending);
 
         if ($sortedCollection->count() === 0) {
-            return new PivotColumnSearchResult(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
+            return new PivotColumn(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
         }
 
         /** @var Fraction $lowestValue */
@@ -72,7 +72,7 @@ class SimplexTable
 
         foreach ($this->objectiveFunction->getIterator() as $objectiveFunctionIndex => $objectiveFunctionParameter) {
             if ($lowestValue->equals($objectiveFunctionParameter)) {
-                return new PivotColumnSearchResult($lowestValue, $objectiveFunctionIndex);
+                return new PivotColumn($lowestValue, $objectiveFunctionIndex);
             }
         }
 
@@ -99,7 +99,7 @@ class SimplexTable
         $this->limits = $limits;
     }
 
-    public function findPivotRow(PivotColumnSearchResult $pivotColumnSearchResult): PivotRowSearchResult
+    public function findPivotRow(PivotColumn $pivotColumnSearchResult): PivotRow
     {
         $pivotIndex = SimplexEngineInterface::NOT_FOUND;
         $pivotRatio = new Fraction(PHP_INT_MAX);
@@ -120,7 +120,7 @@ class SimplexTable
             }
         }
 
-        return new PivotRowSearchResult($pivotRatio, $pivotIndex);
+        return new PivotRow($pivotRatio, $pivotIndex);
     }
 
     public function addPivotHistory(PivotHistory $pivotHistory): void

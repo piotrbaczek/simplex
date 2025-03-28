@@ -5,9 +5,9 @@ namespace pbaczek\simplex\Solver\Engines;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRow;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
 use pbaczek\simplex\Solver\Engines\Traits\SetProblemTrait;
 use pbaczek\simplex\Solver\Exceptions\OutOfBoundsException;
@@ -139,18 +139,18 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     /**
      * @param SimplexTable $iterationSimplexTable
-     * @param PivotRowSearchResult $pivotRowSearchResult
+     * @param PivotRow $pivotRowSearchResult
      * @param FractionAbstract $previousPivotValue
      * @param SimplexTable $previousStepTable
-     * @param PivotColumnSearchResult $pivotColumnSearchResult
+     * @param PivotColumn $pivotColumnSearchResult
      * @return void
      */
     public function pivotLimits(
         SimplexTable            $iterationSimplexTable,
-        PivotRowSearchResult    $pivotRowSearchResult,
+        PivotRow                $pivotRowSearchResult,
         FractionAbstract        $previousPivotValue,
         SimplexTable            $previousStepTable,
-        PivotColumnSearchResult $pivotColumnSearchResult
+        PivotColumn $pivotColumnSearchResult
     ): void
     {
         $newLimits = clone($iterationSimplexTable->getLimits());
@@ -177,12 +177,12 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     /**
      * @param SimplexTable $iterationSimplexTable
-     * @param PivotColumnSearchResult $pivotColumnSearchResult
+     * @param PivotColumn $pivotColumnSearchResult
      * @return void
      */
     public function pivotObjectiveFunction(
         SimplexTable            $iterationSimplexTable,
-        PivotColumnSearchResult $pivotColumnSearchResult
+        PivotColumn $pivotColumnSearchResult
     ): void
     {
         $iterationSimplexTable
@@ -195,18 +195,18 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     /**
      * @param SimplexTable $iterationSimplexTable
-     * @param PivotRowSearchResult $pivotRowSearchResult
-     * @param PivotColumnSearchResult $pivotColumnSearchResult
+     * @param PivotRow $pivotRowSearchResult
+     * @param PivotColumn $pivotColumnSearchResult
      * @param FractionAbstract $previousPivotValue
      * @param SimplexTable $previousStepTable
      * @return void
      */
     public function pivotSimplexTable(
-        SimplexTable            $iterationSimplexTable,
-        PivotRowSearchResult    $pivotRowSearchResult,
-        PivotColumnSearchResult $pivotColumnSearchResult,
-        FractionAbstract        $previousPivotValue,
-        SimplexTable            $previousStepTable
+        SimplexTable     $iterationSimplexTable,
+        PivotRow         $pivotRowSearchResult,
+        PivotColumn      $pivotColumnSearchResult,
+        FractionAbstract $previousPivotValue,
+        SimplexTable     $previousStepTable
     ): void
     {
         for ($row = 0; $row < $iterationSimplexTable->getRowsCount(); $row++) {

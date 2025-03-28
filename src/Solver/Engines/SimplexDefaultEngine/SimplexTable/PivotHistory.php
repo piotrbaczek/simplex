@@ -4,21 +4,21 @@ namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 
 final class PivotHistory
 {
-    private PivotColumnSearchResult $columnSearchResult;
-    private PivotRowSearchResult $rowSearchResult;
+    private PivotColumn $columnSearchResult;
+    private PivotRow $rowSearchResult;
 
-    public function __construct(PivotRowSearchResult $rowSearchResult, PivotColumnSearchResult $columnSearchResult)
+    public function __construct(PivotRow $rowSearchResult, PivotColumn $columnSearchResult)
     {
         $this->rowSearchResult = $rowSearchResult;
         $this->columnSearchResult = $columnSearchResult;
     }
 
-    public function getColumnSearchResult(): PivotColumnSearchResult
+    public function getColumnSearchResult(): PivotColumn
     {
         return $this->columnSearchResult;
     }
 
-    public function getRowSearchResult(): PivotRowSearchResult
+    public function getRowSearchResult(): PivotRow
     {
         return $this->rowSearchResult;
     }
