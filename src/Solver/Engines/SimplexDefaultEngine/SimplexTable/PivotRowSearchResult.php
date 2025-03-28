@@ -3,8 +3,9 @@
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 
 use pbaczek\fraction\Fraction;
+use pbaczek\simplex\Solver\Interfaces\IndexCompareInterface;
 
-final class PivotRowSearchResult
+final class PivotRowSearchResult implements IndexCompareInterface
 {
     private int $rowIndex;
     private Fraction $ratio;
@@ -23,5 +24,10 @@ final class PivotRowSearchResult
     public function getRatio(): Fraction
     {
         return $this->ratio;
+    }
+
+    public function hasSameIndex(int $index): bool
+    {
+        return $this->rowIndex === $index;
     }
 }

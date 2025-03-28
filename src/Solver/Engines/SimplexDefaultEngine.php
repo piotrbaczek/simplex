@@ -211,14 +211,14 @@ class SimplexDefaultEngine implements SimplexEngineInterface
     {
         for ($row = 0; $row < $iterationSimplexTable->getRowsCount(); $row++) {
             for ($column = 0; $column < $iterationSimplexTable->getColumnsCount(); $column++) {
-                if ($row === $pivotRowSearchResult->getRowIndex()
-                    && $column === $pivotColumnSearchResult->getColumnIndex()) {
+                if ($pivotRowSearchResult->hasSameIndex($row)
+                    && $pivotColumnSearchResult->hasSameIndex($column)) {
                     $iterationSimplexTable->setKey($row, $column, new Fraction(1));
-                } else if ($row === $pivotRowSearchResult->getRowIndex()) {
+                } else if ($pivotRowSearchResult->hasSameIndex($row)) {
                     $currentValue = clone($iterationSimplexTable->getKey($row, $column));
                     $currentValue->divide($previousPivotValue);
                     $iterationSimplexTable->setKey($row, $column, clone($currentValue));
-                } else if ($column === $pivotColumnSearchResult->getColumnIndex()) {
+                } else if ($pivotColumnSearchResult->hasSameIndex($column)) {
                     $iterationSimplexTable->setKey($row, $column, new Fraction(0));
                 } else {
                     $currentValue = clone($iterationSimplexTable->getKey($row, $column));
