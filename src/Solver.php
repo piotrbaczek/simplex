@@ -34,7 +34,6 @@ class Solver
 
     /**
      * @throws ProblemInvalidException
-     * @throws InvalidEngineException
      */
     public function solve(): SimplexSolutionInterface
     {

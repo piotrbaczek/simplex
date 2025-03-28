@@ -23,12 +23,14 @@ class SimplexTable
     private Equation $objectiveFunction;
     private FractionsCollection $limits;
     private PivotHistoryTable $pivotHistory;
+    private Fraction $value;
 
     public function __construct()
     {
         $this->internalTable = new InternalTable();
         $this->limits = new FractionsCollection();
         $this->pivotHistory = new PivotHistoryTable();
+        $this->value = new Fraction(0);
     }
 
     public function __clone()
@@ -152,6 +154,16 @@ class SimplexTable
         $this->internalTable->setKey($row, $column, $fractionAbstract);
     }
 
+    public function setValue(Fraction $value): void
+    {
+        $this->value = $value;
+    }
+
+    public function getValue(): Fraction
+    {
+        return $this->value;
+    }
+
     public function __toString(): string
     {
         $data = $this->internalTable->toArray();
@@ -164,7 +176,7 @@ class SimplexTable
         }
 
         // Append the bottom row
-        $data[] = $objectiveFunction;
+        $data[] = array_merge($objectiveFunction, [$this->value]);
 
         // Calculate column widths
         $col_widths = array_map(function ($col) {

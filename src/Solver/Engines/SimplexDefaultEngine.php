@@ -90,6 +90,8 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
             $iterationSimplexTable->addPivotHistory(new PivotHistory($pivotRowSearchResult, $pivotColumnSearchResult));
 
+            $iterationSimplexTable->setValue($this->calculateValue($iterationSimplexTable));
+
             $this->simplexTables->add($iterationSimplexTable);
 
         } while (!$this->isFinishReached($iterationSimplexTable));
@@ -117,13 +119,10 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     public function getSolutionValue(): Fraction
     {
-        $value = new Fraction(0);
+        /** @var SimplexTable $lastTable */
+        $lastTable = $this->simplexTables->last();
 
-        $history = $this->simplexTables->last()->getPivotHistory()->sort(null, Sort::Descending);
-
-        // @TODO write logic
-
-        return $value;
+        return $lastTable->getValue();
     }
 
     private function isFinishReached(SimplexTable $currentTable): bool
@@ -236,5 +235,21 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 }
             }
         }
+    }
+
+    private function calculateValue(SimplexTable $currentTable): Fraction
+    {
+        $sum = new Fraction(0);
+
+        /** @var PivotHistory $pivotHistory */
+        foreach ($currentTable->getPivotHistory() as $pivotHistory) {
+            $item = clone $pivotHistory->getColumnSearchResult()->getValue();
+            $item->multiply($currentTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex()));
+            $sum->add($item);
+        }
+
+        $sum->changeSign();
+
+        return $sum;
     }
 }
