@@ -97,7 +97,7 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
             $this->simplexTables->add($iterationSimplexTable);
 
-        } while (!$this->isFinishReached($iterationSimplexTable, $this->simplexTables->count()));
+        } while (!$this->isFinishReached($iterationSimplexTable));
 
         return new Solution($this->getSolutionPoints(), $this->getSolutionValue(), $this->simplexTables);
     }
@@ -128,7 +128,7 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         return $lastTable->getValue();
     }
 
-    private function isFinishReached(SimplexTable $currentTable, int $tablesCount): bool
+    private function isFinishReached(SimplexTable $currentTable): bool
     {
         $objectiveFunctionAtPoints = $currentTable->getObjectiveFunctionAtPoint()->filter(function (Fraction $item) {
             return $item->getValue() < 0;
