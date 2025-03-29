@@ -17,6 +17,7 @@ final class ProblemProcessor
         $this->simplexTable = new SimplexTable();
         $this->internalTable = new SimplexTable\InternalTable();
     }
+
     public function process(Problem $problem): array
     {
         $internalTableHeight = $problem->getProblemEquations()->count();
@@ -30,6 +31,10 @@ final class ProblemProcessor
         $this->setObjectiveFunctionFromProblem($problem);
 
         $this->setLimitsFromProblem($problem);
+
+        $this->setResourcesAtPointFromProblem($problem);
+
+        $this->setObjectiveFunctionAtPoint();
 
         return [$this->simplexTable, $this->internalTable];
     }
@@ -47,7 +52,7 @@ final class ProblemProcessor
             $element = $problem->getProblemEquations()->offsetGet($row);
 
             for ($column = 0; $column < $internalTableWidth; $column++) {
-                $this->internalTable->setKey($row, $column, clone $element->getEquation()->offsetGet($column));
+                $this->internalTable->setKey($row, $column, Fraction::from($element->getEquation()->offsetGet($column)));
             }
         }
     }
@@ -97,7 +102,7 @@ final class ProblemProcessor
     {
         /** @var Problem\ProblemEquation $problemEquation */
         foreach ($problem->getProblemEquations() as $problemEquation) {
-            $this->simplexTable->getLimits()->add(clone $problemEquation->getLimit());
+            $this->simplexTable->getLimits()->add(Fraction::from($problemEquation->getLimit()));
         }
     }
 
@@ -109,16 +114,37 @@ final class ProblemProcessor
     {
         $objectiveFunction = clone $problem->getObjectiveFunction();
 
-        /** @var Fraction $objectiveFunctionParameter */
-        foreach ($objectiveFunction as $objectiveFunctionParameter) {
-            $objectiveFunctionParameter->changeSign();
-        }
-
         // Fill with zeros
         foreach ($problem->getProblemEquations() as $ignored) {
             $objectiveFunction->add(new Fraction(0));
         }
 
         $this->simplexTable->setObjectiveFunction($objectiveFunction);
+    }
+
+    private function setResourcesAtPointFromProblem(Problem $problem): void
+    {
+        /** @var Fraction $ignored */
+        foreach ($problem->getObjectiveFunction() as $ignored) {
+            $this->simplexTable->getResourcesAtPoint()->add(new Fraction(0));
+        }
+
+        /** @var Equation $ignored */
+        foreach ($problem->getProblemEquations() as $ignored) {
+            $this->simplexTable->getResourcesAtPoint()->add(new Fraction(0));
+        }
+    }
+
+    private function setObjectiveFunctionAtPoint(): void
+    {
+        /**
+         * @var int $index
+         * @var Fraction $objectiveFunctionParameter
+         */
+        foreach ($this->simplexTable->getObjectiveFunction() as $index => $objectiveFunctionParameter) {
+            $remainingResourceAtPoint = Fraction::from($this->simplexTable->getResourcesAtPoint()->offsetGet($index));
+            $remainingResourceAtPoint->subtract($objectiveFunctionParameter);
+            $this->simplexTable->getObjectiveFunctionAtPoint()->offsetSet($index, $remainingResourceAtPoint);
+        }
     }
 }

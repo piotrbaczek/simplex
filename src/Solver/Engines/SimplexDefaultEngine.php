@@ -5,11 +5,12 @@ namespace pbaczek\simplex\Solver\Engines;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRow;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTableCollection;
 use pbaczek\simplex\Solver\Engines\Traits\SetProblemTrait;
+use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Exceptions\OutOfBoundsException;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Interfaces\SimplexSolutionInterface;
@@ -70,8 +71,6 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 $pivotColumnSearchResult->getColumnIndex()
             );
 
-            $this->pivotObjectiveFunction($iterationSimplexTable, $pivotColumnSearchResult);
-
             $this->pivotLimits(
                 $iterationSimplexTable,
                 $pivotRowSearchResult,
@@ -89,6 +88,10 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             );
 
             $iterationSimplexTable->addPivotHistory(new PivotHistory($pivotRowSearchResult, $pivotColumnSearchResult));
+
+            $iterationSimplexTable->setResourcesAtPoint($this->calculateResourcesAtPoint($iterationSimplexTable));
+
+            $iterationSimplexTable->setObjectiveFunctionAtPoint($this->calculateObjectiveFunctionAtPoint($iterationSimplexTable));
 
             $iterationSimplexTable->setValue($this->calculateValue($iterationSimplexTable));
 
@@ -127,43 +130,42 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     private function isFinishReached(SimplexTable $currentTable): bool
     {
-        $objectiveFunctionParametersSum = clone ($currentTable
-            ->getObjectiveFunction())
-            ->reduce(function (Fraction $carry, Fraction $objectiveFunctionParam) {
-                $carry->add($objectiveFunctionParam);
-                return $carry;
-            }, new Fraction(0));
+        $objectiveFunctionAtPoints = $currentTable
+            ->getObjectiveFunctionAtPoint()
+            ->filter(function (Fraction $item) {
+                return $item->getValue() < 0;
+            });
 
-        return $objectiveFunctionParametersSum->equals(0);
+        return $objectiveFunctionAtPoints->count() === 0;
     }
 
     /**
      * @param SimplexTable $iterationSimplexTable
-     * @param PivotRowSearchResult $pivotRowSearchResult
+     * @param PivotRow $pivotRowSearchResult
      * @param FractionAbstract $previousPivotValue
      * @param SimplexTable $previousStepTable
-     * @param PivotColumnSearchResult $pivotColumnSearchResult
+     * @param PivotColumn $pivotColumnSearchResult
      * @return void
      */
     public function pivotLimits(
-        SimplexTable            $iterationSimplexTable,
-        PivotRowSearchResult    $pivotRowSearchResult,
-        FractionAbstract        $previousPivotValue,
-        SimplexTable            $previousStepTable,
-        PivotColumnSearchResult $pivotColumnSearchResult
+        SimplexTable     $iterationSimplexTable,
+        PivotRow         $pivotRowSearchResult,
+        FractionAbstract $previousPivotValue,
+        SimplexTable     $previousStepTable,
+        PivotColumn      $pivotColumnSearchResult
     ): void
     {
-        $newLimits = clone($iterationSimplexTable->getLimits());
+        $newLimits = clone $iterationSimplexTable->getLimits();
 
         foreach ($iterationSimplexTable->getLimits() as $limitKey => $limitValue) {
-            /** @var Fraction $limitAtRow */
-            $limitAtRow = clone($limitValue);
+
+            $limitAtRow = Fraction::from($limitValue);
 
             if ($limitKey === $pivotRowSearchResult->getRowIndex()) {
                 $limitAtRow->divide($previousPivotValue);
             } else {
-                $rowElement = clone($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
-                $columnElement = clone($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
+                $rowElement = Fraction::from($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
+                $columnElement = Fraction::from($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
                 $rowElement->multiply($columnElement);
                 $rowElement->divide($previousPivotValue);
                 $limitAtRow->subtract($rowElement);
@@ -177,36 +179,18 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     /**
      * @param SimplexTable $iterationSimplexTable
-     * @param PivotColumnSearchResult $pivotColumnSearchResult
-     * @return void
-     */
-    public function pivotObjectiveFunction(
-        SimplexTable            $iterationSimplexTable,
-        PivotColumnSearchResult $pivotColumnSearchResult
-    ): void
-    {
-        $iterationSimplexTable
-            ->getObjectiveFunction()
-            ->offsetSet(
-                $pivotColumnSearchResult->getColumnIndex(),
-                new Fraction(0)
-            );
-    }
-
-    /**
-     * @param SimplexTable $iterationSimplexTable
-     * @param PivotRowSearchResult $pivotRowSearchResult
-     * @param PivotColumnSearchResult $pivotColumnSearchResult
+     * @param PivotRow $pivotRowSearchResult
+     * @param PivotColumn $pivotColumnSearchResult
      * @param FractionAbstract $previousPivotValue
      * @param SimplexTable $previousStepTable
      * @return void
      */
     public function pivotSimplexTable(
-        SimplexTable            $iterationSimplexTable,
-        PivotRowSearchResult    $pivotRowSearchResult,
-        PivotColumnSearchResult $pivotColumnSearchResult,
-        FractionAbstract        $previousPivotValue,
-        SimplexTable            $previousStepTable
+        SimplexTable     $iterationSimplexTable,
+        PivotRow         $pivotRowSearchResult,
+        PivotColumn      $pivotColumnSearchResult,
+        FractionAbstract $previousPivotValue,
+        SimplexTable     $previousStepTable
     ): void
     {
         for ($row = 0; $row < $iterationSimplexTable->getRowsCount(); $row++) {
@@ -215,23 +199,21 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                     && $pivotColumnSearchResult->hasSameIndex($column)) {
                     $iterationSimplexTable->setKey($row, $column, new Fraction(1));
                 } else if ($pivotRowSearchResult->hasSameIndex($row)) {
-                    $currentValue = clone($iterationSimplexTable->getKey($row, $column));
+                    $currentValue = Fraction::from($iterationSimplexTable->getKey($row, $column));
                     $currentValue->divide($previousPivotValue);
-                    $iterationSimplexTable->setKey($row, $column, clone($currentValue));
+                    $iterationSimplexTable->setKey($row, $column, $currentValue);
                 } else if ($pivotColumnSearchResult->hasSameIndex($column)) {
                     $iterationSimplexTable->setKey($row, $column, new Fraction(0));
                 } else {
-                    $currentValue = clone($iterationSimplexTable->getKey($row, $column));
-                    $previousValueAtRow = clone(
-                    $previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column)
-                    );
-                    $previousValueAtColumn = clone(
-                    $previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex())
-                    );
-                    $previousValueAtRow->multiply($previousValueAtColumn);
-                    $previousValueAtRow->divide($previousPivotValue);
-                    $currentValue->subtract($previousValueAtRow);
-                    $iterationSimplexTable->setKey($row, $column, clone($currentValue));
+                    $currentValue = Fraction::from($iterationSimplexTable->getKey($row, $column));
+                    $valueAtPivotRow = Fraction::from($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column));
+                    $valueAtPivotColumn = Fraction::from($previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex()));
+
+                    $valueAtPivotRow->multiply($valueAtPivotColumn);
+                    $valueAtPivotRow->divide($previousPivotValue);
+                    $currentValue->subtract($valueAtPivotRow);
+
+                    $iterationSimplexTable->setKey($row, $column, $currentValue);
                 }
             }
         }
@@ -243,13 +225,48 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
         /** @var PivotHistory $pivotHistory */
         foreach ($currentTable->getPivotHistory() as $pivotHistory) {
-            $item = clone $pivotHistory->getColumnSearchResult()->getValue();
-            $item->multiply($currentTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex()));
-            $sum->add($item);
+            $lowestPivotColumnValue = Fraction::from($pivotHistory->getColumnSearchResult()->getValue());
+            $lowestPivotColumnValue->changeSign();
+            $lowestPivotColumnValue->multiply($currentTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex()));
+            $sum->add($lowestPivotColumnValue);
         }
 
-        $sum->changeSign();
-
         return $sum;
+    }
+
+    private function calculateResourcesAtPoint(SimplexTable $iterationSimplexTable): Equation
+    {
+        $resourcesAtPoint = $iterationSimplexTable->getResourcesAtPoint()->zero();
+
+        /** @var PivotHistory $pivotHistory */
+        foreach ($iterationSimplexTable->getPivotHistory() as $pivotHistory) {
+            for ($columnIndex = 0; $columnIndex < $iterationSimplexTable->getColumnsCount(); $columnIndex++) {
+                $multiplier = Fraction::from($pivotHistory->getColumnSearchResult()->getValue());
+                $multiplier->changeSign();
+
+                $element = Fraction::from($iterationSimplexTable->getKey($pivotHistory->getRowSearchResult()->getRowIndex(), $columnIndex));
+                $element->multiply($multiplier);
+
+                $previousResourceAtPoint = $resourcesAtPoint->offsetGet($columnIndex);
+                $previousResourceAtPoint->add($element);
+                $resourcesAtPoint->offsetSet($columnIndex, $previousResourceAtPoint);
+            }
+        }
+
+        return $resourcesAtPoint;
+    }
+
+    private function calculateObjectiveFunctionAtPoint(SimplexTable $iterationSimplexTable): Equation
+    {
+        $objectiveFunctionAtPoint = $iterationSimplexTable->getObjectiveFunctionAtPoint()->zero();
+
+        /** @var Fraction $resourceAtPointParam */
+        foreach ($iterationSimplexTable->getResourcesAtPoint() as $index => $resourceAtPointParam) {
+            $item = Fraction::from($resourceAtPointParam);
+            $item->subtract($iterationSimplexTable->getObjectiveFunction()->offsetGet($index));
+            $objectiveFunctionAtPoint->offsetSet($index, $item);
+        }
+
+        return $objectiveFunctionAtPoint;
     }
 }

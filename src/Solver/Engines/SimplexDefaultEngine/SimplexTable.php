@@ -6,10 +6,10 @@ use BadFunctionCallException;
 use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumnSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistoryTable;
-use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRowSearchResult;
+use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotRow;
 use pbaczek\simplex\Solver\Equation;
 use pbaczek\simplex\Solver\Interfaces\SimplexEngineInterface;
 use pbaczek\simplex\Solver\Problem;
@@ -21,6 +21,8 @@ class SimplexTable
 {
     private InternalTable $internalTable;
     private Equation $objectiveFunction;
+    private Equation $resourcesAtPoint;
+    private Equation $objectiveFunctionAtPoint;
     private FractionsCollection $limits;
     private PivotHistoryTable $pivotHistory;
     private Fraction $value;
@@ -31,6 +33,9 @@ class SimplexTable
         $this->limits = new FractionsCollection();
         $this->pivotHistory = new PivotHistoryTable();
         $this->value = new Fraction(0);
+        $this->objectiveFunction = new Equation();
+        $this->resourcesAtPoint = new Equation();
+        $this->objectiveFunctionAtPoint = new Equation();
     }
 
     public function __clone()
@@ -39,6 +44,8 @@ class SimplexTable
         $this->objectiveFunction = clone $this->objectiveFunction;
         $this->limits = clone $this->limits;
         $this->pivotHistory = clone $this->pivotHistory;
+        $this->resourcesAtPoint = clone $this->resourcesAtPoint;
+        $this->objectiveFunctionAtPoint = clone $this->objectiveFunctionAtPoint;
     }
 
     public function fromProblem(Problem $problem): void
@@ -50,29 +57,55 @@ class SimplexTable
         $this->internalTable = $internalTable;
         $this->objectiveFunction = $simplexTable->getObjectiveFunction();
         $this->limits = $simplexTable->getLimits();
+        $this->resourcesAtPoint = $simplexTable->getResourcesAtPoint();
+        $this->objectiveFunctionAtPoint = $simplexTable->getObjectiveFunctionAtPoint();
+    }
+
+    public function findPivotRow(PivotColumn $pivotColumnSearchResult): PivotRow
+    {
+        $pivotIndex = SimplexEngineInterface::NOT_FOUND;
+        $pivotRatio = new Fraction(PHP_INT_MAX);
+
+        foreach ($this->internalTable->toArray() as $rowIndex => $row) {
+
+            $limitForRow = Fraction::from($this->limits[$rowIndex]);
+
+            if ($row[$pivotColumnSearchResult->getColumnIndex()]->equals(0)) {
+                continue;
+            }
+
+            $limitForRow->divide($row[$pivotColumnSearchResult->getColumnIndex()]);
+
+            if ($limitForRow->getValue() < $pivotRatio->getValue()) {
+                $pivotRatio = $limitForRow;
+                $pivotIndex = $rowIndex;
+            }
+        }
+
+        return new PivotRow($pivotRatio, $pivotIndex);
     }
 
     /**
-     * @return PivotColumnSearchResult
+     * @return PivotColumn
      */
-    public function findPivotColumn(): PivotColumnSearchResult
+    public function findPivotColumn(): PivotColumn
     {
-        $sortedCollection = $this->objectiveFunction
+        $sortedCollection = $this->objectiveFunctionAtPoint
             ->filter(function (Fraction $element) {
                 return $element->getValue() < 0;
             })
             ->sort('getValue', Sort::Ascending);
 
         if ($sortedCollection->count() === 0) {
-            return new PivotColumnSearchResult(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
+            return new PivotColumn(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
         }
 
         /** @var Fraction $lowestValue */
         $lowestValue = $sortedCollection->first();
 
-        foreach ($this->objectiveFunction->getIterator() as $objectiveFunctionIndex => $objectiveFunctionParameter) {
+        foreach ($this->objectiveFunctionAtPoint->getIterator() as $objectiveFunctionIndex => $objectiveFunctionParameter) {
             if ($lowestValue->equals($objectiveFunctionParameter)) {
-                return new PivotColumnSearchResult($lowestValue, $objectiveFunctionIndex);
+                return new PivotColumn($lowestValue, $objectiveFunctionIndex);
             }
         }
 
@@ -89,6 +122,26 @@ class SimplexTable
         $this->objectiveFunction = $objectiveFunction;
     }
 
+    public function getResourcesAtPoint(): Equation
+    {
+        return $this->resourcesAtPoint;
+    }
+
+    public function setResourcesAtPoint(Equation $resourcesAtPoint): void
+    {
+        $this->resourcesAtPoint = $resourcesAtPoint;
+    }
+
+    public function getObjectiveFunctionAtPoint(): Equation
+    {
+        return $this->objectiveFunctionAtPoint;
+    }
+
+    public function setObjectiveFunctionAtPoint(Equation $objectiveFunctionAtPoint): void
+    {
+        $this->objectiveFunctionAtPoint = $objectiveFunctionAtPoint;
+    }
+
     public function getLimits(): FractionsCollection
     {
         return $this->limits;
@@ -99,29 +152,6 @@ class SimplexTable
         $this->limits = $limits;
     }
 
-    public function findPivotRow(PivotColumnSearchResult $pivotColumnSearchResult): PivotRowSearchResult
-    {
-        $pivotIndex = SimplexEngineInterface::NOT_FOUND;
-        $pivotRatio = new Fraction(PHP_INT_MAX);
-
-        foreach ($this->internalTable->toArray() as $rowIndex => $row) {
-            /** @var Fraction $limitForRow */
-            $limitForRow = clone $this->limits[$rowIndex];
-
-            if ($row[$pivotColumnSearchResult->getColumnIndex()]->equals(0)) {
-                continue;
-            }
-
-            $limitForRow->divide($row[$pivotColumnSearchResult->getColumnIndex()]);
-
-            if ($limitForRow->getValue() < $pivotRatio->getValue()) {
-                $pivotRatio = $limitForRow;
-                $pivotIndex = $rowIndex;
-            }
-        }
-
-        return new PivotRowSearchResult($pivotRatio, $pivotIndex);
-    }
 
     public function addPivotHistory(PivotHistory $pivotHistory): void
     {
@@ -166,33 +196,41 @@ class SimplexTable
 
     public function __toString(): string
     {
-        $data = $this->internalTable->toArray();
+        $table = $this->internalTable->toArray();
         $limits = $this->limits->toArray();
-        $objectiveFunction = $this->objectiveFunction->toArray(); // Bottom row
+        //$limits = array_merge($limits, [$this->value]);
+        array_unshift($limits, '');
+        $objectiveFunction = $this->objectiveFunction->toArray();
+        $objectiveFunctionAtPoint = $this->objectiveFunctionAtPoint->toArray();
+        $resourcesAtPoint = $this->resourcesAtPoint->toArray();
 
-        // Add the $limits column to $data
-        foreach ($data as $index => $row) {
-            $data[$index][] = $limits[$index] ?? ''; // Append limit column
+        // Prepend $objectiveFunction as the first row
+        array_unshift($table, $objectiveFunction);
+
+        // Append $limits column to each row
+        foreach ($table as $index => $row) {
+            $table[$index][] = $limits[$index]; // Add corresponding limit value
         }
 
-        // Append the bottom row
-        $data[] = array_merge($objectiveFunction, [$this->value]);
+        // Append $resourcesAtPoint as the last row
+        $table[] = array_merge($resourcesAtPoint, [$this->value]);
 
-        // Calculate column widths
-        $col_widths = array_map(function ($col) {
-            return max(array_map('strlen', $col));
-        }, array_map(null, ...$data));
+        // Append $objectiveFunctionAtPoint as the final row
+        $table[] = $objectiveFunctionAtPoint;
 
-        // Create border
-        $border = "+-" . implode("-+-", array_map(fn($w) => str_repeat("-", $w), $col_widths)) . "-+";
+        // Determine column widths dynamically
+        $colWidths = array_map(null, ...$table);
+        $colWidths = array_map(fn($col) => max(array_map(fn($num) => strlen($num), $col)), $colWidths);
 
-        $return = $border . PHP_EOL;
-        foreach ($data as $row) {
-            $return .= "| " . implode(" | ", array_map(function ($item, $w) {
-                    return str_pad($item, $w);
-                }, $row, $col_widths)) . ' |' . PHP_EOL;
+        // Generate table line
+        $line = "+-" . implode("-+-", array_map(fn($w) => str_repeat("-", $w), $colWidths)) . "-+\n";
+
+        // Print table
+        $return = $line;
+        foreach ($table as $row) {
+            $return .= "| " . implode(" | ", array_map(fn($i, $w) => str_pad($i, $w), $row, $colWidths)) . " |\n";
+            $return .= $line;
         }
-        $return .= $border . PHP_EOL;
 
         return $return;
     }

@@ -11,4 +11,17 @@ class Equation extends AbstractCollection
     {
         return Fraction::class;
     }
+
+    /**
+     * Zero all elements
+     * @return Equation
+     */
+    public function zero(): static
+    {
+        $this->data = $this->map(function (){
+            return new Fraction(0);
+        })->toArray();
+
+        return $this;
+    }
 }

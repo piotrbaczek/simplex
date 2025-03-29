@@ -65,8 +65,21 @@ class ProblemTest extends TestCase
 
         $solution = $solver->solve();
 
-        foreach ($solution->getSimplexTables()->getIterator() as $table) {
+        /** @var SimplexDefaultEngine\SimplexTable $table */
+        foreach ($solution->getSimplexTables() as $tableIndex => $table) {
             echo $table;
+
+            $pivotHistory = $table->getPivotHistory()->offsetGet($tableIndex-1);
+
+            if (is_null($pivotHistory) === false) {
+                echo sprintf(
+                    'Pivot element [%s,%s] on ratio %s on value %s' . PHP_EOL,
+                    $pivotHistory->getRowSearchResult()->getRowIndex(),
+                    $pivotHistory->getColumnSearchResult()->getColumnIndex(),
+                    $pivotHistory->getRowSearchResult()->getRatio(),
+                    $pivotHistory->getColumnSearchResult()->getValue()
+                );
+            }
         }
 
         $this->assertInstanceOf(Solution::class, $solution);
@@ -84,4 +97,62 @@ class ProblemTest extends TestCase
         $this->assertEquals(new Fraction(5), $points->offsetGet(1));
         $this->assertEquals(35, $solution->getSolutionValue()->getValue());
     }
+
+//    /**
+//     * @throws ProblemInvalidException
+//     */
+//    public function testThreeDimensionalProblem(): void
+//    {
+//        $problem = new Solver\Problem();
+//
+//        $problem->calculateMaximum()
+//            ->setObjectiveFunction(new Equation(
+//                    [
+//                        new Fraction(3),
+//                        new Fraction(4),
+//                        new Fraction(2)
+//                    ]
+//                )
+//            )
+//            ->addEquation(
+//                new Equation([new Fraction(1), new Fraction(2), new Fraction(3)]),
+//                Sign::LEQ,
+//                new Fraction(20)
+//            )
+//            ->addEquation(
+//                new Equation([new Fraction(1), new Fraction(1), new Fraction(1)]),
+//                Sign::LEQ,
+//                new Fraction(15)
+//            )
+//            ->addEquation(
+//                new Equation([new Fraction(3), new Fraction(2), new Fraction(1)]),
+//                Sign::LEQ,
+//                new Fraction(15)
+//            );
+//
+//        $solver = (new Solver())
+//            ->setEngine(new SimplexDefaultEngine())
+//            ->setProblem($problem);
+//
+//        $solution = $solver->solve();
+//
+//        foreach ($solution->getSimplexTables()->getIterator() as $table) {
+//            echo $table;
+//        }
+//
+//        $this->assertInstanceOf(Solution::class, $solution);
+//
+//        $points = $solution->getPointCoordinates();
+//
+//        foreach ($points as $pointIndex => $point) {
+//            echo sprintf('x%s = %s' . PHP_EOL, $pointIndex, $point->getValue());
+//        }
+//
+//        echo sprintf('Value = %s' . PHP_EOL, $solution->getSolutionValue());
+//
+//        $this->assertTrue($points->count() === 3);
+//        $this->assertEquals(new Fraction(0), $points->offsetGet(0));
+//        $this->assertEquals(new Fraction(15,2), $points->offsetGet(1));
+//        $this->assertEquals(new Fraction(0), $points->offsetGet(2));
+//    }
 }

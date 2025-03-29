@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e7c4ba1371b731121c38f1ff7460f3b",
+    "content-hash": "36224f05247a4cd9b52746193114c1c8",
     "packages": [
         {
             "name": "pbaczek/fraction",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/piotrbaczek/fraction.git",
-                "reference": "0e072d80ea2a540f8fa4442dcb40a7294ca98e00"
+                "reference": "ef9e023d2bb7722c74fc0b1b0816cc8d81752b9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piotrbaczek/fraction/zipball/0e072d80ea2a540f8fa4442dcb40a7294ca98e00",
-                "reference": "0e072d80ea2a540f8fa4442dcb40a7294ca98e00",
+                "url": "https://api.github.com/repos/piotrbaczek/fraction/zipball/ef9e023d2bb7722c74fc0b1b0816cc8d81752b9d",
+                "reference": "ef9e023d2bb7722c74fc0b1b0816cc8d81752b9d",
                 "shasum": ""
             },
             "require": {
@@ -40,22 +40,22 @@
             "description": "Library that handles fractions as nominator/denominator",
             "support": {
                 "issues": "https://github.com/piotrbaczek/fraction/issues",
-                "source": "https://github.com/piotrbaczek/fraction/tree/v1.0.1"
+                "source": "https://github.com/piotrbaczek/fraction/tree/v1.0.2"
             },
-            "time": "2025-03-23T22:59:18+00:00"
+            "time": "2025-03-29T14:17:29+00:00"
         },
         {
             "name": "ramsey/collection",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/collection.git",
-                "reference": "3c5990b8a5e0b79cd1cf11c2dc1229e58e93f109"
+                "reference": "344572933ad0181accbf4ba763e85a0306a8c5e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/collection/zipball/3c5990b8a5e0b79cd1cf11c2dc1229e58e93f109",
-                "reference": "3c5990b8a5e0b79cd1cf11c2dc1229e58e93f109",
+                "url": "https://api.github.com/repos/ramsey/collection/zipball/344572933ad0181accbf4ba763e85a0306a8c5e2",
+                "reference": "344572933ad0181accbf4ba763e85a0306a8c5e2",
                 "shasum": ""
             },
             "require": {
@@ -116,9 +116,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/collection/issues",
-                "source": "https://github.com/ramsey/collection/tree/2.1.0"
+                "source": "https://github.com/ramsey/collection/tree/2.1.1"
             },
-            "time": "2025-03-02T04:48:29+00:00"
+            "time": "2025-03-22T05:38:12+00:00"
         }
     ],
     "packages-dev": [
