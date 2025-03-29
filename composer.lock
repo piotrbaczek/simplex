@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "pbaczek/fraction",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/piotrbaczek/fraction.git",
-                "reference": "0e072d80ea2a540f8fa4442dcb40a7294ca98e00"
+                "reference": "ef9e023d2bb7722c74fc0b1b0816cc8d81752b9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piotrbaczek/fraction/zipball/0e072d80ea2a540f8fa4442dcb40a7294ca98e00",
-                "reference": "0e072d80ea2a540f8fa4442dcb40a7294ca98e00",
+                "url": "https://api.github.com/repos/piotrbaczek/fraction/zipball/ef9e023d2bb7722c74fc0b1b0816cc8d81752b9d",
+                "reference": "ef9e023d2bb7722c74fc0b1b0816cc8d81752b9d",
                 "shasum": ""
             },
             "require": {
@@ -40,9 +40,9 @@
             "description": "Library that handles fractions as nominator/denominator",
             "support": {
                 "issues": "https://github.com/piotrbaczek/fraction/issues",
-                "source": "https://github.com/piotrbaczek/fraction/tree/v1.0.1"
+                "source": "https://github.com/piotrbaczek/fraction/tree/v1.0.2"
             },
-            "time": "2025-03-23T22:59:18+00:00"
+            "time": "2025-03-29T14:17:29+00:00"
         },
         {
             "name": "ramsey/collection",
