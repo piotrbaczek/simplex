@@ -116,9 +116,6 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                 $pivotHistory->getColumnSearchResult()->getColumnIndex(),
                 $lastSimplexTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex())
             );
-//            $points->add(
-//                $lastSimplexTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex())
-//            );
         }
 
         return $points;
