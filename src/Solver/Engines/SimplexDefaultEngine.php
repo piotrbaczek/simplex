@@ -112,9 +112,13 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
         /** @var PivotHistory $pivotHistory */
         foreach ($history as $pivotHistory) {
-            $points->add(
+            $points->offsetSet(
+                $pivotHistory->getColumnSearchResult()->getColumnIndex(),
                 $lastSimplexTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex())
             );
+//            $points->add(
+//                $lastSimplexTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex())
+//            );
         }
 
         return $points;
