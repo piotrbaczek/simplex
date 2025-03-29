@@ -130,9 +130,11 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     private function isFinishReached(SimplexTable $currentTable): bool
     {
-        $objectiveFunctionAtPoints = $currentTable->getObjectiveFunctionAtPoint()->filter(function (Fraction $item) {
-            return $item->getValue() < 0;
-        });
+        $objectiveFunctionAtPoints = $currentTable
+            ->getObjectiveFunctionAtPoint()
+            ->filter(function (Fraction $item) {
+                return $item->getValue() < 0;
+            });
 
         return $objectiveFunctionAtPoints->count() === 0;
     }
@@ -153,17 +155,17 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         PivotColumn      $pivotColumnSearchResult
     ): void
     {
-        $newLimits = clone($iterationSimplexTable->getLimits());
+        $newLimits = clone $iterationSimplexTable->getLimits();
 
         foreach ($iterationSimplexTable->getLimits() as $limitKey => $limitValue) {
-            /** @var Fraction $limitAtRow */
-            $limitAtRow = clone($limitValue);
+
+            $limitAtRow = Fraction::from($limitValue);
 
             if ($limitKey === $pivotRowSearchResult->getRowIndex()) {
                 $limitAtRow->divide($previousPivotValue);
             } else {
-                $rowElement = clone($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
-                $columnElement = clone($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
+                $rowElement = Fraction::from($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
+                $columnElement = Fraction::from($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
                 $rowElement->multiply($columnElement);
                 $rowElement->divide($previousPivotValue);
                 $limitAtRow->subtract($rowElement);
@@ -197,23 +199,21 @@ class SimplexDefaultEngine implements SimplexEngineInterface
                     && $pivotColumnSearchResult->hasSameIndex($column)) {
                     $iterationSimplexTable->setKey($row, $column, new Fraction(1));
                 } else if ($pivotRowSearchResult->hasSameIndex($row)) {
-                    $currentValue = clone($iterationSimplexTable->getKey($row, $column));
+                    $currentValue = Fraction::from($iterationSimplexTable->getKey($row, $column));
                     $currentValue->divide($previousPivotValue);
-                    $iterationSimplexTable->setKey($row, $column, clone($currentValue));
+                    $iterationSimplexTable->setKey($row, $column, $currentValue);
                 } else if ($pivotColumnSearchResult->hasSameIndex($column)) {
                     $iterationSimplexTable->setKey($row, $column, new Fraction(0));
                 } else {
-                    $currentValue = clone($iterationSimplexTable->getKey($row, $column));
-                    $previousValueAtRow = clone(
-                    $previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column)
-                    );
-                    $previousValueAtColumn = clone(
-                    $previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex())
-                    );
-                    $previousValueAtRow->multiply($previousValueAtColumn);
-                    $previousValueAtRow->divide($previousPivotValue);
-                    $currentValue->subtract($previousValueAtRow);
-                    $iterationSimplexTable->setKey($row, $column, clone($currentValue));
+                    $currentValue = Fraction::from($iterationSimplexTable->getKey($row, $column));
+                    $valueAtPivotRow = Fraction::from($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column));
+                    $valueAtPivotColumn = Fraction::from($previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex()));
+
+                    $valueAtPivotRow->multiply($valueAtPivotColumn);
+                    $valueAtPivotRow->divide($previousPivotValue);
+                    $currentValue->subtract($valueAtPivotRow);
+
+                    $iterationSimplexTable->setKey($row, $column, $currentValue);
                 }
             }
         }
@@ -225,12 +225,11 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
         /** @var PivotHistory $pivotHistory */
         foreach ($currentTable->getPivotHistory() as $pivotHistory) {
-            $item = clone $pivotHistory->getColumnSearchResult()->getValue();
-            $item->multiply($currentTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex()));
-            $sum->add($item);
+            $lowestPivotColumnValue = Fraction::from($pivotHistory->getColumnSearchResult()->getValue());
+            $lowestPivotColumnValue->changeSign();
+            $lowestPivotColumnValue->multiply($currentTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex()));
+            $sum->add($lowestPivotColumnValue);
         }
-
-        $sum->changeSign();
 
         return $sum;
     }

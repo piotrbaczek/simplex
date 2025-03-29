@@ -67,8 +67,8 @@ class SimplexTable
         $pivotRatio = new Fraction(PHP_INT_MAX);
 
         foreach ($this->internalTable->toArray() as $rowIndex => $row) {
-            /** @var Fraction $limitForRow */
-            $limitForRow = clone $this->limits[$rowIndex];
+
+            $limitForRow = Fraction::from($this->limits[$rowIndex]);
 
             if ($row[$pivotColumnSearchResult->getColumnIndex()]->equals(0)) {
                 continue;

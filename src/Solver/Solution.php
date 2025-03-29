@@ -11,7 +11,6 @@ use pbaczek\simplex\Solver\Solution\FractionsCollection;
 class Solution implements SimplexSolutionInterface
 {
     private Fraction $value;
-
     private FractionsCollection $pointCoordinates;
     private SimplexTableCollection $simplexTables;
 
