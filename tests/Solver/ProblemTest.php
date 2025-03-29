@@ -66,11 +66,12 @@ class ProblemTest extends TestCase
         $solution = $solver->solve();
 
         /** @var SimplexDefaultEngine\SimplexTable $table */
-        foreach ($solution->getSimplexTables() as $table) {
+        foreach ($solution->getSimplexTables() as $tableIndex => $table) {
             echo $table;
 
-            /** @var SimplexDefaultEngine\SimplexTable\PivotHistory $pivotHistory */
-            foreach ($table->getPivotHistory() as $pivotHistory) {
+            $pivotHistory = $table->getPivotHistory()->offsetGet($tableIndex-1);
+
+            if (is_null($pivotHistory) === false) {
                 echo sprintf(
                     'Pivot element [%s,%s] on ratio %s on value %s' . PHP_EOL,
                     $pivotHistory->getRowSearchResult()->getRowIndex(),
