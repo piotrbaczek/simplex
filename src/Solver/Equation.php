@@ -16,7 +16,7 @@ class Equation extends AbstractCollection
      * Zero all elements
      * @return Equation
      */
-    public function zero(): static
+    public function fillWithZeros(): static
     {
         $this->data = $this->map(function (){
             return new Fraction(0);

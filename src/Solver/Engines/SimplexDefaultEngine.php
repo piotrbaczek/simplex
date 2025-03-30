@@ -237,19 +237,26 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     private function calculateResourcesAtPoint(SimplexTable $iterationSimplexTable): Equation
     {
-        $resourcesAtPoint = $iterationSimplexTable->getResourcesAtPoint()->zero();
+        $resourcesAtPoint = $iterationSimplexTable->getResourcesAtPoint()->fillWithZeros();
 
         /** @var PivotHistory $pivotHistory */
         foreach ($iterationSimplexTable->getPivotHistory() as $pivotHistory) {
             for ($columnIndex = 0; $columnIndex < $iterationSimplexTable->getColumnsCount(); $columnIndex++) {
+
                 $multiplier = Fraction::from($pivotHistory->getColumnSearchResult()->getValue());
                 $multiplier->changeSign();
 
-                $element = Fraction::from($iterationSimplexTable->getKey($pivotHistory->getRowSearchResult()->getRowIndex(), $columnIndex));
-                $element->multiply($multiplier);
+                $multiplicationResultForCell = Fraction::from(
+                    $iterationSimplexTable->getKey(
+                        $pivotHistory->getRowSearchResult()->getRowIndex(),
+                        $columnIndex
+                    )
+                );
+
+                $multiplicationResultForCell->multiply($multiplier);
 
                 $previousResourceAtPoint = $resourcesAtPoint->offsetGet($columnIndex);
-                $previousResourceAtPoint->add($element);
+                $previousResourceAtPoint->add($multiplicationResultForCell);
                 $resourcesAtPoint->offsetSet($columnIndex, $previousResourceAtPoint);
             }
         }
@@ -259,13 +266,15 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
     private function calculateObjectiveFunctionAtPoint(SimplexTable $iterationSimplexTable): Equation
     {
-        $objectiveFunctionAtPoint = $iterationSimplexTable->getObjectiveFunctionAtPoint()->zero();
+        $objectiveFunctionAtPoint = $iterationSimplexTable->getObjectiveFunctionAtPoint()->fillWithZeros();
 
         /** @var Fraction $resourceAtPointParam */
-        foreach ($iterationSimplexTable->getResourcesAtPoint() as $index => $resourceAtPointParam) {
-            $item = Fraction::from($resourceAtPointParam);
-            $item->subtract($iterationSimplexTable->getObjectiveFunction()->offsetGet($index));
-            $objectiveFunctionAtPoint->offsetSet($index, $item);
+        foreach ($iterationSimplexTable->getResourcesAtPoint() as $columnIndex => $resourceAtPointParam) {
+            $objectiveFuncAtPointValueForColumn = Fraction::from($resourceAtPointParam);
+            $objectiveFuncAtPointValueForColumn
+                ->subtract($iterationSimplexTable->getObjectiveFunction()->offsetGet($columnIndex));
+
+            $objectiveFunctionAtPoint->offsetSet($columnIndex, $objectiveFuncAtPointValueForColumn);
         }
 
         return $objectiveFunctionAtPoint;
