@@ -18,9 +18,9 @@ class Equation extends AbstractCollection
      */
     public function fillWithZeros(): static
     {
-        $this->data = $this->map(function () {
+        $this->data = array_map(function () {
             return new Fraction(0);
-        })->toArray();
+        }, $this->data);
 
         return $this;
     }
