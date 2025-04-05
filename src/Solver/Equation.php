@@ -13,12 +13,12 @@ class Equation extends AbstractCollection
     }
 
     /**
-     * Zero all elements
+     * Make all elements of array equal to Zero
      * @return Equation
      */
     public function fillWithZeros(): static
     {
-        $this->data = $this->map(function (){
+        $this->data = $this->map(function () {
             return new Fraction(0);
         })->toArray();
 
