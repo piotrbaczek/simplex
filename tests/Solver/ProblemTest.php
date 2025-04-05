@@ -166,4 +166,57 @@ class ProblemTest extends TestCase
         $this->assertTrue($points->count() === 1);
         $this->assertEquals(new Fraction(15, 2), $points->offsetGet(1));
     }
+
+    /**
+     * @throws ProblemInvalidException
+     */
+    public function testUnboundedCase(): void
+    {
+        $this->expectException(Solver\Exceptions\OutOfBoundsException::class);
+
+        $problem = new Solver\Problem();
+
+        $problem->calculateMaximum()
+            ->setObjectiveFunction(
+                new Equation(
+                    [
+                        new Fraction(2),
+                        new Fraction(1)
+                    ]
+                )
+            )
+            ->addEquation(
+                new Equation(
+                    [
+                        new Fraction(1),
+                        new Fraction(1)
+                    ]
+                ),
+                Sign::GEQ,
+                new Fraction(1)
+            );
+
+        $solver = (new Solver())
+            ->setEngine(new SimplexDefaultEngine())
+            ->setProblem($problem);
+
+        $solution = $solver->solve();
+
+        /** @var SimplexDefaultEngine\SimplexTable $table */
+        foreach ($solution->getSimplexTables() as $tableIndex => $table) {
+            echo $table;
+
+            $pivotHistory = $table->getPivotHistory()->offsetGet($tableIndex - 1);
+
+            if (is_null($pivotHistory) === false) {
+                echo sprintf(
+                    'Pivot element [%s,%s] on ratio %s on value %s' . PHP_EOL,
+                    $pivotHistory->getRowSearchResult()->getRowIndex(),
+                    $pivotHistory->getColumnSearchResult()->getColumnIndex(),
+                    $pivotHistory->getRowSearchResult()->getRatio(),
+                    $pivotHistory->getColumnSearchResult()->getValue()
+                );
+            }
+        }
+    }
 }
