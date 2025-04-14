@@ -2,21 +2,21 @@
 
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Interfaces\IndexCompareInterface;
 
 final class PivotColumn implements IndexCompareInterface
 {
-    private Fraction $value;
+    private MFraction $value;
     private int $columnIndex;
 
-    public function __construct(Fraction $value, int $columnIndex)
+    public function __construct(MFraction $value, int $columnIndex)
     {
         $this->value = $value;
         $this->columnIndex = $columnIndex;
     }
 
-    public function getValue(): Fraction
+    public function getValue(): MFraction
     {
         return $this->value;
     }

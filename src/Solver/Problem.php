@@ -3,7 +3,7 @@
 namespace pbaczek\simplex\Solver;
 
 use Override;
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
 use pbaczek\simplex\Solver\Interfaces\SimplexProblemInterface;
 use pbaczek\simplex\Solver\Problem\ProblemEquation;
@@ -64,7 +64,7 @@ class Problem implements SimplexProblemInterface
         return $this->objectiveFunction;
     }
 
-    public function addEquation(Equation $equation, Sign $sign, Fraction $limit): static
+    public function addEquation(Equation $equation, Sign $sign, MFraction $limit): static
     {
         $this->problemEquations->add(new ProblemEquation($equation, $sign, $limit));
 

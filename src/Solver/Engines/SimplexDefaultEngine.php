@@ -2,8 +2,8 @@
 
 namespace pbaczek\simplex\Solver\Engines;
 
-use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
+use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
@@ -121,7 +121,7 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         return $points;
     }
 
-    public function getSolutionValue(): Fraction
+    public function getSolutionValue(): MFraction
     {
         /** @var SimplexTable $lastTable */
         $lastTable = $this->simplexTables->last();
@@ -133,7 +133,7 @@ class SimplexDefaultEngine implements SimplexEngineInterface
     {
         $objectiveFunctionAtPoints = $currentTable
             ->getObjectiveFunctionAtPoint()
-            ->filter(function (Fraction $item) {
+            ->filter(function (MFraction $item) {
                 return $item->getValue() < 0;
             });
 
@@ -160,13 +160,13 @@ class SimplexDefaultEngine implements SimplexEngineInterface
 
         foreach ($iterationSimplexTable->getLimits() as $limitKey => $limitValue) {
 
-            $limitAtRow = Fraction::from($limitValue);
+            $limitAtRow = MFraction::from($limitValue);
 
             if ($limitKey === $pivotRowSearchResult->getRowIndex()) {
                 $limitAtRow->divide($previousPivotValue);
             } else {
-                $rowElement = Fraction::from($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
-                $columnElement = Fraction::from($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
+                $rowElement = MFraction::from($previousStepTable->getKey($limitKey, $pivotColumnSearchResult->getColumnIndex()));
+                $columnElement = MFraction::from($iterationSimplexTable->getLimits()->offsetGet($pivotRowSearchResult->getRowIndex()));
                 $rowElement->multiply($columnElement);
                 $rowElement->divide($previousPivotValue);
                 $limitAtRow->subtract($rowElement);
@@ -198,17 +198,17 @@ class SimplexDefaultEngine implements SimplexEngineInterface
             for ($column = 0; $column < $iterationSimplexTable->getColumnsCount(); $column++) {
                 if ($pivotRowSearchResult->hasSameIndex($row)
                     && $pivotColumnSearchResult->hasSameIndex($column)) {
-                    $iterationSimplexTable->setKey($row, $column, new Fraction(1));
+                    $iterationSimplexTable->setKey($row, $column, new MFraction(1));
                 } else if ($pivotRowSearchResult->hasSameIndex($row)) {
-                    $currentValue = Fraction::from($iterationSimplexTable->getKey($row, $column));
+                    $currentValue = MFraction::from($iterationSimplexTable->getKey($row, $column));
                     $currentValue->divide($previousPivotValue);
                     $iterationSimplexTable->setKey($row, $column, $currentValue);
                 } else if ($pivotColumnSearchResult->hasSameIndex($column)) {
-                    $iterationSimplexTable->setKey($row, $column, new Fraction(0));
+                    $iterationSimplexTable->setKey($row, $column, new MFraction(0));
                 } else {
-                    $currentValue = Fraction::from($iterationSimplexTable->getKey($row, $column));
-                    $valueAtPivotRow = Fraction::from($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column));
-                    $valueAtPivotColumn = Fraction::from($previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex()));
+                    $currentValue = MFraction::from($iterationSimplexTable->getKey($row, $column));
+                    $valueAtPivotRow = MFraction::from($previousStepTable->getKey($pivotRowSearchResult->getRowIndex(), $column));
+                    $valueAtPivotColumn = MFraction::from($previousStepTable->getKey($row, $pivotColumnSearchResult->getColumnIndex()));
 
                     $valueAtPivotRow->multiply($valueAtPivotColumn);
                     $valueAtPivotRow->divide($previousPivotValue);
@@ -220,13 +220,13 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         }
     }
 
-    private function calculateValue(SimplexTable $currentTable): Fraction
+    private function calculateValue(SimplexTable $currentTable): MFraction
     {
-        $sum = new Fraction(0);
+        $sum = new MFraction(0);
 
         /** @var PivotHistory $pivotHistory */
         foreach ($currentTable->getPivotHistory() as $pivotHistory) {
-            $lowestPivotColumnValue = Fraction::from($pivotHistory->getColumnSearchResult()->getValue());
+            $lowestPivotColumnValue = MFraction::from($pivotHistory->getColumnSearchResult()->getValue());
             $lowestPivotColumnValue->changeSign();
             $lowestPivotColumnValue->multiply($currentTable->getLimits()->offsetGet($pivotHistory->getRowSearchResult()->getRowIndex()));
             $sum->add($lowestPivotColumnValue);
@@ -243,10 +243,10 @@ class SimplexDefaultEngine implements SimplexEngineInterface
         foreach ($iterationSimplexTable->getPivotHistory() as $pivotHistory) {
             for ($columnIndex = 0; $columnIndex < $iterationSimplexTable->getColumnsCount(); $columnIndex++) {
 
-                $multiplier = Fraction::from($pivotHistory->getColumnSearchResult()->getValue());
+                $multiplier = MFraction::from($pivotHistory->getColumnSearchResult()->getValue());
                 $multiplier->changeSign();
 
-                $multiplicationResultForCell = Fraction::from(
+                $multiplicationResultForCell = MFraction::from(
                     $iterationSimplexTable->getKey(
                         $pivotHistory->getRowSearchResult()->getRowIndex(),
                         $columnIndex
@@ -268,9 +268,9 @@ class SimplexDefaultEngine implements SimplexEngineInterface
     {
         $objectiveFunctionAtPoint = $iterationSimplexTable->getObjectiveFunctionAtPoint()->fillWithZeros();
 
-        /** @var Fraction $resourceAtPointParam */
+        /** @var MFraction $resourceAtPointParam */
         foreach ($iterationSimplexTable->getResourcesAtPoint() as $columnIndex => $resourceAtPointParam) {
-            $objectiveFuncAtPointValueForColumn = Fraction::from($resourceAtPointParam);
+            $objectiveFuncAtPointValueForColumn = MFraction::from($resourceAtPointParam);
             $objectiveFuncAtPointValueForColumn
                 ->subtract($iterationSimplexTable->getObjectiveFunction()->offsetGet($columnIndex));
 

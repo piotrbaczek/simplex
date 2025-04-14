@@ -2,7 +2,7 @@
 
 namespace pbaczek\simplex\Solver\Problem;
 
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
 use pbaczek\simplex\Solver\Equation;
 
@@ -10,9 +10,9 @@ class ProblemEquation
 {
     private Equation $equation;
     private Sign $sign;
-    private Fraction $limit;
+    private MFraction $limit;
 
-    public function __construct(Equation $equation, Sign $sign, Fraction $limit)
+    public function __construct(Equation $equation, Sign $sign, MFraction $limit)
     {
         $this->equation = $equation;
         $this->sign = $sign;
@@ -29,7 +29,7 @@ class ProblemEquation
         return $this->sign;
     }
 
-    public function getLimit(): Fraction
+    public function getLimit(): MFraction
     {
         return $this->limit;
     }

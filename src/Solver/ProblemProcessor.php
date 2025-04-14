@@ -2,7 +2,6 @@
 
 namespace pbaczek\simplex\Solver;
 
-use pbaczek\fraction\Fraction;
 use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Dictionaries\Sign;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
@@ -52,7 +51,7 @@ final class ProblemProcessor
             $element = $problem->getProblemEquations()->offsetGet($row);
 
             for ($column = 0; $column < $internalTableWidth; $column++) {
-                $this->internalTable->setKey($row, $column, Fraction::from($element->getEquation()->offsetGet($column)));
+                $this->internalTable->setKey($row, $column, MFraction::from($element->getEquation()->offsetGet($column)));
             }
         }
     }
@@ -74,9 +73,9 @@ final class ProblemProcessor
                 case Sign::LEQ:
                     for ($column = 0; $column < $internalTableHeight; $column++) {
                         if ($column === $row) {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new Fraction(1));
+                            $this->internalTable->setKey($row, $internalTableWidth + $column, new MFraction(1));
                         } else {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new Fraction(0));
+                            $this->internalTable->setKey($row, $internalTableWidth + $column, new MFraction(0));
                         }
                     }
                     break;
@@ -86,7 +85,7 @@ final class ProblemProcessor
                         if ($column === $row) {
                             $this->internalTable->setKey($row, $internalTableWidth + $column, new MFraction(0, 1, -1, 1));
                         } else {
-                            $this->internalTable->setKey($row, $internalTableWidth + $column, new Fraction(0));
+                            $this->internalTable->setKey($row, $internalTableWidth + $column, new MFraction(0));
                         }
                     }
                     break;
@@ -102,7 +101,7 @@ final class ProblemProcessor
     {
         /** @var Problem\ProblemEquation $problemEquation */
         foreach ($problem->getProblemEquations() as $problemEquation) {
-            $this->simplexTable->getLimits()->add(Fraction::from($problemEquation->getLimit()));
+            $this->simplexTable->getLimits()->add(MFraction::from($problemEquation->getLimit()));
         }
     }
 
@@ -116,7 +115,7 @@ final class ProblemProcessor
 
         // Fill with zeros
         foreach ($problem->getProblemEquations() as $ignored) {
-            $objectiveFunction->add(new Fraction(0));
+            $objectiveFunction->add(new MFraction(0));
         }
 
         $this->simplexTable->setObjectiveFunction($objectiveFunction);
@@ -124,14 +123,14 @@ final class ProblemProcessor
 
     private function setResourcesAtPointFromProblem(Problem $problem): void
     {
-        /** @var Fraction $ignored */
+        /** @var MFraction $ignored */
         foreach ($problem->getObjectiveFunction() as $ignored) {
-            $this->simplexTable->getResourcesAtPoint()->add(new Fraction(0));
+            $this->simplexTable->getResourcesAtPoint()->add(new MFraction(0));
         }
 
         /** @var Equation $ignored */
         foreach ($problem->getProblemEquations() as $ignored) {
-            $this->simplexTable->getResourcesAtPoint()->add(new Fraction(0));
+            $this->simplexTable->getResourcesAtPoint()->add(new MFraction(0));
         }
     }
 
@@ -139,10 +138,10 @@ final class ProblemProcessor
     {
         /**
          * @var int $index
-         * @var Fraction $objectiveFunctionParameter
+         * @var MFraction $objectiveFunctionParameter
          */
         foreach ($this->simplexTable->getObjectiveFunction() as $index => $objectiveFunctionParameter) {
-            $remainingResourceAtPoint = Fraction::from($this->simplexTable->getResourcesAtPoint()->offsetGet($index));
+            $remainingResourceAtPoint = MFraction::from($this->simplexTable->getResourcesAtPoint()->offsetGet($index));
             $remainingResourceAtPoint->subtract($objectiveFunctionParameter);
             $this->simplexTable->getObjectiveFunctionAtPoint()->offsetSet($index, $remainingResourceAtPoint);
         }

@@ -3,8 +3,8 @@
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine;
 
 use BadFunctionCallException;
-use pbaczek\fraction\Fraction;
 use pbaczek\fraction\FractionAbstract;
+use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\InternalTable;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotColumn;
 use pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable\PivotHistory;
@@ -25,14 +25,14 @@ class SimplexTable
     private Equation $objectiveFunctionAtPoint;
     private FractionsCollection $limits;
     private PivotHistoryTable $pivotHistory;
-    private Fraction $value;
+    private MFraction $value;
 
     public function __construct()
     {
         $this->internalTable = new InternalTable();
         $this->limits = new FractionsCollection();
         $this->pivotHistory = new PivotHistoryTable();
-        $this->value = new Fraction(0);
+        $this->value = new MFraction(0);
         $this->objectiveFunction = new Equation();
         $this->resourcesAtPoint = new Equation();
         $this->objectiveFunctionAtPoint = new Equation();
@@ -64,11 +64,11 @@ class SimplexTable
     public function findPivotRow(PivotColumn $pivotColumnSearchResult): PivotRow
     {
         $pivotIndex = SimplexEngineInterface::NOT_FOUND;
-        $pivotRatio = new Fraction(PHP_INT_MAX);
+        $pivotRatio = new MFraction(PHP_INT_MAX);
 
         foreach ($this->internalTable->toArray() as $rowIndex => $row) {
 
-            $limitForRow = Fraction::from($this->limits[$rowIndex]);
+            $limitForRow = MFraction::from($this->limits[$rowIndex]);
 
             if ($row[$pivotColumnSearchResult->getColumnIndex()]->equals(0)) {
                 continue;
@@ -91,16 +91,16 @@ class SimplexTable
     public function findPivotColumn(): PivotColumn
     {
         $sortedCollection = $this->objectiveFunctionAtPoint
-            ->filter(function (Fraction $element) {
+            ->filter(function (MFraction $element) {
                 return $element->getValue() < 0;
             })
             ->sort('getValue', Sort::Ascending);
 
         if ($sortedCollection->count() === 0) {
-            return new PivotColumn(new Fraction(-1), SimplexEngineInterface::NOT_FOUND);
+            return new PivotColumn(new MFraction(-1), SimplexEngineInterface::NOT_FOUND);
         }
 
-        /** @var Fraction $lowestValue */
+        /** @var MFraction $lowestValue */
         $lowestValue = $sortedCollection->first();
 
         foreach ($this->objectiveFunctionAtPoint->getIterator() as $objectiveFunctionIndex => $objectiveFunctionParameter) {
@@ -174,22 +174,22 @@ class SimplexTable
         return count($internalTableArray[0]);
     }
 
-    public function getKey(int $row, int $column): FractionAbstract
+    public function getKey(int $row, int $column): MFraction
     {
         return $this->internalTable->getKey($row, $column);
     }
 
-    public function setKey(int $row, int $column, FractionAbstract $fractionAbstract): void
+    public function setKey(int $row, int $column, MFraction $fractionAbstract): void
     {
         $this->internalTable->setKey($row, $column, $fractionAbstract);
     }
 
-    public function setValue(Fraction $value): void
+    public function setValue(MFraction $value): void
     {
         $this->value = $value;
     }
 
-    public function getValue(): Fraction
+    public function getValue(): MFraction
     {
         return $this->value;
     }

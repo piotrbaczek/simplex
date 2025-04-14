@@ -2,15 +2,15 @@
 
 namespace pbaczek\simplex\Solver\Engines\SimplexDefaultEngine\SimplexTable;
 
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\MFraction;
 use pbaczek\simplex\Solver\Interfaces\IndexCompareInterface;
 
 final class PivotRow implements IndexCompareInterface
 {
     private int $rowIndex;
-    private Fraction $ratio;
+    private MFraction $ratio;
 
-    public function __construct(Fraction $ratio, int $rowIndex)
+    public function __construct(MFraction $ratio, int $rowIndex)
     {
         $this->ratio = $ratio;
         $this->rowIndex = $rowIndex;
@@ -21,7 +21,7 @@ final class PivotRow implements IndexCompareInterface
         return $this->rowIndex;
     }
 
-    public function getRatio(): Fraction
+    public function getRatio(): MFraction
     {
         return $this->ratio;
     }

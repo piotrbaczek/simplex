@@ -2,14 +2,14 @@
 
 namespace pbaczek\simplex\Solver;
 
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\MFraction;
 use Ramsey\Collection\AbstractCollection;
 
 class Equation extends AbstractCollection
 {
     public function getType(): string
     {
-        return Fraction::class;
+        return MFraction::class;
     }
 
     /**
@@ -19,7 +19,7 @@ class Equation extends AbstractCollection
     public function fillWithZeros(): static
     {
         $this->data = array_map(function () {
-            return new Fraction(0);
+            return new MFraction(0);
         }, $this->data);
 
         return $this;

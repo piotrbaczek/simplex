@@ -2,13 +2,13 @@
 
 namespace pbaczek\simplex\Solver\Solution;
 
-use pbaczek\fraction\Fraction;
+use pbaczek\fraction\MFraction;
 use Ramsey\Collection\AbstractCollection;
 
 class FractionsCollection extends AbstractCollection
 {
     public function getType(): string
     {
-        return Fraction::class;
+        return MFraction::class;
     }
 }
