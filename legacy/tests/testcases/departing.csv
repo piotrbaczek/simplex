@@ -1,0 +1,4 @@
+MAX Z = 4x1 + 7x2
+subject to
+2x1 + 12x2 <= 4
+and x1,x2 >= 0
